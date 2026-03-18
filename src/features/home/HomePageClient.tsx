@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { parseMediaUrls } from "@/shared/lib/mediaUrls";
@@ -12,6 +12,7 @@ export type { HomeProject } from "@/features/home/homeProject.types";
 
 const HERO_TITLE = "TOON EXPO 2026. INVEST";
 const HERO_SUBTITLE = "interactive map";
+const PROJECTS_PAGE_SIZE = 15;
 
 const FIGMA_ASSETS = {
   heroBg: "/figma/home/heroBg.jpg",
@@ -56,6 +57,7 @@ function formatRange(minValue?: string, maxValue?: string): string {
 
 export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   const [q, setQ] = useState("");
+  const [visibleCount, setVisibleCount] = useState(PROJECTS_PAGE_SIZE);
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -77,7 +79,17 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
     });
   }, [projects, q]);
 
+  useEffect(() => {
+    setVisibleCount(PROJECTS_PAGE_SIZE);
+  }, [q]);
+
   const markers = useMemo(() => buildMapMarkersFromProjects(filtered), [filtered]);
+  const visibleProjects = filtered.slice(0, visibleCount);
+  const hasMoreProjects = filtered.length > visibleProjects.length;
+
+  function handleShowMore() {
+    setVisibleCount((currentCount) => currentCount + PROJECTS_PAGE_SIZE);
+  }
 
   return (
     <div className="min-h-screen bg-white text-white">
@@ -158,17 +170,23 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           ) : (
             <>
               <ul id="projects" className="grid scroll-mt-6 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {filtered.map((project, index) => (
+                {visibleProjects.map((project, index) => (
                   <li key={project.id}>
                     <ProjectCard project={project} index={index} />
                   </li>
                 ))}
               </ul>
-              <div className="mt-10 flex justify-center">
-                <div className="rounded-[4px] border border-[#18fffb] px-10 py-4 text-sm font-semibold uppercase tracking-[0.24em] text-white/90">
-                  View more
+              {hasMoreProjects ? (
+                <div className="mt-10 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={handleShowMore}
+                    className="cursor-pointer rounded-[4px] border border-[#18fffb] px-10 py-4 text-sm font-semibold uppercase tracking-[0.24em] text-white/90 transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#18fffb] focus-visible:ring-offset-2 focus-visible:ring-offset-[#246976]"
+                  >
+                    View more
+                  </button>
                 </div>
-              </div>
+              ) : null}
             </>
           )}
         </section>
