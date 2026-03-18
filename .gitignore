@@ -10,6 +10,9 @@ Thumbs.db
 # Dependencies (if scripts use Node/npm)
 node_modules/
 
+# TypeScript incremental (локально меняется при tsc — мешает pull)
+*.tsbuildinfo
+
 # Build output
 .next/
 dist/

@@ -2,18 +2,50 @@
  * Normalize Matterport / 3D tour URLs for iframe embed.
  * Matterport share links: https://my.matterport.com/show/?m=...
  */
-export function isMatterportUrl(url: string): boolean {
-  const u = url.trim().toLowerCase();
+
+const MATTERPORT_ROOT = "matterport.com";
+const MPEMBED_ROOT = "mpembed.com";
+const HAS_URL_SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:/;
+
+/**
+ * Վերադարձնում է hostname-ը (lowercase) կամ null, եթե parse-ը ձախողվի։
+ */
+function parseUrlHostname(input: string): string | null {
+  const trimmed = input.trim();
+  if (!trimmed) {
+    return null;
+  }
+  try {
+    const toParse = HAS_URL_SCHEME.test(trimmed) ? trimmed : `https://${trimmed}`;
+    return new URL(toParse).hostname.toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+function isAllowedMatterportHostname(hostname: string): boolean {
   return (
-    u.includes("matterport.com") ||
-    u.includes("mpembed.com") ||
-    u.includes("my.matterport.com")
+    hostname === MATTERPORT_ROOT ||
+    hostname.endsWith(`.${MATTERPORT_ROOT}`) ||
+    hostname === MPEMBED_ROOT ||
+    hostname.endsWith(`.${MPEMBED_ROOT}`)
   );
+}
+
+export function isMatterportUrl(url: string): boolean {
+  const hostname = parseUrlHostname(url);
+  if (!hostname) {
+    return false;
+  }
+  return isAllowedMatterportHostname(hostname);
 }
 
 export function toMatterportEmbedUrl(url: string): string {
   const u = url.trim();
-  if (u.includes("mpembed.com")) return u;
+  const host = parseUrlHostname(u);
+  if (host && (host === MPEMBED_ROOT || host.endsWith(`.${MPEMBED_ROOT}`))) {
+    return u;
+  }
   const m = u.match(/[?&]m=([^&]+)/);
   if (m) {
     return `https://mpembed.com/show/?m=${m[1]}&amp;qp=1&amp;q=0.5`;

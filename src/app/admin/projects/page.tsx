@@ -73,7 +73,7 @@ export default async function AdminProjectsPage({
       </div>
 
       <Suspense fallback={<div className="h-16 rounded-2xl bg-slate-100" />}>
-        <AdminProjectsToolbar initialPublished="all" initialView="list" />
+        <AdminProjectsToolbar initialPublished={pub} initialView={view} />
       </Suspense>
 
       <AdminProjectsViews projects={list} view={view} />

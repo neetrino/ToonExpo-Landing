@@ -25,7 +25,13 @@ export function AdminProjectsToolbar({ initialPublished, initialView }: Props) {
   const sp = useSearchParams();
   const qFromUrl = sp.get("q") ?? "";
   const published = sp.get("published") ?? initialPublished;
-  const view = (sp.get("view") === "cards" ? "cards" : "list") as AdminProjectsViewMode;
+  const viewParam = sp.get("view");
+  const view: AdminProjectsViewMode =
+    viewParam === "cards"
+      ? "cards"
+      : viewParam === "list"
+        ? "list"
+        : initialView;
   const pageFromUrl = Math.max(1, parseInt(sp.get("page") ?? "1", 10) || 1);
 
   const [search, setSearch] = useState(qFromUrl);
