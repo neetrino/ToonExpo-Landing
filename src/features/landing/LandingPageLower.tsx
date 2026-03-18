@@ -1,13 +1,22 @@
-import Link from "next/link";
-import { parseLatLng, parseMediaUrls } from "@/shared/lib/mediaUrls";
+/* eslint-disable @next/next/no-img-element */
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/lib/blockVisibility";
-
-import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
-import { GallerySlider } from "@/features/landing/GallerySlider";
 import { Tour3DBlock } from "@/features/landing/Tour3DBlock";
 import { VideoEmbedBlock } from "@/features/landing/VideoEmbedBlock";
+import {
+  constructionCards,
+  parkingCards,
+  PARTICIPANT_SECTION_INSET,
+  participantFigmaAssets,
+} from "@/features/landing/landingPage.constants";
+import {
+  extractApartmentSizes,
+  firstNonEmpty,
+  formatRange,
+  getProjectMedia,
+  splitListItems,
+} from "@/features/landing/landingPage.helpers";
 
 function Section({
   id,
@@ -32,264 +41,263 @@ type Props = {
 
 export function LandingPageLower({ fields, title }: Props) {
   const vis = visibleBlocks(fields);
+  const media = getProjectMedia(fields);
+  const apartmentSizes = extractApartmentSizes(fields);
+  const infrastructureItems = splitListItems(fields.expo_field_33);
+  const investmentIntro = firstNonEmpty(
+    fields.expo_field_17,
+    fields.expo_field_18,
+    "Price varies by view and floor. Higher floors and better views command premium.",
+  );
+  const galleryImages = [
+    media[0] || participantFigmaAssets.galleryMain,
+    media[1] || participantFigmaAssets.galleryUpper,
+    media[2] || participantFigmaAssets.galleryUpdates,
+  ];
+  const infrastructureImages = [
+    media[3] || media[1] || participantFigmaAssets.infrastructureLeft,
+    media[4] || media[2] || participantFigmaAssets.infrastructureRight,
+  ];
+  const activeSizeIndex =
+    apartmentSizes.length > 1 ? 1 : apartmentSizes.length === 1 ? 0 : -1;
 
   return (
     <>
       {vis.investment ? (
-        <Section id="investment" className="bg-[#2ba8b0] px-4 py-16 text-white">
-          <div className="mx-auto max-w-4xl">
-            <h2 className="mb-8 text-2xl font-bold uppercase">Ներդրում</h2>
-            <div className="grid gap-6 md:grid-cols-3">
+        <Section id="investment" className="bg-[#2ba8b0] py-9 text-white lg:py-10">
+          <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
+            <h2 className="text-[clamp(1.55rem,2.1vw,1.95rem)] font-semibold uppercase">Investment</h2>
+            <p className="mt-4 max-w-[700px] text-sm leading-6 text-white/90 lg:text-[1.05rem] lg:leading-[1.4]">
+              {investmentIntro}
+            </p>
+            <div className="mt-7 grid gap-5 lg:grid-cols-3 lg:gap-6">
               {[
-                ["expo_field_07", "Մակերեսի min (դրամ)"],
-                ["expo_field_08", "Մակերեսի max (դրամ)"],
-                ["expo_field_17", "Միավոր min"],
-                ["expo_field_18", "Միավոր max"],
-                ["expo_field_10", "Բանկեր"],
-                ["expo_field_09", "Եկամտային հարկ"],
-              ].map(([k, lab]) =>
-                isFieldNonEmpty(fields[k]) ? (
-                  <div key={k} className="rounded-lg bg-white/10 p-4">
-                    <p className="text-sm text-white/80">{lab}</p>
-                    <p className="font-semibold">{fields[k]}</p>
+                {
+                  title: firstNonEmpty(fields.expo_field_17, "High ROI rental potential"),
+                  text: formatRange(fields.expo_field_17, fields.expo_field_18),
+                },
+                {
+                  title: "Price logic: view + higher floors",
+                  text: formatRange(fields.expo_field_07, fields.expo_field_08),
+                },
+                {
+                  title: "Ideal for seasonal rental",
+                  text: firstNonEmpty(fields.expo_field_10, fields.expo_field_09, "On request"),
+                },
+              ].map((item) => (
+                <div key={item.title} className="flex items-start gap-3.5">
+                  <img src={participantFigmaAssets.investmentIcon} alt="" className="mt-0.5 h-6 w-6 shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-[1rem] font-semibold leading-snug lg:text-[1.1rem]">{item.title}</p>
+                    <p className="mt-1.5 text-xs leading-5 text-white/88 lg:text-sm lg:leading-6">{item.text}</p>
                   </div>
-                ) : null,
-              )}
+                </div>
+              ))}
             </div>
           </div>
         </Section>
       ) : null}
 
       {vis.apartments ? (
-        <Section id="apartments" className="px-4 py-16">
-          <div className="mx-auto max-w-4xl">
-            <h2 className="mb-6 text-2xl font-bold text-[#2ba8b0]">Բնակարաններ</h2>
-            <pre className="whitespace-pre-wrap rounded-xl border border-[#2ba8b0]/30 bg-slate-50 p-4 text-sm">
-              {fields.expo_field_06}
-            </pre>
-            <div className="mt-4 grid gap-2 text-sm md:grid-cols-3">
-              {["expo_field_26", "expo_field_27", "expo_field_28"].map((k) =>
-                isFieldNonEmpty(fields[k]) ? (
-                  <p key={k}>
-                    <span className="text-slate-500">{k.replace("expo_field_", "")}: </span>
-                    {fields[k]}
-                  </p>
-                ) : null,
-              )}
+        <Section id="apartments" className="bg-white py-10">
+          <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
+            <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
+              Apartment options
+            </h2>
+            <div className="mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-4 xl:grid-cols-8">
+              {apartmentSizes.map((size, index) => (
+                <div
+                  key={size}
+                  className={`flex min-h-[92px] items-center justify-center rounded-[4px] border-[3px] px-3 text-center text-[1.15rem] font-semibold leading-tight lg:min-h-[108px] lg:text-[1.35rem] ${
+                    index === activeSizeIndex
+                      ? "border-[#2ba8b0] bg-[#2ba8b0] text-white"
+                      : "border-[#2ba8b0] text-[#2ba8b0]"
+                  }`}
+                >
+                  {size}
+                </div>
+              ))}
             </div>
-          </div>
-        </Section>
-      ) : null}
-
-      {vis.gallery ? (
-        <Section id="gallery" className="bg-slate-100 px-4 py-16">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="mb-6 text-2xl font-bold text-[#2ba8b0]">Պատկերասրահ</h2>
-            <GallerySlider
-              urls={[
-                ...parseMediaUrls(fields.expo_field_43),
-                ...parseMediaUrls(fields.expo_field_44),
-              ]}
-            />
-          </div>
-        </Section>
-      ) : null}
-
-      {vis.payment ? (
-        <Section id="payment" className="bg-[#ffd24d] px-4 py-16 text-slate-900">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="mb-4 text-2xl font-bold">Վճարման պայմաններ</h2>
-            <p className="whitespace-pre-wrap">{fields.expo_field_19}</p>
-            {isFieldNonEmpty(fields.expo_field_09) ? (
-              <p className="mt-4 font-medium">Եկամտային հարկ: {fields.expo_field_09}</p>
+            {isFieldNonEmpty(fields.expo_field_06) ? (
+              <p className="mt-6 max-w-[860px] text-base leading-7 text-black/80 whitespace-pre-wrap">
+                {fields.expo_field_06}
+              </p>
             ) : null}
           </div>
         </Section>
       ) : null}
 
+      {vis.gallery ? (
+        <Section id="gallery" className="bg-white px-5 py-5 lg:px-0 lg:py-0">
+          <div className="mx-auto max-w-[1920px]">
+            <div className="grid gap-0 lg:grid-cols-[minmax(0,820px)_400px_400px]">
+              <div className="relative min-h-[340px] overflow-hidden lg:min-h-[620px]">
+                <img src={galleryImages[0]} alt="" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-black/35" />
+                <div className="absolute bottom-6 left-5 text-white lg:left-[140px]">
+                  <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">Gallery</h2>
+                  <p className="mt-2 text-[clamp(1.05rem,1.5vw,1.7rem)]">Typical Renders</p>
+                </div>
+              </div>
+              <div className="relative min-h-[240px] overflow-hidden lg:min-h-[620px]">
+                <img src={galleryImages[1]} alt="" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-black/15" />
+                <p className="absolute bottom-5 left-5 text-xl text-white lg:text-2xl">Upper Levels</p>
+              </div>
+              <div className="relative min-h-[240px] overflow-hidden lg:min-h-[620px]">
+                <img src={galleryImages[2]} alt="" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-black/18" />
+                <p className="absolute bottom-5 left-5 max-w-[220px] text-xl text-white lg:text-2xl">Floorplan Updates</p>
+              </div>
+            </div>
+            <div className="pointer-events-none relative flex h-0 justify-between">
+              <img src={participantFigmaAssets.galleryArrowLeft} alt="" className="absolute left-4 top-[-370px] hidden h-[56px] w-[22px] lg:block" />
+              <img src={participantFigmaAssets.galleryArrowRight} alt="" className="absolute left-[760px] top-[-370px] hidden h-[56px] w-[22px] lg:block" />
+            </div>
+          </div>
+        </Section>
+      ) : null}
+
+      {vis.payment ? (
+        <Section id="payment" className="bg-[#ffd24d] py-10 text-black lg:py-14">
+          <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
+            <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">Payment conditions</h2>
+            <div className="mt-8 grid gap-6 border-black/15 lg:grid-cols-3 lg:divide-x lg:divide-black/25">
+              {[
+                {
+                  title: "Installment",
+                  text: firstNonEmpty(fields.expo_field_19, "On request"),
+                  icon: participantFigmaAssets.paymentInstallmentIcon,
+                },
+                {
+                  title: "Mortgage",
+                  text: firstNonEmpty(fields.expo_field_10, "On request"),
+                  icon: participantFigmaAssets.paymentMortgageIcon,
+                },
+                {
+                  title: "Income tax return",
+                  text: firstNonEmpty(fields.expo_field_09, "On request"),
+                  icon: participantFigmaAssets.paymentTaxIcon,
+                },
+              ].map((item) => (
+                <div key={item.title} className="lg:px-7">
+                  <img src={item.icon} alt="" className="h-[56px] w-[56px]" />
+                  <p className="mt-5 text-[1.3rem] font-semibold lg:text-[1.45rem]">{item.title}</p>
+                  <p className="mt-3 text-sm leading-7 lg:text-base">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Section>
+      ) : null}
+
       {vis.infrastructure ? (
-        <Section id="infrastructure" className="px-4 py-16">
-          <h2 className="mx-auto mb-6 max-w-3xl text-2xl font-bold text-[#2ba8b0]">
-            Ինֆրակառուցվածք
-          </h2>
-          <p className="mx-auto max-w-3xl whitespace-pre-wrap">{fields.expo_field_33}</p>
+        <Section id="infrastructure" className="bg-white py-10 lg:py-14">
+          <div
+            className={`mx-auto grid max-w-[1920px] gap-6 lg:grid-cols-[minmax(0,1fr)_400px_400px] ${PARTICIPANT_SECTION_INSET}`}
+          >
+            <div>
+              <h2 className="max-w-[360px] text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
+                Infrastructure & amenities
+              </h2>
+              <ul className="mt-7 space-y-3 text-base leading-7 text-black/82 lg:text-[1.15rem] lg:leading-[1.5]">
+                {infrastructureItems.map((item) => (
+                  <li key={item} className="ml-6 list-disc">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {infrastructureImages.map((image) => (
+              <div key={image} className="overflow-hidden">
+                <img src={image} alt="" className="h-full min-h-[220px] w-full object-cover lg:min-h-[320px]" />
+              </div>
+            ))}
+          </div>
         </Section>
       ) : null}
 
       {vis.construction ? (
-        <Section id="construction" className="bg-slate-900 px-4 py-16 text-white">
-          <div className="mx-auto max-w-4xl">
-            <h2 className="mb-8 text-2xl font-bold uppercase">Շինարարություն</h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                ["expo_field_20", "Տեսակ"],
-                ["expo_field_21", "Երեսպատում"],
-                ["expo_field_22", "Մեկուսացում"],
-                ["expo_field_25", "Հարկայնություն"],
-                ["expo_field_29", "Առաստաղ"],
-                ["expo_field_30", "Վերելակներ"],
-                ["expo_field_31", "Հանձնում"],
-                ["expo_field_23", "Հող"],
-                ["expo_field_24", "Բնակելի"],
-                ["expo_field_35", "Ջեռուցում"],
-                ["expo_field_36", "Հովացում"],
-              ].map(([k, lab]) =>
-                isFieldNonEmpty(fields[k]) ? (
-                  <div key={k} className="rounded-lg border border-white/10 p-3">
-                    <p className="text-xs text-[#2ba8b0]">{lab}</p>
-                    <p>{fields[k]}</p>
-                  </div>
-                ) : null,
-              )}
+        <Section id="construction" className="bg-[#192643] py-10 text-white lg:py-12">
+          <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
+            <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
+              Construction details
+            </h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-6">
+              {constructionCards.map((card) => (
+                <div key={card.key} className="flex flex-col items-center text-center">
+                  <img src={card.icon} alt="" className="h-[62px] w-[62px] object-contain" />
+                  <p className="mt-4 text-[1.15rem] font-semibold text-[#2ba8b0] lg:text-[1.25rem]">{card.label}</p>
+                  <p className="mt-2 text-sm leading-7 text-white/88 lg:text-base">{firstNonEmpty(fields[card.key], "On request")}</p>
+                </div>
+              ))}
             </div>
           </div>
         </Section>
       ) : null}
 
       {vis.parking ? (
-        <Section id="parking" className="bg-[#2ba8b0] px-4 py-16 text-white">
-          <div className="mx-auto max-w-4xl">
-            <h2 className="mb-6 text-2xl font-bold">Կայանատեղի և կոմերցիոն</h2>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-              {[
-                ["expo_field_37", "Բաց"],
-                ["expo_field_38", "Փակ"],
-                ["expo_field_39", "Չափ"],
-                ["expo_field_40", "Արժեք"],
-                ["expo_field_41", "Կոմերցիոն"],
-              ].map(([k, lab]) =>
-                isFieldNonEmpty(fields[k]) ? (
-                  <div key={k}>
-                    <p className="text-sm text-white/80">{lab}</p>
-                    <p className="font-semibold">{fields[k]}</p>
-                  </div>
-                ) : null,
-              )}
+        <Section id="parking" className="bg-[#2ba8b0] py-10 text-white lg:py-12">
+          <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
+            <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#192643]">
+              Parking & commercial
+            </h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
+              {parkingCards.map((card) => (
+                <div key={card.key} className="flex flex-col items-center text-center">
+                  <img src={card.icon} alt="" className="h-[62px] w-[62px] object-contain" />
+                  <p className="mt-4 text-[1.15rem] font-semibold text-[#192643] lg:text-[1.25rem]">{card.label}</p>
+                  <p className="mt-2 text-sm leading-7 lg:text-base">{firstNonEmpty(fields[card.key], "On request")}</p>
+                </div>
+              ))}
             </div>
-            {isFieldNonEmpty(fields.expo_field_42) ? (
-              <p className="mt-6 text-sm whitespace-pre-wrap">{fields.expo_field_42}</p>
-            ) : null}
           </div>
         </Section>
       ) : null}
 
       {vis.tours ? (
-        <Section id="tours" className="px-4 py-16">
-          <div className="mx-auto max-w-4xl space-y-10">
-            <h2 className="border-b border-[#2eb0b4] pb-2 text-2xl font-bold uppercase tracking-wide text-[#2eb0b4]">
+        <Section id="tours" className="bg-white py-10">
+          <div className={`mx-auto max-w-[1536px] space-y-8 ${PARTICIPANT_SECTION_INSET}`}>
+            <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
               Tours &amp; Media
             </h2>
             {isFieldNonEmpty(fields.expo_field_45) ? (
               <div>
+                <div className="mb-0 inline-flex rounded-t-[10px] bg-[#ffd24d] px-6 py-2 text-base font-semibold uppercase text-white lg:px-7">
+                  3D tour
+                </div>
                 <Tour3DBlock
                   url={fields.expo_field_45}
-                  title={fields.expo_field_02 || "Տիպային տուր"}
+                  title={fields.expo_field_02 || "3D Tour"}
                 />
-                <p className="mt-2 text-sm text-slate-500">Տիպային ինտերակտիվ տուր</p>
-              </div>
-            ) : null}
-            {isFieldNonEmpty(fields.expo_field_47) ? (
-              <div>
-                <Tour3DBlock
-                  url={fields.expo_field_47}
-                  title={fields.expo_field_02 || "Արտաքին տուր"}
-                />
-                <p className="mt-2 text-sm text-slate-500">Արտաքին ինտերակտիվ տուր</p>
               </div>
             ) : null}
             {isFieldNonEmpty(fields.expo_field_46) ? (
               <div>
+                <div className="mb-0 inline-flex rounded-t-[10px] bg-[#ffd24d] px-6 py-2 text-base font-semibold uppercase text-white lg:px-7">
+                  Video
+                </div>
                 <VideoEmbedBlock
                   url={fields.expo_field_46}
                   title={fields.expo_field_02}
                 />
-                <p className="mt-2 text-sm text-slate-500">Տեսանյութ</p>
               </div>
             ) : null}
-            {isFieldNonEmpty(fields.expo_field_48) ? (
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <span className="mb-2 inline-block rounded bg-[#ffd24d] px-2.5 py-1 text-xs font-bold uppercase text-slate-900">
-                  2D
-                </span>
-                <p className="mb-2 font-medium text-slate-800">2D հատակագծեր</p>
-                <a
-                  href={fields.expo_field_48}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="break-all text-[#2eb0b4] underline"
-                >
-                  Բացել հղումը
-                </a>
-              </div>
-            ) : null}
-            {isFieldNonEmpty(fields.expo_field_49) ? (
+            {isFieldNonEmpty(fields.expo_field_47) ? (
               <div>
+                <div className="mb-0 inline-flex rounded-t-[10px] bg-[#ffd24d] px-6 py-2 text-base font-semibold uppercase text-white lg:px-7">
+                  Media
+                </div>
                 <Tour3DBlock
-                  url={fields.expo_field_49}
-                  title={fields.expo_field_02 || "3D"}
+                  url={fields.expo_field_47}
+                  title={fields.expo_field_02 || "Media"}
                 />
-                <p className="mt-2 text-sm text-slate-500">3D / վիզուալիզացիա</p>
               </div>
             ) : null}
           </div>
         </Section>
       ) : null}
 
-      {vis.location && parseLatLng(fields.expo_field_16) ? (
-        <Section id="location" className="bg-slate-100 px-0 py-0">
-          <h2 className="sr-only">Տեղադիրք</h2>
-          <div className="h-[400px] w-full">
-            <HomeMapPreview
-              markers={[
-                {
-                  lat: parseLatLng(fields.expo_field_16)!.lat,
-                  lng: parseLatLng(fields.expo_field_16)!.lng,
-                  label: fields.expo_field_15 || title,
-                },
-              ]}
-              className="h-full w-full"
-            />
-          </div>
-          {isFieldNonEmpty(fields.expo_field_15) ? (
-            <p className="px-4 py-4 text-center text-slate-700">{fields.expo_field_15}</p>
-          ) : null}
-        </Section>
-      ) : vis.location && isFieldNonEmpty(fields.expo_field_15) ? (
-        <Section id="location" className="px-4 py-8">
-          <p>{fields.expo_field_15}</p>
-        </Section>
-      ) : null}
-
-      {vis.footer ? (
-        <footer id="contacts" className="border-t border-slate-200 bg-slate-900 px-4 py-12 text-white">
-          <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 sm:flex-row sm:justify-between">
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
-              {isFieldNonEmpty(fields.expo_field_51) ? (
-                <a href={fields.expo_field_51} className="text-[#2ba8b0] underline" target="_blank" rel="noreferrer">
-                  Կայք
-                </a>
-              ) : null}
-              {isFieldNonEmpty(fields.expo_field_52) ? (
-                <a href={fields.expo_field_52} className="text-[#2ba8b0] underline" target="_blank" rel="noreferrer">
-                  Instagram
-                </a>
-              ) : null}
-              {isFieldNonEmpty(fields.expo_field_53) ? (
-                <a href={fields.expo_field_53} className="text-[#2ba8b0] underline" target="_blank" rel="noreferrer">
-                  Facebook
-                </a>
-              ) : null}
-            </div>
-            <Link href="/" className="text-sm text-slate-400">
-              ← Toon Expo
-            </Link>
-          </div>
-        </footer>
-      ) : (
-        <footer className="border-t bg-slate-900 px-4 py-8 text-center text-slate-400">
-          <Link href="/">Toon Expo</Link>
-        </footer>
-      )}
     </>
   );
 }

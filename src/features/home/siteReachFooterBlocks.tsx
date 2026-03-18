@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment } from "react";
+import Link from "next/link";
 
 const VIEW_APARTMENTS_SIDE_ICON_CLASS = "h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11";
 const FOOTER_SOCIAL_FB_IMG_CLASS = "h-[22px] w-[10px] shrink-0 object-contain object-left";
@@ -117,7 +118,7 @@ export function FooterBottomNav({
 
 export function ReachOutCta({ className = "" }: { className?: string }) {
   return (
-    <a
+    <Link
       href="/#contacts"
       className={`inline-flex items-center justify-center gap-1.5 rounded-full bg-[#fbcd06] px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-black transition hover:brightness-105 ${className}`.trim()}
     >
@@ -126,7 +127,7 @@ export function ReachOutCta({ className = "" }: { className?: string }) {
         <img src={BLOCK_FIGMA.reachOutCircle} alt="" className="absolute inset-0 h-full w-full" />
         <img src={BLOCK_FIGMA.reachOutTarget} alt="" className="relative h-4 w-4" />
       </span>
-    </a>
+    </Link>
   );
 }
 

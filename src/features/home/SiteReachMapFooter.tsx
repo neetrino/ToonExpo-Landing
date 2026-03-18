@@ -60,12 +60,12 @@ export function SiteReachMapFooter({ projects }: { projects: HomeProject[] }) {
             </div>
             <div className="relative z-[2] flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex flex-wrap items-center">
-                <a
+                <Link
                   href="/#projects"
                   className="text-xl font-semibold uppercase tracking-[0.14em] text-white lg:text-[2rem]"
                 >
                   View Apartments
-                </a>
+                </Link>
               </div>
               <div className="flex justify-center lg:hidden">
                 <SocialTilesRow
