@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/shared/lib/db";
 import { normalizeExpoFields } from "@/shared/lib/expoFields";
 import { EditProjectFormClient } from "@/features/builders/components/EditProjectFormClient";
+import { DeleteProjectButton } from "@/features/builders/components/DeleteProjectButton";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -30,13 +31,16 @@ export default async function EditProjectPage({ params }: Props) {
             Խմբագրել — {project.slug}
           </h1>
         </div>
-        <Link
-          href={`/p/${project.slug}`}
-          target="_blank"
-          className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
-        >
-          Դիտել լենդինգը →
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href={`/p/${project.slug}`}
+            target="_blank"
+            className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+          >
+            Բացել լենդինգը →
+          </Link>
+          <DeleteProjectButton projectId={project.id} slug={project.slug} />
+        </div>
       </div>
 
       <EditProjectFormClient
