@@ -40,6 +40,9 @@ export type ProjectFieldsFormProps = {
   sectionId?: ExpoEditSectionId;
 };
 
+const FIELD_INPUT_CLASS =
+  "min-w-0 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm focus:border-[#2eb0b4] focus:outline-none focus:ring-1 focus:ring-[#2eb0b4]";
+
 function FieldRow({
   keyId,
   label,
@@ -59,23 +62,42 @@ function FieldRow({
         {label}
       </label>
       {isLong ? (
-        <textarea
-          id={keyId}
-          name={keyId}
-          rows={4}
-          defaultValue={val}
-          className="rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm focus:border-[#2eb0b4] focus:outline-none focus:ring-1 focus:ring-[#2eb0b4]"
-        />
+        <>
+          <textarea
+            id={keyId}
+            name={keyId}
+            rows={4}
+            defaultValue={val}
+            className={FIELD_INPUT_CLASS}
+          />
+          {isUrl ? (
+            <div className="flex justify-end pt-1">
+              <UploadFieldButton inputName={keyId} />
+            </div>
+          ) : null}
+        </>
+      ) : isUrl ? (
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
+          <input
+            id={keyId}
+            name={keyId}
+            type="text"
+            defaultValue={val}
+            className={`${FIELD_INPUT_CLASS} sm:flex-1`}
+          />
+          <div className="flex shrink-0 items-center sm:items-stretch">
+            <UploadFieldButton inputName={keyId} />
+          </div>
+        </div>
       ) : (
         <input
           id={keyId}
           name={keyId}
           type="text"
           defaultValue={val}
-          className="rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm focus:border-[#2eb0b4] focus:outline-none focus:ring-1 focus:ring-[#2eb0b4]"
+          className={FIELD_INPUT_CLASS}
         />
       )}
-      {isUrl ? <UploadFieldButton inputName={keyId} /> : null}
     </div>
   );
 }

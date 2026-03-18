@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 
+const BTN_CLASS =
+  "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-lg bg-[#2eb0b4] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#269a9e] disabled:opacity-50";
+
 type Props = {
   inputName: string;
 };
@@ -28,7 +31,7 @@ export function UploadFieldButton({ inputName }: Props) {
       }
       if (data.url) {
         const input = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(
-          `[name="${inputName}"]`,
+          `[name="${CSS.escape(inputName)}"]`,
         );
         if (input) {
           input.value = data.url;
@@ -42,8 +45,8 @@ export function UploadFieldButton({ inputName }: Props) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <label className="cursor-pointer text-sm text-[#2ba8b0] underline">
+    <div className="flex flex-col gap-1">
+      <label className={`${BTN_CLASS} ${busy ? "pointer-events-none" : ""}`}>
         {busy ? "…" : "Վերբեռնել"}
         <input type="file" className="sr-only" accept="image/*,application/pdf" onChange={onFile} />
       </label>
