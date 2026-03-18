@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { parseLatLng, parseMediaUrls } from "@/shared/lib/mediaUrls";
@@ -16,9 +16,12 @@ const HERO_TITLE = "TOON EXPO 2026. INVEST";
 const HERO_SUBTITLE = "interactive map";
 /** Սոցիալ SVG-ներ View Apartments-ի կողքին (FB, IG) — կոմպակտ չափ։ */
 const VIEW_APARTMENTS_SIDE_ICON_CLASS = "h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11";
-/** Ֆուտերի ադմին հղման նշաններ (Figma badge + mark), կոմպակտ չափ։ */
-const FOOTER_ADMIN_BADGE_IMG_CLASS = "h-6 w-6 shrink-0 object-contain";
-const FOOTER_ADMIN_MARK_IMG_CLASS = "h-6 w-3 shrink-0 object-contain";
+/** Ֆուտեր — Instagram (badge) և Facebook (mark), Figma նկարի հերթականությամբ FB → IG։ */
+const FOOTER_SOCIAL_FB_IMG_CLASS = "h-[22px] w-[10px] shrink-0 object-contain object-left";
+const FOOTER_SOCIAL_IG_IMG_CLASS = "h-[22px] w-[22px] shrink-0 object-contain";
+const FOOTER_NAV_LINK_CLASS =
+  "whitespace-nowrap text-white/90 transition hover:text-white text-[clamp(0.5625rem,1.65vw,0.8125rem)] tracking-[0.1em] sm:tracking-[0.14em]";
+const FOOTER_NAV_PIPE_CLASS = "shrink-0 px-1 text-white/45 select-none sm:px-1.5";
 
 const FIGMA_ASSETS = {
   heroBg: "/figma/home/heroBg.jpg",
@@ -41,6 +44,14 @@ const FIGMA_ASSETS = {
   cardImageB: "/figma/home/cardImageB.jpg",
   cardImageC: "/figma/home/cardImageC.jpg",
 } as const;
+
+const FOOTER_NAV_ITEMS = [
+  { href: "#top", label: "About" },
+  { href: "#events", label: "Events" },
+  { href: "#participants", label: "Participants" },
+  { href: "#projects", label: "Projects" },
+  { href: "#contacts", label: "Contacts" },
+] as const;
 function projectTitle(f: Record<string, string>): string {
   return f.expo_field_02?.trim() || f.expo_field_01?.trim() || "—";
 }
@@ -87,10 +98,99 @@ function buildMarkers(list: HomeProject[]): MapMarker[] {
   return markers;
 }
 
+function FooterBottomNav({
+  facebookUrl,
+  instagramUrl,
+  alignWithIllustration = false,
+}: {
+  facebookUrl: string;
+  instagramUrl: string;
+  /** Երբ true — աջ սյունակում նկարի վերև, հավասարում աջ։ */
+  alignWithIllustration?: boolean;
+}) {
+  const fbIcon = (
+    <img
+      src={FIGMA_ASSETS.footerBadgeMark}
+      alt=""
+      className={FOOTER_SOCIAL_FB_IMG_CLASS}
+      width={10}
+      height={22}
+    />
+  );
+  const igIcon = (
+    <img
+      src={FIGMA_ASSETS.footerBadge}
+      alt=""
+      className={FOOTER_SOCIAL_IG_IMG_CLASS}
+      width={22}
+      height={22}
+    />
+  );
+
+  /** alignWithIllustration-ում չի կիրառում justify-end — նեղ սյունակում About/Events-ը կտրվում էին։ */
+  const rowAlign = alignWithIllustration ? "justify-start" : "justify-center";
+
+  return (
+    <nav
+      aria-label="Footer"
+      className={`flex w-full min-w-0 flex-nowrap items-center gap-x-1 overflow-x-auto overscroll-x-contain font-medium uppercase text-white sm:[scrollbar-width:thin] ${rowAlign}`}
+    >
+      <div className={`flex min-w-0 shrink-0 flex-nowrap items-center ${rowAlign}`}>
+        {FOOTER_NAV_ITEMS.map((item, index) => (
+          <Fragment key={item.href}>
+            {index > 0 ? (
+              <span className={FOOTER_NAV_PIPE_CLASS} aria-hidden>
+                |
+              </span>
+            ) : null}
+            <a href={item.href} className={FOOTER_NAV_LINK_CLASS}>
+              {item.label}
+            </a>
+          </Fragment>
+        ))}
+      </div>
+      <div
+        className={`flex shrink-0 items-center gap-4 pl-4 sm:pl-8 ${alignWithIllustration ? "lg:pl-6" : "lg:pl-10"}`}
+      >
+        {facebookUrl ? (
+          <a
+            href={facebookUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Facebook"
+            className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80"
+          >
+            {fbIcon}
+          </a>
+        ) : (
+          <span className="inline-flex opacity-45" aria-hidden>
+            {fbIcon}
+          </span>
+        )}
+        {instagramUrl ? (
+          <a
+            href={instagramUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Instagram"
+            className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80"
+          >
+            {igIcon}
+          </a>
+        ) : (
+          <span className="inline-flex opacity-45" aria-hidden>
+            {igIcon}
+          </span>
+        )}
+      </div>
+    </nav>
+  );
+}
+
 function ReachOutCta({ className = "" }: { className?: string }) {
   return (
     <a
-      href="/#location"
+      href="/#contacts"
       className={`inline-flex items-center justify-center gap-1.5 rounded-full bg-[#fbcd06] px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-black transition hover:brightness-105 ${className}`.trim()}
     >
       Reach Out
@@ -207,7 +307,10 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           </div>
         </header>
 
-        <section className="relative z-10 px-5 pb-16 pt-8 lg:px-10 lg:pb-28">
+        <section
+          id="events"
+          className="relative z-10 scroll-mt-6 px-5 pb-16 pt-8 lg:px-10 lg:pb-28"
+        >
           <div className="mx-auto max-w-[1680px]">
             <div className="mb-8 text-center">
               <p className="text-[clamp(2rem,4vw,3rem)] font-semibold uppercase tracking-[0.08em] text-white">
@@ -243,14 +346,17 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
       </div>
 
       <main className="bg-[#246976]">
-        <section id="projects" className="mx-auto max-w-[1680px] px-5 py-10 lg:px-10 lg:py-12">
+        <section
+          id="participants"
+          className="mx-auto max-w-[1680px] scroll-mt-6 px-5 py-10 lg:px-10 lg:py-12"
+        >
           {filtered.length === 0 ? (
             <p className="rounded-[12px] border border-[#18fffb]/40 bg-white/8 px-6 py-12 text-center text-lg text-white/80">
               Արդյունք չկա
             </p>
           ) : (
             <>
-              <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <ul id="projects" className="grid scroll-mt-6 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filtered.map((project, index) => (
                   <li key={project.id}>
                     <ProjectCard project={project} index={index} />
@@ -266,7 +372,10 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           )}
         </section>
 
-        <section id="location" className="mx-auto max-w-[1680px] px-5 pb-10 lg:px-10 lg:pb-14">
+        <section
+          id="contacts"
+          className="mx-auto max-w-[1680px] scroll-mt-6 px-5 pb-10 lg:px-10 lg:pb-14"
+        >
           <div className="mb-6 flex items-center gap-4">
             <h2 className="text-2xl font-semibold uppercase tracking-[0.12em] text-white lg:text-[2.5rem]">
               Location
@@ -324,50 +433,27 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
       </main>
 
       <footer className="bg-[#050b10] px-5 py-8 lg:px-10">
-        <div className="mx-auto flex max-w-[1680px] flex-col gap-6 text-white/70 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-start gap-4">
-            <img src={FIGMA_ASSETS.footerLogo} alt="" className="h-14 w-14 shrink-0" />
-            <div>
-              <p className="text-2xl font-bold uppercase tracking-[0.08em] text-white">Toon Expo</p>
-              <p className="mt-3 text-sm uppercase tracking-[0.16em] text-white/55">
+        <div className="mx-auto max-w-[1680px]">
+          <div className="flex flex-col gap-8 text-white/70 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-center gap-4">
+              <img src={FIGMA_ASSETS.footerLogo} alt="" className="h-14 w-14 shrink-0" />
+              <p className="text-sm uppercase tracking-[0.16em] text-white/55">
                 © 2026 Toon Expo. All rights reserved.
               </p>
             </div>
-          </div>
-          <div className="hidden lg:block lg:w-[340px]">
-            <img src={FIGMA_ASSETS.footerIllustration} alt="" className="ml-auto w-full max-w-[320px] opacity-90" />
-          </div>
-          <nav className="flex flex-wrap gap-x-5 gap-y-3 text-sm uppercase tracking-[0.18em]">
-            <a href="#top" className="transition hover:text-white">
-              About
-            </a>
-            <a href="#projects" className="transition hover:text-white">
-              Participants
-            </a>
-            <a href="#location" className="transition hover:text-white">
-              Location
-            </a>
-            <Link
-              href="/admin/login"
-              aria-label="Admin"
-              className="inline-flex items-center gap-1.5 opacity-90 transition hover:opacity-100"
-            >
-              <img
-                src={FIGMA_ASSETS.footerBadge}
-                alt=""
-                className={FOOTER_ADMIN_BADGE_IMG_CLASS}
-                width={24}
-                height={24}
+            <div className="flex w-full flex-col items-center gap-6 lg:w-[min(100%,min(90vw,640px))] lg:shrink-0 lg:items-end">
+              <FooterBottomNav
+                facebookUrl={footerFacebook}
+                instagramUrl={footerInstagram}
+                alignWithIllustration
               />
               <img
-                src={FIGMA_ASSETS.footerBadgeMark}
+                src={FIGMA_ASSETS.footerIllustration}
                 alt=""
-                className={FOOTER_ADMIN_MARK_IMG_CLASS}
-                width={12}
-                height={24}
+                className="w-full max-w-[320px] opacity-90 lg:ml-0 lg:mr-0"
               />
-            </Link>
-          </nav>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
