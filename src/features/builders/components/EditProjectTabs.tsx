@@ -7,10 +7,15 @@ import {
 } from "@/shared/constants/expoFieldKeys";
 import type { ExpoFieldsFormValues } from "@/shared/lib/expoFields";
 import { ProjectFieldsForm } from "@/features/builders/components/ProjectFieldsForm";
+import { DeleteProjectButton } from "@/features/builders/components/DeleteProjectButton";
 
-type Props = { defaults: ExpoFieldsFormValues };
+type Props = {
+  defaults: ExpoFieldsFormValues;
+  projectId: string;
+  deleteConfirmSlug: string;
+};
 
-export function EditProjectTabs({ defaults }: Props) {
+export function EditProjectTabs({ defaults, projectId, deleteConfirmSlug }: Props) {
   const [activeId, setActiveId] = useState<ExpoEditSectionId>(EXPO_EDIT_SECTIONS[0].id);
 
   return (
@@ -68,6 +73,13 @@ export function EditProjectTabs({ defaults }: Props) {
             );
           })}
         </nav>
+        <div className="mt-3 border-t border-slate-200/80 pt-3">
+          <DeleteProjectButton
+            projectId={projectId}
+            slug={deleteConfirmSlug}
+            className="w-full justify-center"
+          />
+        </div>
       </aside>
 
       <div className="min-h-[24rem] min-w-0 flex-1">
