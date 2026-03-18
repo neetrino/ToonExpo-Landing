@@ -22,6 +22,10 @@ const FOOTER_SOCIAL_IG_IMG_CLASS = "h-[22px] w-[22px] shrink-0 object-contain";
 const FOOTER_NAV_LINK_CLASS =
   "whitespace-nowrap text-white/90 transition hover:text-white text-[clamp(0.5625rem,1.65vw,0.8125rem)] tracking-[0.1em] sm:tracking-[0.14em]";
 const FOOTER_NAV_PIPE_CLASS = "shrink-0 px-1 text-white/45 select-none sm:px-1.5";
+/** Ֆուտերի © / Privacy — նույն տիպոգրաֆիա։ */
+const FOOTER_LEGAL_TEXT_CLASS =
+  "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
+const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_TEXT_CLASS} shrink-0 transition hover:text-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050b10]`;
 
 const FIGMA_ASSETS = {
   heroBg: "/figma/home/heroBg.jpg",
@@ -129,13 +133,14 @@ function FooterBottomNav({
 
   /** alignWithIllustration-ում չի կիրառում justify-end — նեղ սյունակում About/Events-ը կտրվում էին։ */
   const rowAlign = alignWithIllustration ? "justify-start" : "justify-center";
+  const navLinksOffsetClass = alignWithIllustration ? "pl-14 sm:pl-20 lg:pl-32" : "";
 
   return (
     <nav
       aria-label="Footer"
       className={`flex w-full min-w-0 flex-nowrap items-center gap-x-1 overflow-x-auto overscroll-x-contain font-medium uppercase text-white sm:[scrollbar-width:thin] ${rowAlign}`}
     >
-      <div className={`flex min-w-0 shrink-0 flex-nowrap items-center ${rowAlign}`}>
+      <div className={`flex min-w-0 shrink-0 flex-nowrap items-center ${rowAlign} ${navLinksOffsetClass}`}>
         {FOOTER_NAV_ITEMS.map((item, index) => (
           <Fragment key={item.href}>
             {index > 0 ? (
@@ -432,16 +437,25 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
         </section>
       </main>
 
-      <footer className="bg-[#050b10] px-5 py-8 lg:px-10">
+      <footer className="bg-[#050b10] px-5 py-4 lg:px-10 lg:py-5">
         <div className="mx-auto max-w-[1680px]">
-          <div className="flex flex-col gap-8 text-white/70 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex items-center gap-4">
-              <img src={FIGMA_ASSETS.footerLogo} alt="" className="h-14 w-14 shrink-0" />
-              <p className="text-sm uppercase tracking-[0.16em] text-white/55">
-                © 2026 Toon Expo. All rights reserved.
-              </p>
+          <div className="flex flex-col gap-4 text-white/70 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex w-full min-w-0 max-w-full flex-col items-start gap-3 sm:gap-4">
+              <img src={FIGMA_ASSETS.footerLogo} alt="" className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" />
+              <div
+                className="flex max-w-full flex-nowrap items-baseline gap-x-7 overflow-x-auto overscroll-x-contain sm:gap-x-10 sm:[scrollbar-width:thin]"
+                role="group"
+                aria-label="Legal"
+              >
+                <p className={`${FOOTER_LEGAL_TEXT_CLASS} shrink-0`}>
+                  © 2026 TOON EXPO. All rights reserved.
+                </p>
+                <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
+                  Privacy policy
+                </Link>
+              </div>
             </div>
-            <div className="flex w-full flex-col items-center gap-6 lg:w-[min(100%,min(90vw,640px))] lg:shrink-0 lg:items-end">
+            <div className="flex w-full flex-col items-center gap-3 lg:w-[min(100%,min(90vw,640px))] lg:shrink-0 lg:items-end">
               <FooterBottomNav
                 facebookUrl={footerFacebook}
                 instagramUrl={footerInstagram}
@@ -450,7 +464,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
               <img
                 src={FIGMA_ASSETS.footerIllustration}
                 alt=""
-                className="w-full max-w-[320px] opacity-90 lg:ml-0 lg:mr-0"
+                className="w-full max-w-[220px] opacity-90 lg:ml-0 lg:mr-0"
               />
             </div>
           </div>
