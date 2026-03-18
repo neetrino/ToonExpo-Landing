@@ -1,10 +1,16 @@
-import { EXPO_FIELD_GROUPS, EXPO_FIELD_LABELS_HY } from "@/shared/constants/expoFieldKeys";
+import {
+  EXPO_FIELD_GROUPS,
+  EXPO_FIELD_LABELS_HY,
+  type ExpoFieldGroupId,
+} from "@/shared/constants/expoFieldKeys";
 import type { ExpoFieldsFormValues } from "@/shared/lib/expoFields";
 import { UploadFieldButton } from "@/features/builders/components/UploadFieldButton";
+import { MediaListField } from "@/features/builders/components/MediaListField";
+
+/** Multiple images (gallery): upload several or add URLs */
+const MEDIA_LIST_FIELD_KEYS = new Set(["expo_field_43", "expo_field_44"]);
 
 const URL_FIELD_KEYS = new Set([
-  "expo_field_43",
-  "expo_field_44",
   "expo_field_45",
   "expo_field_46",
   "expo_field_47",
@@ -24,48 +30,93 @@ const LONG_FIELDS = new Set([
   "expo_field_42",
 ]);
 
-type Props = {
+export type ProjectFieldsFormProps = {
   defaults: ExpoFieldsFormValues;
+  /** If set, only this group is rendered (for tabbed edit) */
+  groupId?: ExpoFieldGroupId;
 };
 
-export function ProjectFieldsForm({ defaults }: Props) {
+function FieldRow({
+  keyId,
+  label,
+  val,
+  isUrl,
+  isLong,
+}: {
+  keyId: string;
+  label: string;
+  val: string;
+  isUrl: boolean;
+  isLong: boolean;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label htmlFor={keyId} className="text-sm font-medium text-slate-700">
+        {label}
+      </label>
+      {isLong ? (
+        <textarea
+          id={keyId}
+          name={keyId}
+          rows={4}
+          defaultValue={val}
+          className="rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm focus:border-[#2eb0b4] focus:outline-none focus:ring-1 focus:ring-[#2eb0b4]"
+        />
+      ) : (
+        <input
+          id={keyId}
+          name={keyId}
+          type="text"
+          defaultValue={val}
+          className="rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm focus:border-[#2eb0b4] focus:outline-none focus:ring-1 focus:ring-[#2eb0b4]"
+        />
+      )}
+      {isUrl ? <UploadFieldButton inputName={keyId} /> : null}
+    </div>
+  );
+}
+
+export function ProjectFieldsForm({ defaults, groupId }: ProjectFieldsFormProps) {
   const d = defaults as Record<string, string>;
+  const groups = groupId
+    ? EXPO_FIELD_GROUPS.filter((g) => g.id === groupId)
+    : EXPO_FIELD_GROUPS;
 
   return (
-    <div className="flex flex-col gap-10">
-      {EXPO_FIELD_GROUPS.map((group) => (
-        <fieldset key={group.id} className="rounded-xl border border-slate-200 p-4">
-          <legend className="px-2 text-lg font-semibold text-slate-800">{group.titleHy}</legend>
+    <div className="flex flex-col gap-6">
+      {groups.map((group) => (
+        <fieldset
+          key={group.id}
+          className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+        >
+          <legend className="px-2 text-base font-semibold text-slate-800">
+            {group.titleHy}
+          </legend>
           <div className="mt-4 flex flex-col gap-4">
             {group.keys.map((key) => {
               const label = EXPO_FIELD_LABELS_HY[key] ?? key;
               const val = d[key] ?? "";
+              if (MEDIA_LIST_FIELD_KEYS.has(key)) {
+                return (
+                  <MediaListField
+                    key={key}
+                    name={key}
+                    label={label}
+                    defaultValue={val}
+                  />
+                );
+              }
               const isUrl = URL_FIELD_KEYS.has(key);
               const isLong = LONG_FIELDS.has(key) || key === "expo_field_19";
               return (
-                <div key={key} className="flex flex-col gap-1">
-                  <label htmlFor={key} className="text-sm font-medium text-slate-700">
-                    {label}
-                  </label>
-                  {isLong ? (
-                    <textarea
-                      id={key}
-                      name={key}
-                      rows={4}
-                      defaultValue={val}
-                      className="rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm"
-                    />
-                  ) : (
-                    <input
-                      id={key}
-                      name={key}
-                      type="text"
-                      defaultValue={val}
-                      className="rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm"
-                    />
-                  )}
-                  {isUrl ? <UploadFieldButton inputName={key} /> : null}
-                </div>
+                <FieldRow
+                  key={key}
+                  keyId={key}
+                  label={label}
+                  val={val}
+                  isUrl={isUrl}
+                  isLong={isLong}
+                />
               );
             })}
           </div>

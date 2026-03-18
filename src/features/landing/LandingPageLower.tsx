@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { parseLatLng, parseMediaUrls } from "@/shared/lib/mediaUrls";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
@@ -6,6 +5,9 @@ import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/lib/blockVisibility";
 
 import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
+import { GallerySlider } from "@/features/landing/GallerySlider";
+import { Tour3DBlock } from "@/features/landing/Tour3DBlock";
+import { VideoEmbedBlock } from "@/features/landing/VideoEmbedBlock";
 
 function Section({
   id,
@@ -83,15 +85,12 @@ export function LandingPageLower({ fields, title }: Props) {
         <Section id="gallery" className="bg-slate-100 px-4 py-16">
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-6 text-2xl font-bold text-[#2ba8b0]">Պատկերասրահ</h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {[...parseMediaUrls(fields.expo_field_43), ...parseMediaUrls(fields.expo_field_44)].map(
-                (url, i) => (
-                  <div key={`${url}-${i}`} className="relative aspect-video overflow-hidden rounded-lg">
-                    <Image src={url} alt="" fill className="object-cover" sizes="(max-width:768px) 100vw, 33vw" />
-                  </div>
-                ),
-              )}
-            </div>
+            <GallerySlider
+              urls={[
+                ...parseMediaUrls(fields.expo_field_43),
+                ...parseMediaUrls(fields.expo_field_44),
+              ]}
+            />
           </div>
         </Section>
       ) : null}
@@ -176,29 +175,62 @@ export function LandingPageLower({ fields, title }: Props) {
 
       {vis.tours ? (
         <Section id="tours" className="px-4 py-16">
-          <div className="mx-auto max-w-4xl space-y-8">
-            <h2 className="text-2xl font-bold text-[#2ba8b0]">Տուրեր և մեդիա</h2>
-            {[
-              ["expo_field_45", "Տիպային տուր"],
-              ["expo_field_47", "Արտաքին տուր"],
-              ["expo_field_46", "Տեսանյութ"],
-              ["expo_field_48", "2D"],
-              ["expo_field_49", "3D"],
-            ].map(([k, lab]) =>
-              isFieldNonEmpty(fields[k]) ? (
-                <div key={k}>
-                  <p className="mb-2 font-medium">{lab}</p>
-                  <a
-                    href={fields[k]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="break-all text-[#2ba8b0] underline"
-                  >
-                    {fields[k]}
-                  </a>
-                </div>
-              ) : null,
-            )}
+          <div className="mx-auto max-w-4xl space-y-10">
+            <h2 className="border-b border-[#2eb0b4] pb-2 text-2xl font-bold uppercase tracking-wide text-[#2eb0b4]">
+              Tours &amp; Media
+            </h2>
+            {isFieldNonEmpty(fields.expo_field_45) ? (
+              <div>
+                <Tour3DBlock
+                  url={fields.expo_field_45}
+                  title={fields.expo_field_02 || "Տիպային տուր"}
+                />
+                <p className="mt-2 text-sm text-slate-500">Տիպային ինտերակտիվ տուր</p>
+              </div>
+            ) : null}
+            {isFieldNonEmpty(fields.expo_field_47) ? (
+              <div>
+                <Tour3DBlock
+                  url={fields.expo_field_47}
+                  title={fields.expo_field_02 || "Արտաքին տուր"}
+                />
+                <p className="mt-2 text-sm text-slate-500">Արտաքին ինտերակտիվ տուր</p>
+              </div>
+            ) : null}
+            {isFieldNonEmpty(fields.expo_field_46) ? (
+              <div>
+                <VideoEmbedBlock
+                  url={fields.expo_field_46}
+                  title={fields.expo_field_02}
+                />
+                <p className="mt-2 text-sm text-slate-500">Տեսանյութ</p>
+              </div>
+            ) : null}
+            {isFieldNonEmpty(fields.expo_field_48) ? (
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <span className="mb-2 inline-block rounded bg-[#ffd24d] px-2.5 py-1 text-xs font-bold uppercase text-slate-900">
+                  2D
+                </span>
+                <p className="mb-2 font-medium text-slate-800">2D հատակագծեր</p>
+                <a
+                  href={fields.expo_field_48}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="break-all text-[#2eb0b4] underline"
+                >
+                  Բացել հղումը
+                </a>
+              </div>
+            ) : null}
+            {isFieldNonEmpty(fields.expo_field_49) ? (
+              <div>
+                <Tour3DBlock
+                  url={fields.expo_field_49}
+                  title={fields.expo_field_02 || "3D"}
+                />
+                <p className="mt-2 text-sm text-slate-500">3D / վիզուալիզացիա</p>
+              </div>
+            ) : null}
           </div>
         </Section>
       ) : null}

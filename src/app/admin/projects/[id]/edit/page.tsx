@@ -17,18 +17,25 @@ export default async function EditProjectPage({ params }: Props) {
   const defaults = normalizeExpoFields(project.expoFields);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Link href="/admin/projects" className="text-sm text-slate-600 underline">
-          ← Ցանկ
-        </Link>
-        <h1 className="text-2xl font-bold">Խմբագրել — {project.slug}</h1>
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/admin/projects"
+            className="text-sm font-medium text-slate-600 transition hover:text-slate-900"
+          >
+            ← Ցանկ
+          </Link>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+            Խմբագրել — {project.slug}
+          </h1>
+        </div>
         <Link
           href={`/p/${project.slug}`}
           target="_blank"
-          className="text-sm text-[#2ba8b0] underline"
+          className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
         >
-          Դիտել լենդինգը
+          Դիտել լենդինգը →
         </Link>
       </div>
 

@@ -2,78 +2,91 @@ import Link from "next/link";
 import { prisma } from "@/shared/lib/db";
 import { CsvImportForm } from "@/features/admin/components/CsvImportForm";
 import { DeleteProjectButton } from "@/features/builders/components/DeleteProjectButton";
+import { AdminProjectsList } from "@/features/admin/components/AdminProjectsList";
+import { AdminProjectsFilters } from "@/features/admin/components/AdminProjectsFilters";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminProjectsPage() {
+type SearchParams = { q?: string; published?: string };
+
+export default async function AdminProjectsPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const qRaw = params.q;
+  const publishedRaw = params.published;
+  const q = Array.isArray(qRaw) ? qRaw[0] ?? "" : qRaw ?? "";
+  const publishedFilter = Array.isArray(publishedRaw) ? publishedRaw[0] ?? "all" : publishedRaw ?? "all";
+  const qNorm = String(q).trim().toLowerCase();
+  const publishedOnly =
+    publishedFilter === "yes" ? true : publishedFilter === "no" ? false : null;
+
   const projects = await prisma.project.findMany({
     orderBy: { updatedAt: "desc" },
-    select: { id: true, slug: true, published: true, updatedAt: true },
+    select: {
+      id: true,
+      slug: true,
+      published: true,
+      updatedAt: true,
+      expoFields: true,
+    },
   });
+
+  const expoTitle = (raw: unknown): string => {
+    if (!raw || typeof raw !== "object") return "";
+    const o = raw as Record<string, unknown>;
+    const v = o.expo_field_02 ?? o.expo_field_01;
+    return typeof v === "string" ? v.trim() : "";
+  };
+
+  let filtered = projects;
+  if (qNorm) {
+    filtered = projects.filter((p) => {
+      const title = expoTitle(p.expoFields);
+      return (
+        p.slug.toLowerCase().includes(qNorm) ||
+        title.toLowerCase().includes(qNorm)
+      );
+    });
+  }
+  if (publishedOnly !== null) {
+    filtered = filtered.filter((p) => p.published === publishedOnly);
+  }
+
+  const list = filtered.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    published: p.published,
+    updatedAt: p.updatedAt,
+    title: expoTitle(p.expoFields) || p.slug,
+  }));
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-slate-900">Նախագծեր</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          Նախագծեր
+        </h1>
         <Link
           href="/admin/projects/new"
-          className="rounded-lg bg-[#2ba8b0] px-4 py-2 text-sm font-medium text-white"
+          className="rounded-xl bg-[#2eb0b4] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#269a9e]"
         >
           + Նոր նախագիծ
         </Link>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4">
-        <h2 className="mb-3 text-lg font-semibold">CSV ներմուծում</h2>
+      <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+        <h2 className="mb-4 text-base font-semibold text-slate-800">
+          CSV ներմուծում
+        </h2>
         <CsvImportForm />
       </section>
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50">
-            <tr>
-              <th className="p-3 font-semibold">Slug</th>
-              <th className="p-3 font-semibold">Հրապարակված</th>
-              <th className="p-3 font-semibold">Թարմացում</th>
-              <th className="p-3 font-semibold">Գործողություն</th>
-            </tr>
-          </thead>
-          <tbody>
-            {projects.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="p-6 text-center text-slate-500">
-                  Դատարկ է
-                </td>
-              </tr>
-            ) : (
-              projects.map((p) => (
-                <tr key={p.id} className="border-b border-slate-100">
-                  <td className="p-3">
-                    <Link href={`/p/${p.slug}`} className="text-[#2ba8b0] underline" target="_blank">
-                      {p.slug}
-                    </Link>
-                  </td>
-                  <td className="p-3">{p.published ? "Այո" : "Ոչ"}</td>
-                  <td className="p-3 text-slate-600">
-                    {p.updatedAt.toISOString().slice(0, 10)}
-                  </td>
-                  <td className="p-3">
-                    <div className="flex flex-wrap gap-2">
-                      <Link
-                        href={`/admin/projects/${p.id}/edit`}
-                        className="rounded border border-slate-300 px-2 py-1 text-xs"
-                      >
-                        Խմբագրել
-                      </Link>
-                      <DeleteProjectButton projectId={p.id} slug={p.slug} />
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      <AdminProjectsFilters currentQ={q} currentPublished={publishedFilter} />
+
+      <AdminProjectsList projects={list} />
     </div>
   );
 }

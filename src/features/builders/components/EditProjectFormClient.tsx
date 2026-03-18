@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { updateProjectFormAction } from "@/features/builders/actions/projectActions";
-import { ProjectFieldsForm } from "@/features/builders/components/ProjectFieldsForm";
+import { EditProjectTabs } from "@/features/builders/components/EditProjectTabs";
 import type { ExpoFieldsFormValues } from "@/shared/lib/expoFields";
 
 type Props = {
@@ -39,7 +39,7 @@ export function EditProjectFormClient({
         </p>
       ) : null}
 
-      <div className="flex flex-wrap gap-6 rounded-xl border border-slate-200 bg-white p-4">
+      <div className="flex flex-wrap gap-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <label className="flex flex-col gap-1 text-sm">
           <span className="font-medium text-slate-700">Slug</span>
           <input
@@ -48,7 +48,7 @@ export function EditProjectFormClient({
             defaultValue={defaultSlug}
             required
             pattern="[a-z0-9]+(-[a-z0-9]+)*"
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            className="rounded-lg border border-slate-300 px-3 py-2 focus:border-[#2eb0b4] focus:outline-none focus:ring-1 focus:ring-[#2eb0b4]"
           />
         </label>
         <label className="flex items-center gap-2 text-sm">
@@ -56,21 +56,23 @@ export function EditProjectFormClient({
             name="published"
             type="checkbox"
             defaultChecked={defaultPublished}
-            className="h-4 w-4"
+            className="h-4 w-4 rounded border-slate-300 text-[#2eb0b4] focus:ring-[#2eb0b4]"
           />
           <span>Հրապարակված</span>
         </label>
       </div>
 
-      <ProjectFieldsForm defaults={defaults} />
+      <EditProjectTabs defaults={defaults} />
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="max-w-xs rounded-lg bg-[#2ba8b0] py-3 font-semibold text-white disabled:opacity-50"
-      >
-        {pending ? "…" : "Պահպանել"}
-      </button>
+      <div className="flex items-center gap-4">
+        <button
+          type="submit"
+          disabled={pending}
+          className="rounded-xl bg-[#2eb0b4] px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-[#269a9e] disabled:opacity-50"
+        >
+          {pending ? "Պահպանվում է…" : "Պահպանել"}
+        </button>
+      </div>
     </form>
   );
 }
