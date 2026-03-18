@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
+import { parseMediaUrls } from "@/shared/lib/mediaUrls";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/lib/blockVisibility";
 import { GalleryShowcase } from "@/features/landing/GalleryShowcase";
@@ -43,6 +44,8 @@ type Props = {
 export function LandingPageLower({ fields, title }: Props) {
   const vis = visibleBlocks(fields);
   const media = getProjectMedia(fields);
+  const exteriorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_43)));
+  const interiorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_44)));
   const apartmentSizes = extractApartmentSizes(fields);
   const infrastructureItems = splitListItems(fields.expo_field_33);
   const investmentIntro = firstNonEmpty(
@@ -68,8 +71,8 @@ export function LandingPageLower({ fields, title }: Props) {
     })),
   ];
   const infrastructureImages = [
-    media[3] || media[1] || participantFigmaAssets.infrastructureLeft,
-    media[4] || media[2] || participantFigmaAssets.infrastructureRight,
+    exteriorMedia[1] || exteriorMedia[0] || media[3] || participantFigmaAssets.infrastructureLeft,
+    interiorMedia[1] || interiorMedia[0] || media[4] || participantFigmaAssets.infrastructureRight,
   ];
   const activeSizeIndex =
     apartmentSizes.length > 1 ? 1 : apartmentSizes.length === 1 ? 0 : -1;

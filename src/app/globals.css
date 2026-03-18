@@ -22,9 +22,25 @@ body {
     sans-serif;
 }
 
+.toon-home-map {
+  isolation: isolate;
+}
+
+.toon-home-map .maplibregl-map,
+.toon-home-map .maplibregl-canvas,
+.toon-home-map .maplibregl-canvas-container {
+  position: relative;
+  z-index: 0 !important;
+}
+
 .toon-home-map .maplibregl-control-container {
   position: relative;
-  z-index: 30;
+  z-index: 1 !important;
+}
+
+.toon-home-map .maplibregl-popup,
+.toon-home-map .maplibregl-marker {
+  z-index: 1 !important;
 }
 
 .toon-home-map .maplibregl-ctrl-top-right {

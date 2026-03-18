@@ -32,10 +32,10 @@ export function SiteReachMapFooter({ projects }: { projects: HomeProject[] }) {
 
   return (
     <>
-      <div className="bg-[#246976]">
+      <div className="relative isolate bg-[#246976]">
         <section
           id="contacts"
-          className="mx-auto max-w-[1680px] scroll-mt-6 px-5 pb-10 pt-10 lg:px-10 lg:pb-14 lg:pt-12"
+          className="relative z-20 mx-auto max-w-[1680px] scroll-mt-6 px-5 pb-10 pt-10 lg:px-10 lg:pb-14 lg:pt-12"
         >
           <div className="mb-6 flex items-center gap-4">
             <h2 className="text-2xl font-semibold uppercase tracking-[0.12em] text-white lg:text-[2.5rem]">
@@ -43,13 +43,13 @@ export function SiteReachMapFooter({ projects }: { projects: HomeProject[] }) {
             </h2>
             <img src={FIGMA_ASSETS.locationDivider} alt="" className="h-[2px] min-w-0 flex-1 opacity-70" />
           </div>
-          <div className="toon-home-map overflow-hidden rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)]">
+          <div className="toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)]">
             <HomeMapPreview markers={markers} className="h-[240px] w-full md:h-[320px]" />
           </div>
         </section>
 
-        <section className="border-t border-white/10 bg-[#2ba8b0]">
-          <div className="relative mx-auto max-w-[1680px] px-5 py-8 lg:min-h-[4.5rem] lg:px-10">
+        <section className="relative z-10 -mt-12 border-t border-white/10 bg-[#2ba8b0] pt-12 lg:-mt-40 lg:pt-40">
+          <div className="relative mx-auto max-w-[1680px] px-5 py-10 lg:min-h-[6rem] lg:px-10 lg:py-12">
             <div className="pointer-events-none absolute inset-0 z-[1] hidden items-center justify-center lg:flex">
               <SocialTilesRow
                 facebookUrl={footerFacebook}
