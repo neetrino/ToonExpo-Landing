@@ -44,6 +44,13 @@ export function SiteReachMapFooter({
   const markers = useMemo(() => buildMapMarkersFromProjects(projects), [projects]);
   const anchor = projects[0] ?? null;
   const isParticipant = variant === "participant";
+  const locationStripClass = isParticipant ? "bg-white" : "bg-[#246976]";
+  const locationTitleClass = isParticipant
+    ? "text-2xl font-semibold uppercase tracking-[0.12em] text-[#246976] lg:text-[2.5rem]"
+    : "text-2xl font-semibold uppercase tracking-[0.12em] text-white lg:text-[2.5rem]";
+  const mapFrameClass = isParticipant
+    ? "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-[#246976]/25 shadow-[0_25px_60px_rgba(0,0,0,0.08)]"
+    : "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)]";
   const firstProjectWithSite = useMemo(
     () => projects.find((p) => (p.expoFields?.expo_field_51 ?? "").trim() !== ""),
     [projects],
@@ -56,18 +63,20 @@ export function SiteReachMapFooter({
 
   return (
     <>
-      <div className="relative isolate bg-[#246976]">
+      <div className={`relative isolate ${locationStripClass}`}>
         <section
           id="contacts"
           className="relative z-20 mx-auto max-w-[1680px] scroll-mt-6 px-5 pb-10 pt-10 lg:px-10 lg:pb-14 lg:pt-12"
         >
           <div className="mb-6 flex items-center gap-4">
-            <h2 className="text-2xl font-semibold uppercase tracking-[0.12em] text-white lg:text-[2.5rem]">
-              Location
-            </h2>
-            <img src={FIGMA_ASSETS.locationDivider} alt="" className="h-[2px] min-w-0 flex-1 opacity-70" />
+            <h2 className={locationTitleClass}>Location</h2>
+            {isParticipant ? (
+              <div className="h-px min-w-0 flex-1 bg-[#246976]/30" aria-hidden />
+            ) : (
+              <img src={FIGMA_ASSETS.locationDivider} alt="" className="h-[2px] min-w-0 flex-1 opacity-70" />
+            )}
           </div>
-          <div className="toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)]">
+          <div className={mapFrameClass}>
             <HomeMapPreview markers={markers} className="h-[240px] w-full md:h-[320px]" />
           </div>
         </section>
