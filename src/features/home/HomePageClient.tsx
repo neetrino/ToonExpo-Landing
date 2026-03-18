@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { parseLatLng } from "@/shared/lib/mediaUrls";
+import { parseLatLng, parseMediaUrls } from "@/shared/lib/mediaUrls";
 import { HomeMapPreview, type MapMarker } from "@/features/map/components/HomeMapPreview";
 
 export type HomeProject = {
@@ -33,22 +33,18 @@ const FIGMA_ASSETS = {
   cardImageB: "/figma/home/cardImageB.jpg",
   cardImageC: "/figma/home/cardImageC.jpg",
 } as const;
-const FALLBACK_CARD_IMAGES = [
-  FIGMA_ASSETS.cardImageA,
-  FIGMA_ASSETS.cardImageB,
-  FIGMA_ASSETS.cardImageC,
-] as const;
-
 function projectTitle(f: Record<string, string>): string {
   return f.expo_field_02?.trim() || f.expo_field_01?.trim() || "—";
 }
 
 function projectThumb(f: Record<string, string>): string | null {
-  const u = f.expo_field_43?.trim() || f.expo_field_44?.trim() || f.expo_field_50?.trim();
-  if (u && /^https?:\/\//i.test(u)) {
-    return u.split(/[\n;]/)[0]?.trim() ?? null;
+  const logo = f.expo_field_50?.trim();
+  if (logo && /^https?:\/\//i.test(logo)) {
+    return logo;
   }
-  return null;
+
+  const media = [...parseMediaUrls(f.expo_field_43), ...parseMediaUrls(f.expo_field_44)];
+  return media[0] ?? null;
 }
 
 function projectLocation(f: Record<string, string>): string {
@@ -310,7 +306,6 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
   const taxRefund = fields.expo_field_09?.trim() || "On request";
   const pricePerMeter = formatRange(fields.expo_field_07, fields.expo_field_08);
   const priceRange = formatRange(fields.expo_field_17, fields.expo_field_18);
-  const fallbackImage = FALLBACK_CARD_IMAGES[index % FALLBACK_CARD_IMAGES.length];
 
   return (
     <Link
@@ -321,14 +316,14 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
         {title}
       </h2>
       <div className="relative mt-5 aspect-[1.5/1] overflow-hidden rounded-[10px] bg-[#1d5662]">
-        <Image
-          src={thumb || fallbackImage}
-          alt={title}
-          fill
-          unoptimized
-          className="object-cover"
-          sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 100vw"
-        />
+        {thumb ? (
+          <img
+            src={thumb}
+            alt={title}
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        ) : null}
       </div>
       <div className="mt-6 space-y-4 text-white">
         <InfoRow iconSrc={FIGMA_ASSETS.refundIcon} label="Income Tax Refund" value={taxRefund} />
