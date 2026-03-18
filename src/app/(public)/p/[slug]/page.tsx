@@ -37,6 +37,7 @@ export default async function PublicLandingPage({ params }: Props) {
     <>
       <LandingPage fields={fields} />
       <SiteReachMapFooter
+        variant="participant"
         projects={[
           {
             id: project.id,

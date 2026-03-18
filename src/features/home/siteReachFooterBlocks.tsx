@@ -16,6 +16,7 @@ const BLOCK_FIGMA = {
   visitSiteIconLeft: "/figma/home/visitSiteIconLeft.svg",
   visitSiteIconRight: "/figma/home/visitSiteIconRight.svg",
   reachOutCircle: "/figma/home/reachOutCircle.svg",
+  reachOutTargetArrow: "/figma/home/reachOutTargetArrow.svg",
   reachOutTarget: "/figma/home/reachOutTarget.svg",
 } as const;
 
@@ -120,12 +121,23 @@ export function ReachOutCta({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/#contacts"
-      className={`inline-flex items-center justify-center gap-1.5 rounded-full bg-[#fbcd06] px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-black transition hover:brightness-105 ${className}`.trim()}
+      className={`inline-flex items-center justify-center gap-1.5 rounded-full bg-[#fbcd06] px-3 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.14em] text-black transition hover:brightness-105 ${className}`.trim()}
     >
       Reach Out
       <span className="relative inline-flex h-7 w-7 shrink-0 items-center justify-center">
         <img src={BLOCK_FIGMA.reachOutCircle} alt="" className="absolute inset-0 h-full w-full" />
-        <img src={BLOCK_FIGMA.reachOutTarget} alt="" className="relative h-4 w-4" />
+        <span className="relative flex h-full w-full items-center justify-center" aria-hidden>
+          <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <span className="inline-block translate-x-2.5 -translate-y-2">
+              <img src={BLOCK_FIGMA.reachOutTargetArrow} alt="" className="h-4 w-4 object-contain" />
+            </span>
+          </span>
+          <img
+            src={BLOCK_FIGMA.reachOutTarget}
+            alt=""
+            className="pointer-events-none relative z-10 h-6 w-6 object-contain"
+          />
+        </span>
       </span>
     </Link>
   );
