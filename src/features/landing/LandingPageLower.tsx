@@ -2,6 +2,7 @@
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/lib/blockVisibility";
+import { GalleryShowcase } from "@/features/landing/GalleryShowcase";
 import { Tour3DBlock } from "@/features/landing/Tour3DBlock";
 import { VideoEmbedBlock } from "@/features/landing/VideoEmbedBlock";
 import {
@@ -49,10 +50,22 @@ export function LandingPageLower({ fields, title }: Props) {
     fields.expo_field_18,
     "Price varies by view and floor. Higher floors and better views command premium.",
   );
-  const galleryImages = [
-    media[0] || participantFigmaAssets.galleryMain,
-    media[1] || participantFigmaAssets.galleryUpper,
-    media[2] || participantFigmaAssets.galleryUpdates,
+  const galleryImages = Array.from(
+    new Set([
+      ...media,
+      participantFigmaAssets.galleryMain,
+      participantFigmaAssets.galleryUpper,
+      participantFigmaAssets.galleryUpdates,
+    ]),
+  );
+  const galleryItems = [
+    { label: "Typical Renders", image: galleryImages[0] },
+    { label: "Upper Levels", image: galleryImages[1] ?? galleryImages[0] },
+    { label: "Floorplan Updates", image: galleryImages[2] ?? galleryImages[0] },
+    ...galleryImages.slice(3).map((image, index) => ({
+      label: `Gallery View ${index + 4}`,
+      image,
+    })),
   ];
   const infrastructureImages = [
     media[3] || media[1] || participantFigmaAssets.infrastructureLeft,
@@ -129,32 +142,11 @@ export function LandingPageLower({ fields, title }: Props) {
 
       {vis.gallery ? (
         <Section id="gallery" className="bg-white px-5 py-5 lg:px-0 lg:py-0">
-          <div className="mx-auto max-w-[1920px]">
-            <div className="grid gap-0 lg:grid-cols-[minmax(0,820px)_400px_400px]">
-              <div className="relative min-h-[340px] overflow-hidden lg:min-h-[620px]">
-                <img src={galleryImages[0]} alt="" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-black/35" />
-                <div className="absolute bottom-6 left-5 text-white lg:left-[140px]">
-                  <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">Gallery</h2>
-                  <p className="mt-2 text-[clamp(1.05rem,1.5vw,1.7rem)]">Typical Renders</p>
-                </div>
-              </div>
-              <div className="relative min-h-[240px] overflow-hidden lg:min-h-[620px]">
-                <img src={galleryImages[1]} alt="" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-black/15" />
-                <p className="absolute bottom-5 left-5 text-xl text-white lg:text-2xl">Upper Levels</p>
-              </div>
-              <div className="relative min-h-[240px] overflow-hidden lg:min-h-[620px]">
-                <img src={galleryImages[2]} alt="" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-black/18" />
-                <p className="absolute bottom-5 left-5 max-w-[220px] text-xl text-white lg:text-2xl">Floorplan Updates</p>
-              </div>
-            </div>
-            <div className="pointer-events-none relative flex h-0 justify-between">
-              <img src={participantFigmaAssets.galleryArrowLeft} alt="" className="absolute left-4 top-[-370px] hidden h-[56px] w-[22px] lg:block" />
-              <img src={participantFigmaAssets.galleryArrowRight} alt="" className="absolute left-[760px] top-[-370px] hidden h-[56px] w-[22px] lg:block" />
-            </div>
-          </div>
+          <GalleryShowcase
+            items={galleryItems}
+            leftArrowSrc={participantFigmaAssets.galleryArrowLeft}
+            rightArrowSrc={participantFigmaAssets.galleryArrowRight}
+          />
         </Section>
       ) : null}
 
@@ -194,7 +186,7 @@ export function LandingPageLower({ fields, title }: Props) {
       {vis.infrastructure ? (
         <Section id="infrastructure" className="bg-white py-10 lg:py-14">
           <div
-            className={`mx-auto grid max-w-[1920px] gap-6 lg:grid-cols-[minmax(0,1fr)_400px_400px] ${PARTICIPANT_SECTION_INSET}`}
+            className={`mx-auto grid max-w-[1920px] gap-6 lg:grid-cols-[minmax(0,1fr)_400px_400px] ${PARTICIPANT_SECTION_INSET} lg:pr-0 xl:pr-0`}
           >
             <div>
               <h2 className="max-w-[360px] text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">

@@ -135,19 +135,19 @@ export function LandingPage({ fields }: Props) {
           <div className="mx-auto flex max-w-[1920px] flex-col gap-10 px-5 py-12 sm:px-8 lg:min-h-[780px] lg:flex-row lg:items-stretch lg:gap-0 lg:pl-[102px] lg:pr-0 lg:py-[76px]">
             <div className="flex w-full items-center lg:w-1/2 lg:pr-[140px] xl:pr-[190px]">
               <div className="max-w-[620px]">
-                <h2 className="text-[clamp(1.7rem,2.3vw,2.5rem)] font-semibold uppercase leading-none tracking-[0.01em]">
+                <h2 className="text-[clamp(1.55rem,2.1vw,2.25rem)] font-semibold uppercase leading-none tracking-[0.01em]">
                   About the project
                 </h2>
                 <div className="mt-10 lg:mt-[126px]">
-                  <p className="text-[1.05rem] font-light leading-[1.45] text-white/90 lg:text-[1.75rem] lg:leading-[1.2]">
+                  <p className="text-[1rem] font-light leading-[1.45] text-white/90 lg:text-[1.55rem] lg:leading-[1.2]">
                     {aboutIntroText}
                   </p>
                   {isFieldNonEmpty(aboutSupportingText) && aboutSupportingText !== aboutIntroText ? (
-                    <p className="mt-5 max-w-[620px] text-[1rem] font-light leading-[1.4] text-white/88 lg:mt-[34px] lg:text-[1.75rem] lg:leading-[1.15]">
+                    <p className="mt-5 max-w-[620px] text-[0.95rem] font-light leading-[1.4] text-white/88 lg:mt-[34px] lg:text-[1.55rem] lg:leading-[1.15]">
                       {aboutSupportingText}
                     </p>
                   ) : null}
-                  <p className="mt-8 max-w-[620px] text-[1.35rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[2rem] lg:leading-[1.28]">
+                  <p className="mt-8 max-w-[620px] text-[1.2rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[1.8rem] lg:leading-[1.28]">
                     {aboutMainText}
                   </p>
                   <a
