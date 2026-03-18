@@ -14,6 +14,9 @@ export type HomeProject = {
 
 const HERO_TITLE = "TOON EXPO 2026. INVEST";
 const HERO_SUBTITLE = "interactive map";
+/** Սոցիալ SVG-ներ View Apartments-ի կողքին (FB, IG) — կոմպակտ չափ։ */
+const VIEW_APARTMENTS_SIDE_ICON_CLASS = "h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11";
+
 const FIGMA_ASSETS = {
   heroBg: "/figma/home/heroBg.jpg",
   headerLogo: "/figma/home/headerLogo.svg",
@@ -77,6 +80,68 @@ function buildMarkers(list: HomeProject[]): MapMarker[] {
     }
   }
   return markers;
+}
+
+function ReachOutCta({ className = "" }: { className?: string }) {
+  return (
+    <a
+      href="/#location"
+      className={`inline-flex items-center justify-center gap-1.5 rounded-full bg-[#fbcd06] px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-black transition hover:brightness-105 ${className}`.trim()}
+    >
+      Reach Out
+      <span className="relative inline-flex h-7 w-7 shrink-0 items-center justify-center">
+        <img src={FIGMA_ASSETS.reachOutCircle} alt="" className="absolute inset-0 h-full w-full" />
+        <img src={FIGMA_ASSETS.reachOutTarget} alt="" className="relative h-4 w-4" />
+      </span>
+    </a>
+  );
+}
+
+function SocialTilesRow({
+  facebookUrl,
+  instagramUrl,
+  iconClassName,
+  className = "flex items-center gap-2",
+}: {
+  facebookUrl: string;
+  instagramUrl: string;
+  iconClassName: string;
+  className?: string;
+}) {
+  return (
+    <div className={className}>
+      {facebookUrl ? (
+        <a
+          href={facebookUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Facebook"
+          className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+        >
+          <img src={FIGMA_ASSETS.visitSiteIconLeft} alt="" className={iconClassName} />
+        </a>
+      ) : (
+        <span className="inline-flex" aria-hidden>
+          <img src={FIGMA_ASSETS.visitSiteIconLeft} alt="" className={iconClassName} />
+        </span>
+      )}
+      {instagramUrl ? (
+        <a
+          href={instagramUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Instagram"
+          className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+        >
+          <img src={FIGMA_ASSETS.visitSiteIconRight} alt="" className={iconClassName} />
+        </a>
+      ) : (
+        <span className="inline-flex" aria-hidden>
+          <img src={FIGMA_ASSETS.visitSiteIconRight} alt="" className={iconClassName} />
+        </span>
+      )}
+    </div>
+  );
 }
 
 export function HomePageClient({ projects }: { projects: HomeProject[] }) {
@@ -209,55 +274,46 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
         </section>
 
         <section className="border-t border-white/10 bg-[#2ba8b0]">
-          <div className="mx-auto grid max-w-[1680px] gap-6 px-5 py-8 lg:grid-cols-[1.1fr_auto_auto] lg:items-center lg:px-10">
-            <a href="#projects" className="text-xl font-semibold uppercase tracking-[0.14em] text-white lg:text-[2rem]">
-              View Apartments
-            </a>
-            <div className="flex flex-wrap items-center gap-3">
-              {footerSite ? (
-                <a
-                  href={footerSite}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="relative inline-flex h-[60px] w-[307px] items-center justify-center text-xs font-semibold uppercase tracking-[0.2em] text-[#2ba8b0] transition hover:brightness-110"
-                >
-                  <img src={FIGMA_ASSETS.visitSiteButton} alt="" className="absolute inset-0 h-full w-full" />
-                  <span className="relative z-10">Visit Site</span>
-                </a>
-              ) : null}
-              {footerInstagram ? (
-                <a
-                  href={footerInstagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Instagram"
-                  className="transition hover:brightness-110"
-                >
-                  <img src={FIGMA_ASSETS.visitSiteIconLeft} alt="" className="h-[60px] w-[60px]" />
-                </a>
-              ) : null}
-              {footerFacebook ? (
-                <a
-                  href={footerFacebook}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Facebook"
-                  className="transition hover:brightness-110"
-                >
-                  <img src={FIGMA_ASSETS.visitSiteIconRight} alt="" className="h-[60px] w-[60px]" />
-                </a>
-              ) : null}
+          <div className="relative mx-auto max-w-[1680px] px-5 py-8 lg:min-h-[4.5rem] lg:px-10">
+            <div className="pointer-events-none absolute inset-0 z-[1] hidden items-center justify-center lg:flex">
+              <SocialTilesRow
+                facebookUrl={footerFacebook}
+                instagramUrl={footerInstagram}
+                iconClassName={VIEW_APARTMENTS_SIDE_ICON_CLASS}
+                className="pointer-events-auto flex items-center gap-2"
+              />
             </div>
-            <a
-              href="#location"
-              className="inline-flex items-center justify-center gap-3 rounded-full bg-[#fbcd06] px-6 py-3 text-sm font-bold uppercase tracking-[0.2em] text-black transition hover:brightness-105"
-            >
-              Reach Out
-              <span className="relative inline-flex h-10 w-10 items-center justify-center">
-                <img src={FIGMA_ASSETS.reachOutCircle} alt="" className="absolute inset-0 h-full w-full" />
-                <img src={FIGMA_ASSETS.reachOutTarget} alt="" className="relative h-7 w-7" />
-              </span>
-            </a>
+            <div className="relative z-[2] flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex flex-wrap items-center">
+                <a
+                  href="#projects"
+                  className="text-xl font-semibold uppercase tracking-[0.14em] text-white lg:text-[2rem]"
+                >
+                  View Apartments
+                </a>
+              </div>
+              <div className="flex justify-center lg:hidden">
+                <SocialTilesRow
+                  facebookUrl={footerFacebook}
+                  instagramUrl={footerInstagram}
+                  iconClassName={VIEW_APARTMENTS_SIDE_ICON_CLASS}
+                />
+              </div>
+              <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4 lg:ml-auto lg:shrink-0">
+                {footerSite ? (
+                  <a
+                    href={footerSite}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="relative inline-flex h-[60px] w-[307px] max-w-full items-center justify-center text-xs font-semibold uppercase tracking-[0.2em] text-[#2ba8b0] transition hover:brightness-110"
+                  >
+                    <img src={FIGMA_ASSETS.visitSiteButton} alt="" className="absolute inset-0 h-full w-full" />
+                    <span className="relative z-10">Visit Site</span>
+                  </a>
+                ) : null}
+                <ReachOutCta className="shrink-0" />
+              </div>
+            </div>
           </div>
         </section>
       </main>
