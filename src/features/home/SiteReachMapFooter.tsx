@@ -43,10 +43,16 @@ export function SiteReachMapFooter({
 }) {
   const markers = useMemo(() => buildMapMarkersFromProjects(projects), [projects]);
   const anchor = projects[0] ?? null;
-  const footerSite = anchor?.expoFields.expo_field_51?.trim() ?? "";
+  const isParticipant = variant === "participant";
+  const firstProjectWithSite = useMemo(
+    () => projects.find((p) => (p.expoFields?.expo_field_51 ?? "").trim() !== ""),
+    [projects],
+  );
+  const footerSite =
+    (isParticipant ? anchor?.expoFields.expo_field_51 : firstProjectWithSite?.expoFields?.expo_field_51)?.trim() ??
+    "";
   const footerInstagram = anchor?.expoFields.expo_field_52?.trim() ?? "";
   const footerFacebook = anchor?.expoFields.expo_field_53?.trim() ?? "";
-  const isParticipant = variant === "participant";
 
   return (
     <>
@@ -68,22 +74,8 @@ export function SiteReachMapFooter({
 
         <section className="relative z-10 -mt-12 border-t border-white/10 bg-[#2ba8b0] pt-12 lg:-mt-40 lg:pt-40">
           <div className="relative mx-auto max-w-[1680px] px-5 py-10 lg:min-h-[6rem] lg:px-10 lg:py-12">
-            {!isParticipant ? (
-              <div className="pointer-events-none absolute inset-0 z-[1] hidden items-center justify-center lg:flex">
-                <SocialTilesRow
-                  facebookUrl={footerFacebook}
-                  instagramUrl={footerInstagram}
-                  iconClassName={VIEW_APARTMENTS_SIDE_ICON_CLASS}
-                  className="pointer-events-auto flex items-center gap-2"
-                />
-              </div>
-            ) : null}
-            <div
-              className={`relative z-[2] flex flex-col gap-5 lg:flex-row lg:items-center ${isParticipant ? "" : "lg:justify-between"}`}
-            >
-              <div
-                className={`flex flex-wrap items-center ${isParticipant ? "shrink-0 justify-center lg:justify-start" : ""}`}
-              >
+            <div className="relative z-[2] flex flex-col gap-5 lg:flex-row lg:items-center">
+              <div className="flex shrink-0 flex-wrap items-center justify-center lg:justify-start">
                 <Link
                   href="/#projects"
                   className="text-xl font-semibold uppercase tracking-[0.14em] text-white lg:text-[2rem]"
@@ -122,14 +114,7 @@ export function SiteReachMapFooter({
                 </>
               ) : (
                 <>
-                  <div className="flex justify-center lg:hidden">
-                    <SocialTilesRow
-                      facebookUrl={footerFacebook}
-                      instagramUrl={footerInstagram}
-                      iconClassName={VIEW_APARTMENTS_SIDE_ICON_CLASS}
-                    />
-                  </div>
-                  <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4 lg:ml-auto lg:shrink-0">
+                  <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-2 sm:gap-4">
                     {footerSite ? (
                       <a
                         href={footerSite}
@@ -141,6 +126,14 @@ export function SiteReachMapFooter({
                         <span className="relative z-10">Visit Site</span>
                       </a>
                     ) : null}
+                    <SocialTilesRow
+                      facebookUrl={footerFacebook}
+                      instagramUrl={footerInstagram}
+                      iconClassName={VIEW_APARTMENTS_SIDE_ICON_CLASS}
+                      className="flex items-center gap-2"
+                    />
+                  </div>
+                  <div className="flex w-full shrink-0 justify-end lg:w-auto">
                     <ReachOutCta className="shrink-0" />
                   </div>
                 </>
