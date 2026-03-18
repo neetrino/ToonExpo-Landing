@@ -37,6 +37,53 @@ function Section({
   );
 }
 
+function AboutIntroPinIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={40}
+      height={56}
+      viewBox="0 0 40 56"
+      fill="none"
+      aria-hidden
+      className="mt-0.5 h-10 w-10 shrink-0 lg:mt-1 lg:h-14 lg:w-10"
+    >
+      <path
+        d="M39.9969 19.8089C39.9613 23.1196 39.2004 26.7162 37.7374 30.1507C33.8401 39.2937 27.9044 47.0941 21.2604 54.4188C20.5289 55.2262 19.6907 55.4663 18.9004 54.5733C11.2388 45.9242 3.91584 37.0382 0.779427 25.6442C-2.38637 14.1295 4.39063 2.7937 15.6897 0.457111C28.2014 -2.13026 39.3102 6.52796 40 19.8074H39.9969V19.8089ZM31.9657 19.6422C31.9889 12.9995 26.6517 7.57392 20.0758 7.55404C13.4844 7.53416 7.94151 12.9566 7.91213 19.4648C7.88274 26.0602 13.2617 31.3756 19.9706 31.3848C26.6533 31.394 31.9425 26.2162 31.9641 19.6407L31.9657 19.6422Z"
+        fill="#2BA8B0"
+      />
+    </svg>
+  );
+}
+
+const ABOUT_SUPPORTING_GEAR_CLIP_ID = "clipAboutSupportingGear";
+
+function AboutSupportingGearIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={45}
+      height={45}
+      viewBox="0 0 45 45"
+      fill="none"
+      aria-hidden
+      className="mt-0.5 h-9 w-9 shrink-0 lg:h-11 lg:w-11"
+    >
+      <g clipPath={`url(#${ABOUT_SUPPORTING_GEAR_CLIP_ID})`}>
+        <path
+          d="M43.1557 17.7307H39.3091C38.9403 16.4133 38.4133 15.1487 37.7283 13.9368L40.4157 11.2494C41.1534 10.5117 41.1534 9.35246 40.4157 8.66744L36.2529 4.50468C35.5152 3.76697 34.356 3.76697 33.671 4.50468L30.9836 7.19203C29.8244 6.50702 28.5597 6.03278 27.1897 5.61124V1.87002C27.1897 0.868848 26.3466 0.0257568 25.3454 0.0257568H19.4438C18.4426 0.0257568 17.5995 0.868848 17.5995 1.87002V5.66393C16.2822 6.03278 15.0176 6.55971 13.8056 7.24473L11.1183 4.55737C10.3806 3.81967 9.22131 3.81967 8.5363 4.55737L4.37354 8.72014C3.63583 9.45784 3.63583 10.6171 4.37354 11.3021L7.06089 13.9895C6.37588 15.1487 5.90164 16.4133 5.48009 17.7834H1.84426C0.843091 17.7834 0 18.6265 0 19.6276V25.5293C0 26.5304 0.843091 27.3735 1.84426 27.3735H5.69087C6.05972 28.6909 6.58665 29.9555 7.27166 31.1674L4.58431 33.8548C3.8466 34.5925 3.8466 35.7518 4.58431 36.4368L8.74707 40.5995C9.48478 41.3372 10.644 41.3372 11.329 40.5995L14.0164 37.9122C15.1756 38.5972 16.4403 39.0714 17.8103 39.493V43.2869C17.8103 44.2881 18.6534 45.1311 19.6546 45.1311H25.5562C26.5574 45.1311 27.4005 44.2881 27.4005 43.2869V39.493C28.7178 39.1241 29.9824 38.5972 31.1944 37.9122L33.8817 40.5995C34.6194 41.3372 35.7787 41.3372 36.4637 40.5995L40.6265 36.4368C41.3642 35.6991 41.3642 34.5398 40.6265 33.8548L37.9391 31.1674C38.6241 30.0082 39.0984 28.7436 39.5199 27.3735H43.3665C44.3677 27.3735 45.2108 26.5304 45.2108 25.5293V19.6276C45.2108 18.6265 44.3677 17.7834 43.3665 17.7834L43.1557 17.7307ZM22.5 31.7471C17.3888 31.7471 13.2787 27.637 13.2787 22.5258C13.2787 17.4145 17.3888 13.3044 22.5 13.3044C27.6112 13.3044 31.7213 17.4145 31.7213 22.5258C31.7213 27.637 27.6112 31.7471 22.5 31.7471Z"
+          fill="#2BA8B0"
+        />
+      </g>
+      <defs>
+        <clipPath id={ABOUT_SUPPORTING_GEAR_CLIP_ID}>
+          <rect width="45" height="45" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
 export function LandingPage({ fields }: Props) {
   const vis = visibleBlocks(fields);
   const navItems = participantNav.filter((item) => vis[item.block]);
@@ -72,8 +119,15 @@ export function LandingPage({ fields }: Props) {
     <div className="min-h-screen overflow-x-hidden bg-white text-[#111827]">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/15 bg-black/72 text-white backdrop-blur">
         <div className="mx-auto flex max-w-[1920px] items-center gap-5 px-5 py-4 lg:px-12">
-          <Link href="/" className="shrink-0 text-xs font-semibold uppercase tracking-[0.18em] text-[#2ba8b0] lg:text-sm">
-            Toon Expo
+          <Link
+            href="/"
+            className="inline-flex shrink-0 items-center transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2 focus-visible:ring-offset-black/70"
+          >
+            <img
+              src="/figma/home/footerLogo.svg"
+              alt="Toon Expo"
+              className="h-10 w-10 object-contain lg:h-12 lg:w-12"
+            />
           </Link>
           <nav className="hidden min-w-0 flex-1 flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.72rem] uppercase tracking-[0.14em] xl:flex">
             {navItems.map((n) => (
@@ -139,13 +193,32 @@ export function LandingPage({ fields }: Props) {
                   About the project
                 </h2>
                 <div className="mt-10 lg:mt-[126px]">
-                  <p className="text-[1rem] font-light leading-[1.45] text-white/90 lg:text-[1.55rem] lg:leading-[1.2]">
-                    {aboutIntroText}
-                  </p>
-                  {isFieldNonEmpty(aboutSupportingText) && aboutSupportingText !== aboutIntroText ? (
-                    <p className="mt-5 max-w-[620px] text-[0.95rem] font-light leading-[1.4] text-white/88 lg:mt-[34px] lg:text-[1.55rem] lg:leading-[1.15]">
-                      {aboutSupportingText}
+                  <div className="flex items-start gap-4 lg:gap-5">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width={40}
+                      height={56}
+                      viewBox="0 0 40 56"
+                      fill="none"
+                      aria-hidden
+                      className="mt-0.5 h-10 w-10 shrink-0 lg:mt-1 lg:h-14 lg:w-10"
+                    >
+                      <path
+                        d="M39.9969 19.8089C39.9613 23.1196 39.2004 26.7162 37.7374 30.1507C33.8401 39.2937 27.9044 47.0941 21.2604 54.4188C20.5289 55.2262 19.6907 55.4663 18.9004 54.5733C11.2388 45.9242 3.91584 37.0382 0.779427 25.6442C-2.38637 14.1295 4.39063 2.7937 15.6897 0.457111C28.2014 -2.13026 39.3102 6.52796 40 19.8074H39.9969V19.8089ZM31.9657 19.6422C31.9889 12.9995 26.6517 7.57392 20.0758 7.55404C13.4844 7.53416 7.94151 12.9566 7.91213 19.4648C7.88274 26.0602 13.2617 31.3756 19.9706 31.3848C26.6533 31.394 31.9425 26.2162 31.9641 19.6407L31.9657 19.6422Z"
+                        fill="#2BA8B0"
+                      />
+                    </svg>
+                    <p className="min-w-0 flex-1 text-[1rem] font-light leading-[1.45] text-white/90 lg:text-[1.55rem] lg:leading-[1.2]">
+                      {aboutIntroText}
                     </p>
+                  </div>
+                  {isFieldNonEmpty(aboutSupportingText) && aboutSupportingText !== aboutIntroText ? (
+                    <div className="mt-5 flex items-start gap-4 lg:mt-[34px] lg:gap-5">
+                      <AboutSupportingGearIcon />
+                      <p className="min-w-0 flex-1 max-w-[620px] text-[0.95rem] font-light leading-[1.4] text-white/88 lg:text-[1.55rem] lg:leading-[1.15]">
+                        {aboutSupportingText}
+                      </p>
+                    </div>
                   ) : null}
                   <p className="mt-8 max-w-[620px] text-[1.2rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[1.8rem] lg:leading-[1.28]">
                     {aboutMainText}

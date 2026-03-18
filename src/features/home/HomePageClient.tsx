@@ -16,7 +16,7 @@ const PROJECTS_PAGE_SIZE = 15;
 
 const FIGMA_ASSETS = {
   heroBg: "/figma/home/heroBg.jpg",
-  headerLogo: "/figma/home/headerLogo.svg",
+  siteHeaderLogo: "/figma/home/footerLogo.svg",
   refundIcon: "/figma/home/refundIcon.svg",
   locationIcon: "/figma/home/locationIcon.svg",
   priceIcon: "/figma/home/priceIcon.svg",
@@ -107,9 +107,15 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
 
         <header id="top" className="relative z-10 px-5 py-6 lg:px-10">
           <div className="mx-auto flex max-w-[1680px] items-center justify-between gap-4">
-            <Link href="/" className="inline-flex items-center gap-3 text-[clamp(1.5rem,2vw,2.25rem)] font-bold uppercase tracking-[0.04em] text-[#2ba8b0]">
-              <img src={FIGMA_ASSETS.headerLogo} alt="" className="h-11 w-11 shrink-0" />
-              <span>Toon Expo</span>
+            <Link
+              href="/"
+              className="inline-flex shrink-0 items-center transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b2530]"
+            >
+              <img
+                src={FIGMA_ASSETS.siteHeaderLogo}
+                alt="Toon Expo"
+                className="h-12 w-12 object-contain sm:h-14 sm:w-14"
+              />
             </Link>
             <Link
               href="/admin/login"
