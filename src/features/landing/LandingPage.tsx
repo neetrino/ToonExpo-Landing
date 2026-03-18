@@ -4,11 +4,13 @@ import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { LandingPageLower } from "@/features/landing/LandingPageLower";
 import { visibleBlocks, type ExpoMap } from "@/features/landing/lib/blockVisibility";
 import {
+  firstNonEmpty,
   getLandingTitle,
   getLeadText,
   getLogoUrl,
   getProjectMedia,
   splitParagraphs,
+  splitListItems,
 } from "@/features/landing/landingPage.helpers";
 import {
   participantFigmaAssets,
@@ -52,10 +54,22 @@ export function LandingPage({ fields }: Props) {
     { label: "Construction", value: fields.expo_field_13 },
     { label: "Management", value: fields.expo_field_14 },
   ].filter((item) => isFieldNonEmpty(item.value));
+  const aboutHighlights = splitListItems(fields.expo_field_34);
+  const aboutIntroText = firstNonEmpty(
+    aboutFacts.map((item) => `${item.label}: ${item.value}`).join(" / "),
+    leadText,
+  );
+  const aboutSupportingText = firstNonEmpty(fields.expo_field_03, aboutParagraphs.length > 1 ? aboutParagraphs[0] : "");
+  const aboutMainText = firstNonEmpty(
+    aboutHighlights.join(". "),
+    aboutParagraphs.length > 1 ? aboutParagraphs[aboutParagraphs.length - 1] : aboutParagraphs[0],
+    fields.expo_field_03,
+    leadText,
+  );
   const primaryCtaHref = vis.apartments ? "#apartments" : navItems[0] ? `#${navItems[0].id}` : "#about";
 
   return (
-    <div className="min-h-screen bg-white text-[#111827]">
+    <div className="min-h-screen overflow-x-hidden bg-white text-[#111827]">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/15 bg-black/72 text-white backdrop-blur">
         <div className="mx-auto flex max-w-[1920px] items-center gap-5 px-5 py-4 lg:px-12">
           <Link href="/" className="shrink-0 text-xs font-semibold uppercase tracking-[0.18em] text-[#2ba8b0] lg:text-sm">
@@ -117,45 +131,52 @@ export function LandingPage({ fields }: Props) {
       </section>
 
       {vis.about ? (
-        <Section id="about" className="bg-black px-5 py-12 text-white lg:px-0 lg:py-0">
-          <div className="mx-auto flex max-w-[1920px] flex-col gap-10 lg:min-h-[780px] lg:flex-row">
-            <div className="flex w-full flex-col justify-center lg:w-1/2 lg:px-12">
-              <div className="max-w-[680px]">
-                <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase tracking-[0.04em]">
+        <Section id="about" className="relative z-10 border-b border-white/18 bg-black text-white">
+          <div className="mx-auto flex max-w-[1920px] flex-col gap-10 px-5 py-12 sm:px-8 lg:min-h-[780px] lg:flex-row lg:items-stretch lg:gap-0 lg:pl-[102px] lg:pr-0 lg:py-[76px]">
+            <div className="flex w-full items-center lg:w-1/2 lg:pr-[140px] xl:pr-[190px]">
+              <div className="max-w-[620px]">
+                <h2 className="text-[clamp(1.7rem,2.3vw,2.5rem)] font-semibold uppercase leading-none tracking-[0.01em]">
                   About the project
                 </h2>
-                {aboutFacts.length > 0 ? (
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    {aboutFacts.map((item) => (
-                      <div key={item.label} className="rounded-[10px] border border-white/14 bg-white/4 px-4 py-3">
-                        <p className="text-xs uppercase tracking-[0.16em] text-[#2ba8b0]">{item.label}</p>
-                        <p className="mt-1.5 text-sm leading-6 text-white/90 lg:text-[0.95rem]">{item.value}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-                <div className="mt-8 space-y-4 text-base leading-7 text-white/86 lg:text-[1.2rem] lg:leading-[1.5]">
-                  {(aboutParagraphs.length > 0 ? aboutParagraphs : [leadText]).map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
+                <div className="mt-10 lg:mt-[126px]">
+                  <p className="text-[1.05rem] font-light leading-[1.45] text-white/90 lg:text-[1.75rem] lg:leading-[1.2]">
+                    {aboutIntroText}
+                  </p>
+                  {isFieldNonEmpty(aboutSupportingText) && aboutSupportingText !== aboutIntroText ? (
+                    <p className="mt-5 max-w-[620px] text-[1rem] font-light leading-[1.4] text-white/88 lg:mt-[34px] lg:text-[1.75rem] lg:leading-[1.15]">
+                      {aboutSupportingText}
+                    </p>
+                  ) : null}
+                  <p className="mt-8 max-w-[620px] text-[1.35rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[2rem] lg:leading-[1.28]">
+                    {aboutMainText}
+                  </p>
+                  <a
+                    href={vis.investment ? "#investment" : primaryCtaHref}
+                    className="mt-10 inline-flex w-fit items-center gap-3 rounded-[6px] border border-white px-5 py-3 text-sm font-semibold uppercase tracking-[0.03em] text-white transition hover:bg-white hover:text-black lg:mt-[84px] lg:min-h-[71px] lg:px-7 lg:text-[1.5rem]"
+                  >
+                    <span>Explore More</span>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 14 24"
+                      className="h-4 w-2.5 shrink-0 lg:h-[24px] lg:w-[14px]"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M1.5 1.5L12 12L1.5 22.5" stroke="currentColor" strokeWidth="2" />
+                    </svg>
+                  </a>
                 </div>
-                <a
-                  href={vis.investment ? "#investment" : primaryCtaHref}
-                  className="mt-8 inline-flex w-fit items-center rounded-[4px] border border-white px-6 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-white hover:text-black lg:px-7 lg:py-3.5"
-                >
-                  Explore More
-                </a>
               </div>
             </div>
-            <div className="relative min-h-[360px] w-full lg:w-1/2">
+            <div className="relative z-10 min-h-[360px] w-full overflow-visible lg:-mt-[76px] lg:-mb-[190px] lg:-mr-[96px] lg:w-[calc(50%+96px)] lg:self-start">
               <img
                 src={aboutPrimaryImage}
                 alt=""
-                className="h-full min-h-[360px] w-full object-cover lg:min-h-[780px]"
+                className="h-full min-h-[360px] w-full rounded-l-[6px] rounded-r-none object-cover lg:min-h-[1120px]"
               />
-              <div className="absolute inset-0 bg-black/20" />
-              <div className="absolute bottom-6 left-4 w-[68%] max-w-[520px] border-4 border-white shadow-[0_20px_45px_rgba(0,0,0,0.35)] lg:bottom-[90px] lg:left-[-84px]">
-                <img src={aboutSecondaryImage} alt="" className="h-full w-full object-cover" />
+              <div className="absolute inset-0 rounded-l-[6px] rounded-r-none bg-black/18" />
+              <div className="absolute z-20 bottom-4 left-4 w-[72%] max-w-[380px] overflow-hidden rounded-[6px] border-4 border-white shadow-[0_20px_45px_rgba(0,0,0,0.35)] lg:bottom-[220px] lg:left-[-116px] lg:w-[64%] lg:max-w-[480px]">
+                <img src={aboutSecondaryImage} alt="" className="h-[232px] w-full object-cover lg:h-[264px]" />
               </div>
             </div>
           </div>

@@ -64,7 +64,7 @@ export function LandingPageLower({ fields, title }: Props) {
   return (
     <>
       {vis.investment ? (
-        <Section id="investment" className="bg-[#2ba8b0] py-9 text-white lg:py-10">
+        <Section id="investment" className="bg-[#2ba8b0] py-16 text-white lg:py-24">
           <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
             <h2 className="text-[clamp(1.55rem,2.1vw,1.95rem)] font-semibold uppercase">Investment</h2>
             <p className="mt-4 max-w-[700px] text-sm leading-6 text-white/90 lg:text-[1.05rem] lg:leading-[1.4]">
