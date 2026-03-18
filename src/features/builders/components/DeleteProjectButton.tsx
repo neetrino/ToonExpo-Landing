@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { deleteProjectAction } from "@/features/builders/actions/projectActions";
+import { IconTrash } from "@/features/admin/components/AdminUiIcons";
 
 type Props = {
   projectId: string;
@@ -15,6 +16,7 @@ export function DeleteProjectButton({ projectId, slug }: Props) {
     <button
       type="button"
       disabled={pending}
+      title="Ջնջել նախագիծը"
       onClick={() => {
         if (!window.confirm(`Ջնջել «${slug}»?`)) {
           return;
@@ -23,9 +25,10 @@ export function DeleteProjectButton({ projectId, slug }: Props) {
           void deleteProjectAction(projectId);
         });
       }}
-      className="rounded border border-red-200 px-2 py-1 text-xs text-red-700 disabled:opacity-50"
+      className="inline-flex items-center gap-2 rounded-xl border border-red-200/90 bg-white px-4 py-2.5 text-sm font-medium text-red-700 shadow-sm transition-all duration-200 hover:border-red-300 hover:bg-red-50 disabled:opacity-50"
     >
-      {pending ? "…" : "Ջնջել"}
+      <IconTrash className="h-4 w-4 shrink-0" />
+      {pending ? "Ջնջվում է…" : "Ջնջել"}
     </button>
   );
 }
