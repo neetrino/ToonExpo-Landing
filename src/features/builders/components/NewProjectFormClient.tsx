@@ -1,0 +1,47 @@
+"use client";
+
+import { useActionState } from "react";
+import { createProjectAction } from "@/features/builders/actions/projectActions";
+import { ProjectFieldsForm } from "@/features/builders/components/ProjectFieldsForm";
+import { emptyExpoFields } from "@/shared/lib/expoFields";
+
+export function NewProjectFormClient() {
+  const [state, formAction, pending] = useActionState(createProjectAction, {});
+
+  return (
+    <form action={formAction} className="flex flex-col gap-6">
+      {state.error ? (
+        <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-800" role="alert">
+          {state.error}
+        </p>
+      ) : null}
+
+      <div className="flex flex-wrap gap-6 rounded-xl border border-slate-200 bg-white p-4">
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-medium text-slate-700">Slug (ըստ ցանկության)</span>
+          <input
+            name="slug"
+            type="text"
+            placeholder="ինքնաշխատ՝ վերնագրից"
+            pattern="[a-z0-9]+(-[a-z0-9]+)*"
+            className="rounded-lg border border-slate-300 px-3 py-2"
+          />
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input name="published" type="checkbox" defaultChecked className="h-4 w-4" />
+          <span>Հրապարակված</span>
+        </label>
+      </div>
+
+      <ProjectFieldsForm defaults={emptyExpoFields()} />
+
+      <button
+        type="submit"
+        disabled={pending}
+        className="max-w-xs rounded-lg bg-[#2ba8b0] py-3 font-semibold text-white disabled:opacity-50"
+      >
+        {pending ? "…" : "Պահպանել և խմբագրել"}
+      </button>
+    </form>
+  );
+}

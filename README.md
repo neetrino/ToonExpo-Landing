@@ -4,6 +4,20 @@
 
 **Փաստաթղթեր.** `docs/TECH_CARD.md` · `docs/01-ARCHITECTURE.md` · `docs/DATA_FIELDS_SCHEMA.md` · `docs/PROGRESS.md`
 
+### Տեղային գործարկում
+
+```bash
+cp .env.example .env
+# Լրացրու DATABASE_URL, DIRECT_URL, AUTH_SECRET (≥32 նիշ), AUTH_URL
+pnpm install
+pnpm exec prisma migrate deploy   # կամ pnpm db:migrate
+pnpm db:seed                      # ադմին՝ SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD
+pnpm dev                          # http://localhost:3000
+```
+
+- **Ադմին.** `/admin/login` — նույն email/գաղտնաբառը seed-ից։
+- **Vercel.** Env նույնը + `pnpm build` CI-ում։
+
 ---
 
 ## Զարգացման կանոնների կաղապար (Cursor AI)
