@@ -1,6 +1,29 @@
-# Զարգացման կանոնների կաղապար (Cursor AI)
+# Toon Expo Landing
 
-Cursor-ում AI-զարգացման կանոններով repo-ի կաղապար։ Next.js / NestJS, ճարտարապետություն, կոդ, անվտանգություն, թեստեր, դեպլոյ։
+Ցուցահանդեսի հարթակ (լենդինգներ + ադմին) — **չափ B**, feature-based։
+
+**Փաստաթղթեր.** `docs/TECH_CARD.md` · `docs/01-ARCHITECTURE.md` · `docs/DATA_FIELDS_SCHEMA.md` · `docs/PROGRESS.md`
+
+### Տեղային գործարկում
+
+```bash
+cp .env.example .env
+# Լրացրու DATABASE_URL, DIRECT_URL, AUTH_SECRET (≥32 նիշ), AUTH_URL
+pnpm install
+pnpm exec prisma migrate deploy   # կամ pnpm db:migrate
+pnpm db:seed                      # ադմին + CSV (`docs/data/ToonExpoData2026.csv`), եթե DB-ում չկան նախագծեր
+# Վերաբեռնել CSV. SEED_REPLACE_PROJECTS=true pnpm db:seed
+pnpm dev                          # http://localhost:3000
+```
+
+- **Ադմին.** `/admin/login` — նույն email/գաղտնաբառը seed-ից։
+- **Vercel.** Env նույնը + `pnpm build` CI-ում։
+
+---
+
+## Զարգացման կանոնների կաղապար (Cursor AI)
+
+Repo-ում նաև Cursor AI կանոններ, Next.js / NestJS հղումներ, ճարտարապետություն, անվտանգություն։
 
 ---
 

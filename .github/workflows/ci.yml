@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+        env:
+          AUTH_SECRET: ci-auth-secret-at-least-32-characters-long
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+        env:
+          AUTH_SECRET: ci-auth-secret-at-least-32-characters-long
+          DATABASE_URL: postgresql://u:p@localhost:5432/db
+          DIRECT_URL: postgresql://u:p@localhost:5432/db
