@@ -1,6 +1,8 @@
 import {
+  EXPO_EDIT_SECTIONS,
   EXPO_FIELD_GROUPS,
   EXPO_FIELD_LABELS_HY,
+  type ExpoEditSectionId,
   type ExpoFieldGroupId,
 } from "@/shared/constants/expoFieldKeys";
 import type { ExpoFieldsFormValues } from "@/shared/lib/expoFields";
@@ -32,8 +34,10 @@ const LONG_FIELDS = new Set([
 
 export type ProjectFieldsFormProps = {
   defaults: ExpoFieldsFormValues;
-  /** If set, only this group is rendered (for tabbed edit) */
+  /** If set, only this group is rendered */
   groupId?: ExpoFieldGroupId;
+  /** Merged edit section (several field groups) */
+  sectionId?: ExpoEditSectionId;
 };
 
 function FieldRow({
@@ -76,11 +80,27 @@ function FieldRow({
   );
 }
 
-export function ProjectFieldsForm({ defaults, groupId }: ProjectFieldsFormProps) {
+function resolveGroups(
+  sectionId: ExpoEditSectionId | undefined,
+  groupId: ExpoFieldGroupId | undefined,
+) {
+  if (sectionId) {
+    const section = EXPO_EDIT_SECTIONS.find((s) => s.id === sectionId);
+    if (!section) {
+      return EXPO_FIELD_GROUPS;
+    }
+    const idSet = new Set(section.groupIds);
+    return EXPO_FIELD_GROUPS.filter((g) => idSet.has(g.id));
+  }
+  if (groupId) {
+    return EXPO_FIELD_GROUPS.filter((g) => g.id === groupId);
+  }
+  return EXPO_FIELD_GROUPS;
+}
+
+export function ProjectFieldsForm({ defaults, groupId, sectionId }: ProjectFieldsFormProps) {
   const d = defaults as Record<string, string>;
-  const groups = groupId
-    ? EXPO_FIELD_GROUPS.filter((g) => g.id === groupId)
-    : EXPO_FIELD_GROUPS;
+  const groups = resolveGroups(sectionId, groupId);
 
   return (
     <div className="flex flex-col gap-6">

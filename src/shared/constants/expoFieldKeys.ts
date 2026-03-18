@@ -178,3 +178,63 @@ export const EXPO_FIELD_GROUPS: {
     keys: ["expo_field_51", "expo_field_52", "expo_field_53"],
   },
 ];
+
+/** Խմբագրման նավիգացիա — միավորված բաժիններ (<10) */
+export type ExpoEditSectionId =
+  | "overview"
+  | "place_time"
+  | "finance"
+  | "building"
+  | "comfort"
+  | "media"
+  | "online";
+
+export const EXPO_EDIT_SECTIONS: readonly {
+  id: ExpoEditSectionId;
+  titleHy: string;
+  descriptionHy: string;
+  groupIds: readonly ExpoFieldGroupId[];
+}[] = [
+  {
+    id: "overview",
+    titleHy: "Անուն և ընկերություններ",
+    descriptionHy: "Նախագիծ, մասնակից, կառուցապատողներ",
+    groupIds: ["meta", "companies"],
+  },
+  {
+    id: "place_time",
+    titleHy: "Տեղադիրք և ժամկետներ",
+    descriptionHy: "Հասցե, քարտեզ, շինաշխատանքներ",
+    groupIds: ["location", "dates"],
+  },
+  {
+    id: "finance",
+    titleHy: "Գներ և ձեռքբերում",
+    descriptionHy: "Արժեքներ, բանկեր, պայմաններ",
+    groupIds: ["pricing", "purchase"],
+  },
+  {
+    id: "building",
+    titleHy: "Շինարարություն և բնակարաններ",
+    descriptionHy: "Շենք, հարկեր, մակերեսներ, վերելակ",
+    groupIds: ["construction", "units"],
+  },
+  {
+    id: "comfort",
+    titleHy: "Ջեռուցում, կայան, կոմերցիա",
+    descriptionHy: "HVAC, կայանատեղի, սուբսիդիա",
+    groupIds: ["hvac", "parking", "commercial"],
+  },
+  {
+    id: "media",
+    titleHy: "Մեդիա և ֆայլեր",
+    descriptionHy: "Ռենդերներ, տուրեր, լոգո",
+    groupIds: ["media"],
+  },
+  {
+    id: "online",
+    titleHy: "Կայք և սոցցանցեր",
+    descriptionHy: "Հղումներ և հասարակական ցանցեր",
+    groupIds: ["social"],
+  },
+] as const;
