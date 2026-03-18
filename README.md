@@ -11,7 +11,8 @@ cp .env.example .env
 # Լրացրու DATABASE_URL, DIRECT_URL, AUTH_SECRET (≥32 նիշ), AUTH_URL
 pnpm install
 pnpm exec prisma migrate deploy   # կամ pnpm db:migrate
-pnpm db:seed                      # ադմին՝ SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD
+pnpm db:seed                      # ադմին + CSV (`docs/data/ToonExpoData2026.csv`), եթե DB-ում չկան նախագծեր
+# Վերաբեռնել CSV. SEED_REPLACE_PROJECTS=true pnpm db:seed
 pnpm dev                          # http://localhost:3000
 ```
 

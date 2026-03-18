@@ -47,7 +47,7 @@
     "vitest": "^3.0.5"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx --tsconfig tsconfig.json prisma/seed.ts"
   },
   "packageManager": "pnpm@9.14.0"
 }

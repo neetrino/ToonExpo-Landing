@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/shared/lib/db";
@@ -10,10 +9,15 @@ const credentialsSchema = z.object({
   password: z.string().min(1),
 });
 
+/**
+ * JWT սեսիա — Edge middleware-ը չի կարող DB սեսիա ստուգել, այդ պատճառով ադմինը բաց էր առանց մուտքի։
+ */
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
   trustHost: true,
-  session: { strategy: "database", maxAge: 60 * 60 * 24 * 7 },
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 7,
+  },
   pages: {
     signIn: "/admin/login",
   },
@@ -47,9 +51,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    session({ session, user }) {
-      if (session.user && user) {
-        session.user.id = user.id;
+    jwt({ token, user }) {
+      if (user?.id) {
+        token.sub = user.id;
+        token.email = user.email ?? undefined;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+        if (token.email) {
+          session.user.email = token.email as string;
+        }
       }
       return session;
     },
