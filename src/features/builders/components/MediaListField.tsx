@@ -102,7 +102,7 @@ export function MediaListField({ name, label, defaultValue }: Props) {
             ))}
           </ul>
         ) : null}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-2">
           <input
             id={id}
             type="url"
@@ -116,29 +116,33 @@ export function MediaListField({ name, label, defaultValue }: Props) {
                 setNewUrl("");
               }
             }}
-            className="min-w-[200px] flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#2eb0b4] focus:outline-none focus:ring-1 focus:ring-[#2eb0b4]"
+            className="min-h-[42px] min-w-0 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#2eb0b4] focus:outline-none focus:ring-1 focus:ring-[#2eb0b4] sm:flex-1"
           />
-          <button
-            type="button"
-            onClick={() => {
-              addUrl(newUrl);
-              setNewUrl("");
-            }}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-          >
-            Ավելացնել URL
-          </button>
-          <label className="cursor-pointer rounded-lg bg-[#2eb0b4] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#269a9e] disabled:opacity-50">
-            {uploadBusy ? "…" : "Վերբեռնել ֆայլեր"}
-            <input
-              type="file"
-              className="sr-only"
-              accept="image/*"
-              multiple
-              disabled={uploadBusy}
-              onChange={onFileSelect}
-            />
-          </label>
+          <div className="flex shrink-0 flex-wrap items-stretch gap-2 sm:flex-nowrap">
+            <button
+              type="button"
+              onClick={() => {
+                addUrl(newUrl);
+                setNewUrl("");
+              }}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              Ավելացնել URL
+            </button>
+            <label
+              className={`inline-flex cursor-pointer items-center justify-center rounded-lg bg-[#2eb0b4] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#269a9e] ${uploadBusy ? "pointer-events-none opacity-70" : ""}`}
+            >
+              {uploadBusy ? "…" : "Վերբեռնել ֆայլեր"}
+              <input
+                type="file"
+                className="sr-only"
+                accept="image/*"
+                multiple
+                disabled={uploadBusy}
+                onChange={onFileSelect}
+              />
+            </label>
+          </div>
         </div>
         {uploadError ? (
           <p className="mt-2 text-sm text-red-600">{uploadError}</p>
