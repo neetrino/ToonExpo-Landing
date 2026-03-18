@@ -11,9 +11,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // suppressHydrationWarning — extension-ներ (օր. --vsc-domain) կարող են <html> փոխել
   return (
-    <html lang="hy">
-      <body className="min-h-screen antialiased">{children}</body>
+    <html lang="hy" suppressHydrationWarning>
+      <body className="min-h-screen antialiased" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
