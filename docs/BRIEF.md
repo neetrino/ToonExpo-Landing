@@ -20,7 +20,7 @@
 
 ## Stack
 
-Որոշվելիք `TECH_CARD` / `01-ARCHITECTURE` փուլում (Next.js + ԲԴ — հավանական)։
+Տե՛ս `docs/TECH_CARD.md`, `docs/02-TECH_STACK.md` — Next.js, Prisma, Neon, Auth.js, R2, Vercel (չափ **B**)։
 
 ## Դիզայն
 

@@ -1,6 +1,14 @@
-# Զարգացման կանոնների կաղապար (Cursor AI)
+# Toon Expo Landing
 
-Cursor-ում AI-զարգացման կանոններով repo-ի կաղապար։ Next.js / NestJS, ճարտարապետություն, կոդ, անվտանգություն, թեստեր, դեպլոյ։
+Ցուցահանդեսի հարթակ (լենդինգներ + ադմին) — **չափ B**, feature-based։
+
+**Փաստաթղթեր.** `docs/TECH_CARD.md` · `docs/01-ARCHITECTURE.md` · `docs/DATA_FIELDS_SCHEMA.md` · `docs/PROGRESS.md`
+
+---
+
+## Զարգացման կանոնների կաղապար (Cursor AI)
+
+Repo-ում նաև Cursor AI կանոններ, Next.js / NestJS հղումներ, ճարտարապետություն, անվտանգություն։
 
 ---
 
