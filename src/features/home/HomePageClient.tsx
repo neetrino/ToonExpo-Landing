@@ -16,12 +16,17 @@ const HERO_TITLE = "TOON EXPO 2026. INVEST";
 const HERO_SUBTITLE = "interactive map";
 /** Սոցիալ SVG-ներ View Apartments-ի կողքին (FB, IG) — կոմպակտ չափ։ */
 const VIEW_APARTMENTS_SIDE_ICON_CLASS = "h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11";
+/** Ֆուտերի ադմին հղման նշաններ (Figma badge + mark), կոմպակտ չափ։ */
+const FOOTER_ADMIN_BADGE_IMG_CLASS = "h-6 w-6 shrink-0 object-contain";
+const FOOTER_ADMIN_MARK_IMG_CLASS = "h-6 w-3 shrink-0 object-contain";
 
 const FIGMA_ASSETS = {
   heroBg: "/figma/home/heroBg.jpg",
   headerLogo: "/figma/home/headerLogo.svg",
   footerLogo: "/figma/home/footerLogo.svg",
   footerIllustration: "/figma/home/footerIllustration.svg",
+  footerBadge: "/figma/home/footerBadge.svg",
+  footerBadgeMark: "/figma/home/footerBadgeMark.svg",
   locationDivider: "/figma/home/locationDivider.svg",
   visitSiteButton: "/figma/home/visitSiteButton.svg",
   visitSiteIconLeft: "/figma/home/visitSiteIconLeft.svg",
@@ -342,8 +347,25 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             <a href="#location" className="transition hover:text-white">
               Location
             </a>
-            <Link href="/admin/login" className="transition hover:text-white">
-              Admin
+            <Link
+              href="/admin/login"
+              aria-label="Admin"
+              className="inline-flex items-center gap-1.5 opacity-90 transition hover:opacity-100"
+            >
+              <img
+                src={FIGMA_ASSETS.footerBadge}
+                alt=""
+                className={FOOTER_ADMIN_BADGE_IMG_CLASS}
+                width={24}
+                height={24}
+              />
+              <img
+                src={FIGMA_ASSETS.footerBadgeMark}
+                alt=""
+                className={FOOTER_ADMIN_MARK_IMG_CLASS}
+                width={12}
+                height={24}
+              />
             </Link>
           </nav>
         </div>
