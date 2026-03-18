@@ -196,8 +196,6 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           )}
         </section>
 
-        <section className="h-24 bg-white" />
-
         <section id="location" className="mx-auto max-w-[1680px] px-5 pb-10 lg:px-10 lg:pb-14">
           <div className="mb-6 flex items-center gap-4">
             <h2 className="text-2xl font-semibold uppercase tracking-[0.12em] text-white lg:text-[2.5rem]">
