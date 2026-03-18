@@ -5,12 +5,7 @@ import Link from "next/link";
 import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
-import {
-  FooterBottomNav,
-  ReachOutCta,
-  SocialTilesRow,
-  VIEW_APARTMENTS_SIDE_ICON_CLASS,
-} from "@/features/home/siteReachFooterBlocks";
+import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
 
 const FOOTER_LEGAL_TEXT_CLASS =
   "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
@@ -23,14 +18,11 @@ const FIGMA_ASSETS = {
   visitSiteButton: "/figma/home/visitSiteButton.svg",
 } as const;
 
-const HOME_TEAL_VISIT_SITE_CLASS =
-  "relative inline-flex h-[60px] w-[307px] max-w-full items-center justify-center text-xs font-semibold uppercase tracking-[0.2em] text-[#2ba8b0] transition hover:brightness-110";
-
-/** /p slug — փոքր Visit Site + սոցիալներ */
-const PARTICIPANT_TEAL_VISIT_SITE_CLASS =
+/** Home և /p — նույն չափեր (Visit Site, FB/IG teal գոտում) */
+const TEAL_BAR_VISIT_SITE_CLASS =
   "relative inline-flex h-10 w-52 max-w-full shrink-0 items-center justify-center text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-[#2ba8b0] transition hover:brightness-110";
 
-const PARTICIPANT_TEAL_SOCIAL_ICON_CLASS = "h-8 w-8 shrink-0 object-contain";
+const TEAL_BAR_SOCIAL_ICON_CLASS = "h-8 w-8 shrink-0 object-contain";
 
 export type SiteReachMapFooterVariant = "home" | "participant";
 
@@ -92,61 +84,28 @@ export function SiteReachMapFooter({
                   View Apartments
                 </Link>
               </div>
-              {isParticipant ? (
-                <>
-                  <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-2 sm:gap-3">
-                    {footerSite ? (
-                      <a
-                        href={footerSite}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={PARTICIPANT_TEAL_VISIT_SITE_CLASS}
-                      >
-                        <img
-                          src={FIGMA_ASSETS.visitSiteButton}
-                          alt=""
-                          className="absolute inset-0 h-full w-full"
-                        />
-                        <span className="relative z-10">Visit Site</span>
-                      </a>
-                    ) : null}
-                    <SocialTilesRow
-                      facebookUrl={footerFacebook}
-                      instagramUrl={footerInstagram}
-                      iconClassName={PARTICIPANT_TEAL_SOCIAL_ICON_CLASS}
-                      className="flex items-center gap-1.5"
-                    />
-                  </div>
-                  <div className="flex w-full shrink-0 justify-end lg:w-auto">
-                    <ReachOutCta className="shrink-0" />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-2 sm:gap-4">
-                    {footerSite ? (
-                      <a
-                        href={footerSite}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={HOME_TEAL_VISIT_SITE_CLASS}
-                      >
-                        <img src={FIGMA_ASSETS.visitSiteButton} alt="" className="absolute inset-0 h-full w-full" />
-                        <span className="relative z-10">Visit Site</span>
-                      </a>
-                    ) : null}
-                    <SocialTilesRow
-                      facebookUrl={footerFacebook}
-                      instagramUrl={footerInstagram}
-                      iconClassName={VIEW_APARTMENTS_SIDE_ICON_CLASS}
-                      className="flex items-center gap-2"
-                    />
-                  </div>
-                  <div className="flex w-full shrink-0 justify-end lg:w-auto">
-                    <ReachOutCta className="shrink-0" />
-                  </div>
-                </>
-              )}
+              <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-2 sm:gap-3">
+                {footerSite ? (
+                  <a
+                    href={footerSite}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={TEAL_BAR_VISIT_SITE_CLASS}
+                  >
+                    <img src={FIGMA_ASSETS.visitSiteButton} alt="" className="absolute inset-0 h-full w-full" />
+                    <span className="relative z-10">Visit Site</span>
+                  </a>
+                ) : null}
+                <SocialTilesRow
+                  facebookUrl={footerFacebook}
+                  instagramUrl={footerInstagram}
+                  iconClassName={TEAL_BAR_SOCIAL_ICON_CLASS}
+                  className="flex items-center gap-1.5"
+                />
+              </div>
+              <div className="flex w-full shrink-0 justify-end lg:w-auto">
+                <ReachOutCta className="shrink-0" />
+              </div>
             </div>
           </div>
         </section>

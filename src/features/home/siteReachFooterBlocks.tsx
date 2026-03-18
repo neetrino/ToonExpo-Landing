@@ -3,7 +3,6 @@
 import { Fragment } from "react";
 import Link from "next/link";
 
-const VIEW_APARTMENTS_SIDE_ICON_CLASS = "h-10 w-10 shrink-0 object-contain sm:h-11 sm:w-11";
 const FOOTER_SOCIAL_FB_IMG_CLASS = "h-[22px] w-[10px] shrink-0 object-contain object-left";
 const FOOTER_SOCIAL_IG_IMG_CLASS = "h-[22px] w-[22px] shrink-0 object-contain";
 const FOOTER_NAV_LINK_CLASS =
@@ -27,8 +26,6 @@ const FOOTER_NAV_ITEMS = [
   { href: "/#projects", label: "Projects" },
   { href: "/#contacts", label: "Contacts" },
 ] as const;
-
-export { VIEW_APARTMENTS_SIDE_ICON_CLASS };
 
 export function FooterBottomNav({
   facebookUrl,
