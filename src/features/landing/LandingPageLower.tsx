@@ -13,7 +13,6 @@ import {
   participantFigmaAssets,
 } from "@/features/landing/landingPage.constants";
 import {
-  extractApartmentSizes,
   firstNonEmpty,
   formatRange,
   getProjectMedia,
@@ -46,7 +45,6 @@ export function LandingPageLower({ fields, title }: Props) {
   const media = getProjectMedia(fields);
   const exteriorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_43)));
   const interiorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_44)));
-  const apartmentSizes = extractApartmentSizes(fields);
   const infrastructureItems = splitListItems(fields.expo_field_33);
   const investmentIntro = firstNonEmpty(
     fields.expo_field_17,
@@ -74,8 +72,6 @@ export function LandingPageLower({ fields, title }: Props) {
     exteriorMedia[1] || exteriorMedia[0] || media[3] || participantFigmaAssets.infrastructureLeft,
     interiorMedia[1] || interiorMedia[0] || media[4] || participantFigmaAssets.infrastructureRight,
   ];
-  const activeSizeIndex =
-    apartmentSizes.length > 1 ? 1 : apartmentSizes.length === 1 ? 0 : -1;
 
   return (
     <>
@@ -110,35 +106,6 @@ export function LandingPageLower({ fields, title }: Props) {
                 </div>
               ))}
             </div>
-          </div>
-        </Section>
-      ) : null}
-
-      {vis.apartments ? (
-        <Section id="apartments" className="bg-white py-10">
-          <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
-            <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
-              Apartment options
-            </h2>
-            <div className="mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-4 xl:grid-cols-8">
-              {apartmentSizes.map((size, index) => (
-                <div
-                  key={size}
-                  className={`flex min-h-[92px] items-center justify-center rounded-[4px] border-[3px] px-3 text-center text-[1.15rem] font-semibold leading-tight lg:min-h-[108px] lg:text-[1.35rem] ${
-                    index === activeSizeIndex
-                      ? "border-[#2ba8b0] bg-[#2ba8b0] text-white"
-                      : "border-[#2ba8b0] text-[#2ba8b0]"
-                  }`}
-                >
-                  {size}
-                </div>
-              ))}
-            </div>
-            {isFieldNonEmpty(fields.expo_field_06) ? (
-              <p className="mt-6 max-w-[860px] text-base leading-7 text-black/80 whitespace-pre-wrap">
-                {fields.expo_field_06}
-              </p>
-            ) : null}
           </div>
         </Section>
       ) : null}
@@ -296,3 +263,4 @@ export function LandingPageLower({ fields, title }: Props) {
     </>
   );
 }
+

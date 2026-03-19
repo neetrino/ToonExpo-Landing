@@ -17,7 +17,6 @@ const KEYS = {
     "expo_field_10",
     "expo_field_09",
   ],
-  apartments: ["expo_field_06", "expo_field_26", "expo_field_27", "expo_field_28"],
   gallery: ["expo_field_43", "expo_field_44"],
   payment: ["expo_field_19", "expo_field_09"],
   infrastructure: ["expo_field_33", "expo_field_34"],

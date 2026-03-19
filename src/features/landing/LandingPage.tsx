@@ -113,7 +113,7 @@ export function LandingPage({ fields }: Props) {
     fields.expo_field_03,
     leadText,
   );
-  const primaryCtaHref = vis.apartments ? "#apartments" : navItems[0] ? `#${navItems[0].id}` : "#about";
+  const primaryCtaHref = navItems[0] ? `#${navItems[0].id}` : "#about";
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-[#111827]">
@@ -177,7 +177,7 @@ export function LandingPage({ fields }: Props) {
                 href={primaryCtaHref}
                 className="inline-flex items-center justify-center rounded-[4px] bg-[#2ba8b0] px-6 py-3.5 text-base font-semibold uppercase tracking-[0.08em] text-white transition hover:brightness-110 lg:px-7 lg:py-4"
               >
-                View Apartments
+                Explore
               </a>
             </div>
           </div>

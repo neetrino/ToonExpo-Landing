@@ -61,23 +61,6 @@ export function splitListItems(raw: string | undefined): string[] {
     .filter(Boolean);
 }
 
-/** Քաշում է բնակարանների չափերը տարբեր դաշտերից։ */
-export function extractApartmentSizes(fields: ExpoMap): string[] {
-  const candidates = [
-    fields.expo_field_06,
-    fields.expo_field_26,
-    fields.expo_field_27,
-    fields.expo_field_28,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const matches = candidates.match(/\d+(?:[.,]\d+)?\s*m²/gi) ?? [];
-  const normalized = matches.map((match) => match.replace(",", ".").replace(/\s+/g, " ").trim());
-
-  return [...new Set(normalized)].slice(0, 8);
-}
-
 /** Ձևաչափում է միջակայքը գնային քարտերի համար։ */
 export function formatRange(minValue?: string, maxValue?: string): string {
   const min = minValue?.trim();

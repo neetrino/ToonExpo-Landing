@@ -7,7 +7,6 @@ export const participantNav: Array<{
 }> = [
   { id: "about", label: "About", block: "about" },
   { id: "investment", label: "Investment", block: "investment" },
-  { id: "apartments", label: "Apartments", block: "apartments" },
   { id: "gallery", label: "Gallery", block: "gallery" },
   { id: "payment", label: "Payment", block: "payment" },
   { id: "infrastructure", label: "Infrastructure", block: "infrastructure" },
