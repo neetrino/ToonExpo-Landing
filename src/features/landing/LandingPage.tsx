@@ -94,7 +94,7 @@ export function LandingPage({ fields }: Props) {
   const leadText = getLeadText(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const aboutPrimaryImage = media[1] || media[0] || participantFigmaAssets.aboutPrimary;
-  const aboutSecondaryImage = media[2] || media[1] || participantFigmaAssets.aboutSecondary;
+  const aboutSecondaryImage = media[2] || media[1] || media[0] || "";
   const aboutFacts = [
     { label: "Developer", value: fields.expo_field_11 },
     { label: "Architect", value: fields.expo_field_12 },
@@ -248,9 +248,11 @@ export function LandingPage({ fields }: Props) {
                 className="h-full min-h-[360px] w-full rounded-l-[6px] rounded-r-none object-cover lg:min-h-[1120px]"
               />
               <div className="absolute inset-0 rounded-l-[6px] rounded-r-none bg-black/18" />
-              <div className="absolute z-20 bottom-4 left-4 w-[72%] max-w-[380px] overflow-hidden rounded-[6px] border-4 border-white shadow-[0_20px_45px_rgba(0,0,0,0.35)] lg:bottom-[220px] lg:left-[-116px] lg:w-[64%] lg:max-w-[480px]">
-                <img src={aboutSecondaryImage} alt="" className="h-[232px] w-full object-cover lg:h-[264px]" />
-              </div>
+              {aboutSecondaryImage ? (
+                <div className="absolute bottom-4 left-4 z-20 w-[72%] max-w-[380px] overflow-hidden rounded-[6px] border-4 border-white shadow-[0_20px_45px_rgba(0,0,0,0.35)] lg:bottom-[220px] lg:left-[-116px] lg:w-[64%] lg:max-w-[480px]">
+                  <img src={aboutSecondaryImage} alt="" className="h-[232px] w-full object-cover lg:h-[264px]" />
+                </div>
+              ) : null}
             </div>
           </div>
         </Section>
