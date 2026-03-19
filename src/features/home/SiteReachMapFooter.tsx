@@ -111,37 +111,46 @@ export function SiteReachMapFooter({
         </section>
       </div>
 
-      <footer className="bg-[#050b10] px-5 py-4 lg:px-10 lg:py-5">
-        <div className="mx-auto max-w-[1680px]">
-          <div className="flex flex-col gap-4 text-white/70 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex w-full min-w-0 max-w-full flex-col items-start gap-3 sm:gap-4">
-              <img src={FIGMA_ASSETS.footerLogo} alt="" className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" />
-              <div
-                className="flex max-w-full flex-nowrap items-baseline gap-x-7 overflow-x-auto overscroll-x-contain sm:gap-x-10 sm:[scrollbar-width:thin]"
-                role="group"
-                aria-label="Legal"
-              >
-                <p className={`${FOOTER_LEGAL_TEXT_CLASS} shrink-0`}>
-                  © 2026 TOON EXPO. All rights reserved.
-                </p>
-                <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
-                  Privacy policy
-                </Link>
+      <footer className="relative flex min-h-[20rem] flex-col bg-[#050b10] px-5 py-[5.2rem] lg:min-h-[24rem] lg:px-10 lg:py-[6.5rem]">
+        <div className="relative mx-auto flex flex-1 min-h-0 w-full max-w-[3360px] flex-col">
+          <div className="flex flex-1 flex-col">
+            <div className="flex flex-col gap-6 text-white/70 lg:flex-row lg:items-start lg:justify-between">
+              <img
+                src={FIGMA_ASSETS.footerLogo}
+                alt="Toon Expo"
+                className="h-16 w-16 shrink-0 sm:h-20 sm:w-20"
+              />
+              <div className="-mr-2 -mt-8 flex w-full min-w-0 flex-col items-end lg:-mr-6 lg:-mt-12 lg:max-w-[50%] lg:shrink-0">
+                <FooterBottomNav
+                  facebookUrl={footerFacebook}
+                  instagramUrl={footerInstagram}
+                  alignWithIllustration={false}
+                />
               </div>
             </div>
-            <div className="flex w-full flex-col items-center gap-3 lg:w-[min(100%,min(90vw,640px))] lg:shrink-0 lg:items-end">
-              <FooterBottomNav
-                facebookUrl={footerFacebook}
-                instagramUrl={footerInstagram}
-                alignWithIllustration
-              />
-              <img
-                src={FIGMA_ASSETS.footerIllustration}
-                alt=""
-                className="w-full max-w-[220px] opacity-90 lg:ml-0 lg:mr-0"
-              />
+            <div
+              className="mt-auto flex max-w-full flex-wrap items-baseline gap-x-7 gap-y-2 pt-8 sm:gap-x-10"
+              role="group"
+              aria-label="Legal"
+            >
+              <p className={`${FOOTER_LEGAL_TEXT_CLASS} shrink-0`}>
+                © 2026 TOON EXPO. All rights reserved.
+              </p>
+              <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
+                Privacy policy
+              </Link>
             </div>
           </div>
+        </div>
+        <div
+          className="absolute right-0 bottom-0 h-40 w-[min(100%,1056px)] overflow-hidden opacity-90 lg:h-48 pr-5 lg:pr-10"
+          aria-hidden
+        >
+          <img
+            src={FIGMA_ASSETS.footerIllustration}
+            alt=""
+            className="absolute right-0 bottom-0 w-[220px] max-w-none origin-bottom-right scale-x-[4.8] scale-y-[1.333]"
+          />
         </div>
       </footer>
     </>
