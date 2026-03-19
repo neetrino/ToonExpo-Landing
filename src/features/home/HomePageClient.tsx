@@ -117,12 +117,6 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 className="h-12 w-12 object-contain sm:h-14 sm:w-14"
               />
             </Link>
-            <Link
-              href="/admin/login"
-              className="rounded-[4px] border-2 border-white/85 px-4 py-2 text-sm font-medium uppercase tracking-[0.12em] text-white transition hover:bg-white hover:text-[#0b2530]"
-            >
-              Admin
-            </Link>
           </div>
         </header>
 

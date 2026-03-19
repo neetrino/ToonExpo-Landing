@@ -136,13 +136,6 @@ export function LandingPage({ fields }: Props) {
               </a>
             ))}
           </nav>
-          <button
-            type="button"
-            aria-disabled="true"
-            className="ml-auto rounded-[4px] border-2 border-white/85 px-3.5 py-1.5 text-xs uppercase tracking-[0.14em] text-white/90 lg:text-sm"
-          >
-            ENG
-          </button>
         </div>
       </header>
 
