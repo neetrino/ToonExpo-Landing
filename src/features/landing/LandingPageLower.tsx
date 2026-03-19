@@ -111,7 +111,7 @@ export function LandingPageLower({ fields, title }: Props) {
       ) : null}
 
       {vis.gallery ? (
-        <Section id="gallery" className="bg-white px-5 py-5 lg:px-0 lg:py-0">
+        <Section id="gallery" className="bg-white px-2 py-5 sm:px-3 lg:px-0 lg:py-0">
           <GalleryShowcase
             items={galleryItems}
             leftArrowSrc={participantFigmaAssets.galleryArrowLeft}
@@ -263,4 +263,6 @@ export function LandingPageLower({ fields, title }: Props) {
     </>
   );
 }
+
+
 
