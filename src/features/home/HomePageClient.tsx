@@ -18,7 +18,7 @@ const FIGMA_ASSETS = {
   heroBg: "/figma/home/heroBg.jpg",
   siteHeaderLogo: "/figma/home/footerLogo.svg",
   refundIcon: "/figma/home/refundIcon.svg",
-  locationIcon: "/figma/home/locationIcon.svg",
+  locationIcon: "/figma/home/loocation.svg",
   priceIcon: "/figma/home/priceIcon.svg",
   rangeIcon: "/figma/home/rangeIcon.svg",
   cardImageA: "/figma/home/cardImageA.png",
@@ -347,6 +347,7 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
   const pricePerMeter = formatRange(fields.expo_field_07, fields.expo_field_08);
   const priceRange = formatRange(fields.expo_field_17, fields.expo_field_18);
   const imageSrc = thumb ?? CARD_FALLBACK_IMAGES[index % CARD_FALLBACK_IMAGES.length];
+  const hasPhoto = Boolean(thumb);
   const showNewBadge = index < 3;
 
   return (
@@ -354,14 +355,20 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
       href={`/p/${project.slug}`}
       className="flex h-full flex-col overflow-hidden rounded-[16px] bg-white shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] transition duration-200 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2"
     >
-      {/* Блок изображения: 256px, градиент, бейдж New, кнопка избранного */}
-      <div className="relative h-[256px] w-full shrink-0 overflow-hidden">
-        <img
-          src={imageSrc}
-          alt={title}
-          loading="lazy"
-          className="h-full w-full object-cover"
-        />
+      {/* Блок изображения: 256px; при отсутствии фото — иконка-плейсхолдер */}
+      <div className="relative h-[256px] w-full shrink-0 overflow-hidden bg-[#e2e8f0]">
+        {hasPhoto ? (
+          <img
+            src={imageSrc}
+            alt={title}
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-[#94a3b8]">
+            <CardPhotoPlaceholderIcon className="h-20 w-20" />
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-[rgba(15,23,43,0.6)] to-transparent" aria-hidden />
         {showNewBadge && (
           <span className="absolute left-4 top-4 rounded-full bg-[#0092b8] px-4 py-1.5 text-xs font-semibold text-white shadow-sm">
@@ -373,23 +380,29 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
         </div>
       </div>
 
-      {/* Контент: отступ 24px, заголовок, локация, спеки, разделитель, цена + кнопка */}
+      {/* Контент: заголовок, жёлтый пункт (tax refund) вверху, локация ниже, спеки, разделитель, цена + кнопка */}
       <div className="flex flex-1 flex-col gap-4 px-6 pt-6 pb-5">
         <div className="flex flex-col gap-2">
           <h2 className="text-[20px] font-bold leading-7 tracking-[-0.45px] text-[#0f172b]">
             {title}
           </h2>
           <div className="flex items-center gap-2 text-[14px] leading-5 text-[#45556c]">
-            <img src={FIGMA_ASSETS.locationIcon} alt="" className="h-4 w-4 shrink-0" />
+            <img src={FIGMA_ASSETS.refundIcon} alt="" className="h-4 w-4 shrink-0 object-contain" />
+            <span>{taxRefund}</span>
+          </div>
+          <div className="flex items-center gap-2 text-[14px] leading-5 text-[#45556c]">
+            <img
+              src={FIGMA_ASSETS.locationIcon}
+              alt=""
+              className="h-5 w-5 shrink-0 object-contain"
+              width={20}
+              height={20}
+            />
             <span>{location}</span>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-4 border-b border-[#f1f5f9] pb-3">
-          <div className="flex items-center gap-1.5 text-[14px] text-[#45556c]">
-            <img src={FIGMA_ASSETS.refundIcon} alt="" className="h-4 w-4 shrink-0" />
-            <span>{taxRefund}</span>
-          </div>
           <div className="flex items-center gap-1.5 text-[14px] text-[#45556c]">
             <img src={FIGMA_ASSETS.priceIcon} alt="" className="h-4 w-4 shrink-0" />
             <span>{pricePerMeter}</span>
@@ -414,6 +427,26 @@ function HeartIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0092b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+    </svg>
+  );
+}
+
+function CardPhotoPlaceholderIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <rect width="18" height="18" x="3" y="3" rx="2" />
+      <circle cx="9" cy="9" r="2" />
+      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
     </svg>
   );
 }
