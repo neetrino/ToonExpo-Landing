@@ -54,15 +54,15 @@ export function FooterBottomNav({
       height={40}
     />
   );
-  const rowAlign = alignWithIllustration ? "justify-start" : "justify-center";
+  const rowAlign = alignWithIllustration ? "justify-start" : "justify-end";
   const navLinksOffsetClass = alignWithIllustration ? "pl-14 sm:pl-20 lg:pl-32" : "";
 
   return (
     <nav
       aria-label="Footer"
-      className={`flex w-full min-w-0 flex-nowrap items-center gap-x-1 font-medium uppercase text-white ${rowAlign}`}
+      className={`flex w-full min-w-0 flex-wrap items-center justify-end gap-x-1 gap-y-2 font-medium uppercase text-white sm:flex-nowrap ${rowAlign}`}
     >
-      <div className={`flex min-w-0 shrink-0 flex-nowrap items-center gap-x-1 ${rowAlign} ${navLinksOffsetClass}`}>
+      <div className={`flex min-w-0 shrink-0 flex-wrap items-center justify-end gap-x-1 gap-y-2 sm:flex-nowrap ${rowAlign} ${navLinksOffsetClass}`}>
         {FOOTER_NAV_ITEMS.map((item, index) => (
           <Fragment key={item.href}>
             {index > 0 ? (

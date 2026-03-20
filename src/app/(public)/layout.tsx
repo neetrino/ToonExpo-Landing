@@ -1,3 +1,5 @@
+import { PublicLayoutClient } from "./PublicLayoutClient";
+
 export const dynamic = "force-dynamic";
 
 export default async function PublicSiteLayout({
@@ -5,5 +7,5 @@ export default async function PublicSiteLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  return <PublicLayoutClient>{children}</PublicLayoutClient>;
 }
