@@ -257,7 +257,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             }}
           >
             <div
-              className="toon-home-map relative h-[90vh] w-[90vw] overflow-hidden rounded-[26px] border border-[#246976] bg-black shadow-2xl"
+              className="toon-home-map relative h-[74vh] w-[88vw] overflow-hidden rounded-[26px] border border-[#246976] bg-black shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* В попапе поиск всегда раскрыт (не зависим от isSearchExpanded) */}
@@ -371,8 +371,16 @@ id="featured-heading"
       </main>
 
       <HomeBottomBar
-        onScrollToTop={scrollToTop}
-        onOpenSearch={openSearch}
+        onScrollToTop={() => {
+          if (isMapFullscreen) setIsMapFullscreen(false);
+          const delay = isMapFullscreen ? 200 : 0;
+          setTimeout(scrollToTop, delay);
+        }}
+        onOpenSearch={() => {
+          if (isMapFullscreen) setIsMapFullscreen(false);
+          const delay = isMapFullscreen ? 200 : 0;
+          setTimeout(openSearch, delay);
+        }}
         onOpenMap={() => setIsMapFullscreen(true)}
       />
     </div>
