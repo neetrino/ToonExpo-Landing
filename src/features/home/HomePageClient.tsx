@@ -156,9 +156,9 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
     <div className="min-h-screen bg-[#246976] text-white">
       <header
         id="top"
-        className="fixed inset-x-0 top-0 z-[90] border-b border-white/15 bg-black/72 text-white backdrop-blur"
+        className="fixed inset-x-0 top-0 z-[90] border-b border-white/15 bg-black/72 text-white backdrop-blur lg:hidden"
       >
-        <div className="mx-auto flex max-w-[1680px] items-center justify-center gap-4 px-5 py-4 lg:px-10">
+        <div className="mx-auto flex max-w-[1680px] items-center justify-center gap-4 px-5 py-4">
           <Link
             href="/"
             className="inline-flex shrink-0 items-center transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b2530]"
@@ -189,10 +189,26 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           aria-hidden
         />
 
-        {/* Мобильный: сверху текст, потом карта. Десктоп: карта слева, текст справа. Отступ сверху под фиксированный хедер. */}
+        {/* Десктоп: старый хедер в потоке (без фиксации), только lg+ */}
+        <header className="relative z-10 hidden px-5 py-6 lg:block lg:px-10">
+          <div className="mx-auto flex max-w-[1680px] items-center justify-between gap-4">
+            <Link
+              href="/"
+              className="inline-flex shrink-0 items-center transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b2530]"
+            >
+              <img
+                src={FIGMA_ASSETS.siteHeaderLogo}
+                alt="Toon Expo"
+                className="h-[4.5rem] w-[4.5rem] object-contain sm:h-[5.25rem] sm:w-[5.25rem]"
+              />
+            </Link>
+          </div>
+        </header>
+
+        {/* Мобильный: отступ сверху под фиксированный хедер. Десктоп: хедер в потоке, обычные отступы. */}
         <section
           id="events"
-          className="relative z-10 scroll-mt-6 px-4 pb-12 pt-[72px] sm:px-5 sm:pb-16 sm:pt-[72px] lg:px-[92px] lg:pb-28 lg:pr-[107px] lg:pt-24"
+          className="relative z-10 scroll-mt-6 px-4 pb-12 pt-[72px] sm:px-5 sm:pb-16 sm:pt-[72px] lg:px-[92px] lg:pb-28 lg:pr-[107px] lg:pt-8"
         >
           <div className="mx-auto grid max-w-[1920px] grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,1063px)_24px_634px] lg:gap-0">
             <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-hidden rounded-[26px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">

@@ -135,6 +135,13 @@ const MENU_CSS = `
       font-size: 0.8em;
     }
   }
+  @media screen and (min-width: 1280px) {
+    .home-menu-bar {
+      display: none !important;
+      visibility: hidden;
+      pointer-events: none;
+    }
+  }
 `;
 
 function ArrowUpIconSvg({ className }: { className?: string }) {
@@ -266,7 +273,7 @@ export function HomeBottomBar() {
         ref={menuRef}
         role="navigation"
         aria-label="Главная навигация"
-        className="home-menu-bar lg:hidden"
+        className="home-menu-bar xl:hidden"
         style={{
           paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))",
         }}
