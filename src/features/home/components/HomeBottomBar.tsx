@@ -94,7 +94,6 @@ const MENU_CSS = `
   .home-menu-bar__border-wrap {
     left: 0;
     bottom: 100%;
-    margin-bottom: -2px;
     width: 10.9em;
     height: 2.4em;
     position: absolute;
