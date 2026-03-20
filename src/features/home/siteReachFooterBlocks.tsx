@@ -62,7 +62,9 @@ export function FooterBottomNav({
       aria-label="Footer"
       className={`flex w-full min-w-0 flex-wrap items-center justify-end gap-x-1 gap-y-2 font-medium uppercase text-white sm:flex-nowrap ${rowAlign}`}
     >
-      <div className={`flex min-w-0 shrink-0 flex-wrap items-center justify-end gap-x-1 gap-y-2 sm:flex-nowrap ${rowAlign} ${navLinksOffsetClass}`}>
+      <div
+        className={`hidden min-w-0 shrink-0 flex-wrap items-center justify-end gap-x-1 gap-y-2 sm:flex-nowrap md:flex ${rowAlign} ${navLinksOffsetClass}`}
+      >
         {FOOTER_NAV_ITEMS.map((item, index) => (
           <Fragment key={item.href}>
             {index > 0 ? (
