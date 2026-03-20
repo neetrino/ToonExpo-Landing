@@ -118,8 +118,9 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   }
 
   function openSearch() {
-    document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
-    setTimeout(() => setIsSearchExpanded(true), 400);
+    const input = document.getElementById("home-search-featured");
+    input?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => (input as HTMLInputElement | null)?.focus(), 400);
   }
 
   return (
