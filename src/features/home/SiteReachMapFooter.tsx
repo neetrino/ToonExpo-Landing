@@ -9,7 +9,7 @@ import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/si
 
 const FOOTER_LEGAL_TEXT_CLASS =
   "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
-const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_TEXT_CLASS} shrink-0 transition hover:text-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050b10]`;
+const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_TEXT_CLASS} shrink-0 transition hover:text-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black`;
 
 const FIGMA_ASSETS = {
   footerLogo: "/figma/home/footerLogo.svg",
@@ -111,37 +111,46 @@ export function SiteReachMapFooter({
         </section>
       </div>
 
-      <footer className="bg-[#050b10] px-5 py-4 lg:px-10 lg:py-5">
-        <div className="mx-auto max-w-[1680px]">
-          <div className="flex flex-col gap-4 text-white/70 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex w-full min-w-0 max-w-full flex-col items-start gap-3 sm:gap-4">
-              <img src={FIGMA_ASSETS.footerLogo} alt="" className="h-16 w-16 shrink-0 sm:h-20 sm:w-20" />
-              <div
-                className="flex max-w-full flex-nowrap items-baseline gap-x-7 overflow-x-auto overscroll-x-contain sm:gap-x-10 sm:[scrollbar-width:thin]"
-                role="group"
-                aria-label="Legal"
-              >
-                <p className={`${FOOTER_LEGAL_TEXT_CLASS} shrink-0`}>
-                  © 2026 TOON EXPO. All rights reserved.
-                </p>
-                <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
-                  Privacy policy
-                </Link>
+      <footer className="relative flex min-h-[20rem] flex-col bg-black px-5 py-[5.2rem] lg:min-h-[24rem] lg:px-10 lg:py-[6.5rem]">
+        <div className="relative mx-auto flex flex-1 min-h-0 w-full max-w-[1680px] flex-col">
+          <div className="flex flex-1 flex-col">
+            <div className="flex flex-col gap-6 text-white/70 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
+              <img
+                src={FIGMA_ASSETS.footerLogo}
+                alt="Toon Expo"
+                className="-mt-8 h-32 w-32 shrink-0 sm:h-40 sm:w-40 lg:-mt-12"
+              />
+              <div className="-mt-8 flex min-w-0 flex-1 flex-col items-center lg:-mt-12 lg:items-end lg:justify-end">
+                <FooterBottomNav
+                  facebookUrl={footerFacebook}
+                  instagramUrl={footerInstagram}
+                  alignWithIllustration={false}
+                />
               </div>
             </div>
-            <div className="flex w-full flex-col items-center gap-3 lg:w-[min(100%,min(90vw,640px))] lg:shrink-0 lg:items-end">
-              <FooterBottomNav
-                facebookUrl={footerFacebook}
-                instagramUrl={footerInstagram}
-                alignWithIllustration
-              />
-              <img
-                src={FIGMA_ASSETS.footerIllustration}
-                alt=""
-                className="w-full max-w-[220px] opacity-90 lg:ml-0 lg:mr-0"
-              />
-            </div>
           </div>
+        </div>
+        <div
+          className="absolute bottom-0 left-0 right-0 flex max-w-full flex-wrap items-baseline gap-x-7 gap-y-2 px-5 pb-5 pt-4 sm:gap-x-10 lg:px-10 lg:pb-6 lg:pt-5"
+          role="group"
+          aria-label="Legal"
+        >
+          <p className={`${FOOTER_LEGAL_TEXT_CLASS} shrink-0`}>
+            © 2026 TOON EXPO. All rights reserved.
+          </p>
+          <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
+            Privacy policy
+          </Link>
+        </div>
+        <div
+          className="absolute right-0 bottom-0 h-40 w-[min(100%,1056px)] overflow-hidden opacity-90 lg:h-48 pr-5 lg:pr-10"
+          aria-hidden
+        >
+          <img
+            src={FIGMA_ASSETS.footerIllustration}
+            alt=""
+            className="absolute right-0 bottom-0 w-[220px] max-w-none origin-bottom-right scale-x-[4.8] scale-y-[1.333]"
+          />
         </div>
       </footer>
     </>

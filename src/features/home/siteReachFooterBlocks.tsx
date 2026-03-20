@@ -3,11 +3,11 @@
 import { Fragment } from "react";
 import Link from "next/link";
 
-const FOOTER_SOCIAL_FB_IMG_CLASS = "h-[22px] w-[10px] shrink-0 object-contain object-left";
-const FOOTER_SOCIAL_IG_IMG_CLASS = "h-[22px] w-[22px] shrink-0 object-contain";
+const FOOTER_SOCIAL_FB_IMG_CLASS = "h-[40px] w-[18px] shrink-0 object-contain object-left";
+const FOOTER_SOCIAL_IG_IMG_CLASS = "h-[40px] w-[40px] shrink-0 object-contain";
 const FOOTER_NAV_LINK_CLASS =
-  "whitespace-nowrap text-white/90 transition hover:text-white text-[clamp(0.5625rem,1.65vw,0.8125rem)] tracking-[0.1em] sm:tracking-[0.14em]";
-const FOOTER_NAV_PIPE_CLASS = "shrink-0 px-1 text-white/45 select-none sm:px-1.5";
+  "whitespace-nowrap text-white/90 transition hover:text-white text-[clamp(1.0125rem,2.97vw,1.4625rem)] tracking-[0.1em] sm:tracking-[0.14em]";
+const FOOTER_NAV_PIPE_CLASS = "shrink-0 px-1.5 text-white/45 select-none sm:px-2.5";
 
 const BLOCK_FIGMA = {
   footerBadge: "/figma/home/footerBadge.svg",
@@ -41,8 +41,8 @@ export function FooterBottomNav({
       src={BLOCK_FIGMA.footerBadgeMark}
       alt=""
       className={FOOTER_SOCIAL_FB_IMG_CLASS}
-      width={10}
-      height={22}
+      width={18}
+      height={40}
     />
   );
   const igIcon = (
@@ -50,19 +50,19 @@ export function FooterBottomNav({
       src={BLOCK_FIGMA.footerBadge}
       alt=""
       className={FOOTER_SOCIAL_IG_IMG_CLASS}
-      width={22}
-      height={22}
+      width={40}
+      height={40}
     />
   );
-  const rowAlign = alignWithIllustration ? "justify-start" : "justify-center";
+  const rowAlign = alignWithIllustration ? "justify-start" : "justify-end";
   const navLinksOffsetClass = alignWithIllustration ? "pl-14 sm:pl-20 lg:pl-32" : "";
 
   return (
     <nav
       aria-label="Footer"
-      className={`flex w-full min-w-0 flex-nowrap items-center gap-x-1 overflow-x-auto overscroll-x-contain font-medium uppercase text-white sm:[scrollbar-width:thin] ${rowAlign}`}
+      className={`flex w-full min-w-0 flex-wrap items-center justify-end gap-x-1 gap-y-2 font-medium uppercase text-white sm:flex-nowrap ${rowAlign}`}
     >
-      <div className={`flex min-w-0 shrink-0 flex-nowrap items-center ${rowAlign} ${navLinksOffsetClass}`}>
+      <div className={`flex min-w-0 shrink-0 flex-wrap items-center justify-end gap-x-1 gap-y-2 sm:flex-nowrap ${rowAlign} ${navLinksOffsetClass}`}>
         {FOOTER_NAV_ITEMS.map((item, index) => (
           <Fragment key={item.href}>
             {index > 0 ? (
@@ -77,7 +77,7 @@ export function FooterBottomNav({
         ))}
       </div>
       <div
-        className={`flex shrink-0 items-center gap-4 pl-4 sm:pl-8 ${alignWithIllustration ? "lg:pl-6" : "lg:pl-10"}`}
+        className={`flex shrink-0 flex-nowrap items-center gap-5 pl-3 sm:pl-6 ${alignWithIllustration ? "lg:pl-4" : "lg:pl-8"}`}
       >
         {facebookUrl ? (
           <a

@@ -1,0 +1,252 @@
+"use client";
+
+/* eslint-disable @next/next/no-img-element */
+import { useMemo, useState } from "react";
+import { isFieldNonEmpty } from "@/shared/lib/expoFields";
+import { parseMediaUrls } from "@/shared/lib/mediaUrls";
+import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
+import { visibleBlocks } from "@/features/landing/mobile/lib/blockVisibility";
+import {
+  MOBILE_SECTION_INSET,
+  participantFigmaAssets,
+} from "@/features/landing/mobile/landingPage.constants";
+import {
+  firstNonEmpty,
+  formatRange,
+  getProjectMedia,
+  parseSizeOptions,
+  splitListItems,
+} from "@/features/landing/mobile/landingPage.helpers";
+
+type Props = {
+  fields: ExpoMap;
+  title: string;
+};
+
+function InvestmentCard({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-[14px] bg-gradient-to-r from-[#2ba8b0] to-[rgba(43,168,176,0.9)] px-5 py-5 text-white">
+      <div className="flex items-center gap-4">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/20">
+          <img src={participantFigmaAssets.investmentIcon} alt="" className="h-8 w-8" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[16px] font-bold leading-6">{title}</p>
+          <p className="mt-1 text-[14px] leading-5 text-white/90">{text}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PaymentCard({
+  title,
+  text,
+  tone,
+  icon,
+}: {
+  title: string;
+  text: string;
+  tone: "teal" | "gold" | "navy";
+  icon: string;
+}) {
+  const toneClass =
+    tone === "gold"
+      ? "from-[#ffd24d] to-[rgba(255,210,77,0.9)] text-black"
+      : tone === "navy"
+        ? "from-[#192643] to-[rgba(25,38,67,0.9)] text-white"
+        : "from-[#2ba8b0] to-[rgba(43,168,176,0.9)] text-white";
+  const iconShellClass = tone === "gold" ? "bg-black/10" : "bg-white/20";
+  const textClass = tone === "gold" ? "text-black/70" : "text-white/80";
+  const arrow = tone === "gold" ? participantFigmaAssets.paymentArrowDark : participantFigmaAssets.paymentArrowLight;
+
+  return (
+    <div className={`flex items-center gap-4 rounded-[14px] bg-gradient-to-r px-4 py-4 ${toneClass}`}>
+      <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${iconShellClass}`}>
+        <img src={icon} alt="" className="h-6 w-6" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[14px] font-bold leading-5">{title}</p>
+        <p className={`mt-1 text-[12px] leading-4 ${textClass}`}>{text}</p>
+      </div>
+      <img src={arrow} alt="" className="h-3 w-3 shrink-0" />
+    </div>
+  );
+}
+
+export function LandingPageLower({ fields, title }: Props) {
+  const vis = visibleBlocks(fields);
+  const media = getProjectMedia(fields);
+  const galleryImages = useMemo(
+    () =>
+      Array.from(
+        new Set([
+          media[3] || media[2] || participantFigmaAssets.galleryMain,
+          media[4] || media[1] || participantFigmaAssets.galleryUpper,
+          media[5] || media[0] || participantFigmaAssets.galleryUpdates,
+        ]),
+      ),
+    [media],
+  );
+  const sizeOptions = useMemo(() => parseSizeOptions(fields.expo_field_06), [fields.expo_field_06]);
+  const defaultSizeIndex = sizeOptions.length > 3 ? 3 : 0;
+  const [selectedSize, setSelectedSize] = useState(defaultSizeIndex);
+  const sizeRange = firstNonEmpty(
+    sizeOptions[0] && sizeOptions[sizeOptions.length - 1]
+      ? `${sizeOptions[0]} m² - ${sizeOptions[sizeOptions.length - 1]} m².`
+      : "",
+    "30.7 m² - 60.5 m².",
+  );
+  const investmentSummary = firstNonEmpty(
+    splitListItems(fields.expo_field_34)[0],
+    "Price varies by view and floor. Higher floors and better views command premium. Strong rental demand for ski-in/ski-out units.",
+  );
+  const paymentSummary = firstNonEmpty(
+    fields.expo_field_19,
+    investmentSummary,
+    "Price varies by view and floor. Higher floors and better views command premium. Strong rental demand for ski-in/ski-out units.",
+  );
+  const paymentCards = [
+    {
+      title: "Payment Conditions",
+      text: firstNonEmpty(fields.expo_field_19, "Strong rental demand year-round"),
+      tone: "teal" as const,
+      icon: participantFigmaAssets.paymentInstallmentIcon,
+    },
+    {
+      title: "Construction Details",
+      text: firstNonEmpty(fields.expo_field_20, fields.expo_field_21, "Ski-in/ski-out access"),
+      tone: "gold" as const,
+      icon: participantFigmaAssets.paymentMortgageIcon,
+    },
+    {
+      title: "Parking & Commercial",
+      text: firstNonEmpty(fields.expo_field_41, fields.expo_field_40, "30% down, installments until 2027"),
+      tone: "navy" as const,
+      icon: participantFigmaAssets.paymentTaxIcon,
+    },
+  ];
+  const investmentCards = [
+    {
+      title: "High ROI rental potential",
+      text: firstNonEmpty(formatRange(fields.expo_field_17, fields.expo_field_18), "Strong year-round rental demand"),
+    },
+    {
+      title: "Price logic: view + higher floors",
+      text: firstNonEmpty(formatRange(fields.expo_field_07, fields.expo_field_08), "Premium pricing for better views"),
+    },
+    {
+      title: "Ideal for seasonal rental",
+      text: firstNonEmpty(fields.expo_field_10, fields.expo_field_09, "Ski season premium rates"),
+    },
+  ];
+  const showGallery = Boolean(
+    galleryImages[0] ||
+      galleryImages[1] ||
+      galleryImages[2] ||
+      participantFigmaAssets.galleryMain ||
+      participantFigmaAssets.galleryUpper ||
+      participantFigmaAssets.galleryUpdates,
+  );
+  const showPayment = vis.payment || vis.construction || vis.parking;
+  const showOptions = sizeOptions.length > 0;
+
+  return (
+    <>
+      {vis.investment ? (
+        <section id="investment" className={`${MOBILE_SECTION_INSET} pt-6`}>
+          <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Investment Highlights</h2>
+          <div className="mt-3 space-y-3">
+            {investmentCards.map((item) => (
+              <InvestmentCard key={item.title} title={item.title} text={item.text} />
+            ))}
+            <div className="rounded-[14px] bg-white px-4 py-4 text-[14px] leading-[1.625] text-[#364153] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
+              {investmentSummary}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {showGallery ? (
+        <section id="gallery" className={`${MOBILE_SECTION_INSET} pt-8`}>
+          <div className="flex items-center justify-between">
+            <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Gallery Preview</h2>
+            <a href="#gallery" className="text-[14px] font-semibold uppercase leading-5 text-[#2ba8b0]">
+              View All
+            </a>
+          </div>
+          <div className="mt-3 overflow-hidden rounded-[14px]">
+            <img src={galleryImages[0] || participantFigmaAssets.galleryMain} alt={`${title} gallery`} className="h-48 w-full object-cover" />
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="overflow-hidden rounded-[14px]">
+              <img src={galleryImages[1] || participantFigmaAssets.galleryUpper} alt="" className="h-40 w-full object-cover" />
+            </div>
+            <div className="overflow-hidden rounded-[14px]">
+              <img src={galleryImages[2] || participantFigmaAssets.galleryUpdates} alt="" className="h-40 w-full object-cover" />
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {showOptions ? (
+        <section id="options" className="pt-4">
+          <div className={`${MOBILE_SECTION_INSET}`}>
+            <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Apartment Options</h2>
+            <div className="mt-5 space-y-2 text-[16px] leading-7 text-black">
+              <p>
+                <span className="font-bold">Sizes:</span> {sizeRange}
+              </p>
+              <p className="max-w-[281px]">
+                <span className="font-bold">Floor logic:</span> {firstNonEmpty(fields.expo_field_28, "12-13 units per floor depending on level.")}
+              </p>
+            </div>
+            <div className="mt-5 grid grid-cols-4 gap-2.5">
+              {sizeOptions.map((size, index) => {
+                const isActive = index === selectedSize;
+
+                return (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => setSelectedSize(index)}
+                    className={`rounded-[4px] border-[3.551px] px-1 py-3 text-center ${
+                      isActive ? "border-[#2ba8b0] bg-[#2ba8b0] text-white" : "border-[#2ba8b0] bg-white text-[#2ba8b0]"
+                    }`}
+                  >
+                    <span className="block text-[20px] font-semibold leading-7">{size}</span>
+                    <span className="block text-[12px] font-medium leading-4">m²</span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="mt-6 flex items-center gap-3">
+              <img src={participantFigmaAssets.sizeNoteIcon} alt="" className="h-8 w-8 shrink-0" />
+              <p className="text-[14px] leading-5 text-black">Select apartment size to view details</p>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {showPayment ? (
+        <section id="payment" className={`${MOBILE_SECTION_INSET} pt-8`}>
+          <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Payment Conditions</h2>
+          <div className="mt-4 space-y-3">
+            {paymentCards.map((card) => (
+              <PaymentCard key={card.title} title={card.title} text={card.text} tone={card.tone} icon={card.icon} />
+            ))}
+            <div className="rounded-[14px] bg-white px-4 py-4 text-[14px] leading-[1.625] text-[#364153] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
+              {paymentSummary}
+            </div>
+          </div>
+        </section>
+      ) : null}
+    </>
+  );
+}

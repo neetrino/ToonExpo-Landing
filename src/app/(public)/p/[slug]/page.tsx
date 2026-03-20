@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { prisma } from "@/shared/lib/db";
 import { LandingPage } from "@/features/landing/LandingPage";
+import { LandingBottomBarCallbacks } from "@/features/landing/LandingBottomBarCallbacks";
+import { LandingAutoRedirect } from "@/features/landing/mobile/LandingAutoRedirect";
 import { SiteReachMapFooter } from "@/features/home/SiteReachMapFooter";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 
@@ -33,19 +35,16 @@ export default async function PublicLandingPage({ params }: Props) {
     notFound();
   }
   const fields = (project.expoFields as Record<string, string>) ?? {};
+  const projectData = {
+    id: project.id,
+    slug: project.slug,
+    expoFields: fields,
+  };
   return (
-    <>
+    <LandingBottomBarCallbacks>
+      <LandingAutoRedirect slug={project.slug} />
       <LandingPage fields={fields} />
-      <SiteReachMapFooter
-        variant="participant"
-        projects={[
-          {
-            id: project.id,
-            slug: project.slug,
-            expoFields: fields,
-          },
-        ]}
-      />
-    </>
+      <SiteReachMapFooter variant="participant" projects={[projectData]} />
+    </LandingBottomBarCallbacks>
   );
 }
