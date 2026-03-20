@@ -112,15 +112,15 @@ export function SiteReachMapFooter({
       </div>
 
       <footer className="relative flex min-h-[20rem] flex-col bg-black px-5 py-[5.2rem] lg:min-h-[24rem] lg:px-10 lg:py-[6.5rem]">
-        <div className="relative mx-auto flex flex-1 min-h-0 w-full max-w-[3360px] flex-col">
+        <div className="relative mx-auto flex flex-1 min-h-0 w-full max-w-[1680px] flex-col">
           <div className="flex flex-1 flex-col">
-            <div className="flex flex-col gap-6 text-white/70 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex flex-col gap-6 text-white/70 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
               <img
                 src={FIGMA_ASSETS.footerLogo}
                 alt="Toon Expo"
                 className="-mt-8 h-32 w-32 shrink-0 sm:h-40 sm:w-40 lg:-mt-12"
               />
-              <div className="-mt-8 mr-[3vw] flex w-full min-w-0 flex-col items-end lg:-mt-12 lg:max-w-[50%] lg:shrink-0">
+              <div className="-mt-8 flex min-w-0 flex-1 flex-col items-center lg:-mt-12 lg:items-end lg:justify-end">
                 <FooterBottomNav
                   facebookUrl={footerFacebook}
                   instagramUrl={footerInstagram}
