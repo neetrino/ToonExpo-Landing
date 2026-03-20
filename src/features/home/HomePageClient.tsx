@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { parseMediaUrls } from "@/shared/lib/mediaUrls";
 import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
+import { MapSearch } from "@/features/home/components/MapSearch";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 
@@ -92,6 +93,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsMapFullscreen(false);
+        setIsSearchExpanded(false);
       }
     };
     document.addEventListener("keydown", handleEscape);
@@ -151,80 +153,25 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
         >
           <div className="mx-auto grid max-w-[1920px] grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,1063px)_24px_634px] lg:gap-0">
             <div className="toon-home-map relative z-0 min-w-0 overflow-hidden rounded-[12px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
-              {/* Поиск: сначала иконка, при клике раскрывается */}
               <div className="absolute left-4 top-4 z-20 sm:right-auto">
-                {isSearchExpanded ? (
-                  <div className="flex items-center gap-2 sm:w-[320px]">
-                    <label className="sr-only" htmlFor="home-search">
-                      Որոնում
-                    </label>
-                    <input
-                      id="home-search"
-                      type="search"
-                      value={q}
-                      onChange={(e) => setQ(e.target.value)}
-                      onBlur={() => {
-                        if (!q.trim()) {
-                          setIsSearchExpanded(false);
-                        }
-                      }}
-                      placeholder="Որոնում՝ անուն, հասցե…"
-                      autoFocus
-                      className="w-full rounded-xl border border-white/40 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#2ba8b0]"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setQ("");
-                        setIsSearchExpanded(false);
-                      }}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 transition hover:bg-slate-50"
-                      aria-label="Закрыть поиск"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M18 6L6 18M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setIsSearchExpanded(true)}
-                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 transition hover:bg-slate-50"
-                    aria-label="Открыть поиск"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="11" cy="11" r="8" />
-                      <path d="m21 21-4.35-4.35" />
-                    </svg>
-                  </button>
-                )}
+                <MapSearch
+                  value={q}
+                  onChange={setQ}
+                  expanded={isSearchExpanded}
+                  onExpandedChange={setIsSearchExpanded}
+                  inputId="home-search"
+                />
               </div>
 
               {/* Кнопка полноэкранного режима */}
               <button
                 type="button"
-                onClick={() => setIsMapFullscreen(!isMapFullscreen)}
+                onClick={() => {
+                  const next = !isMapFullscreen;
+                  setIsMapFullscreen(next);
+                  if (next) setIsSearchExpanded(true);
+                  else setIsSearchExpanded(false);
+                }}
                 className="absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 transition hover:bg-slate-50"
                 aria-label={isMapFullscreen ? "Выйти из полноэкранного режима" : "Полноэкранный режим"}
               >
@@ -293,21 +240,40 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             role="dialog"
             aria-modal="true"
             aria-label="Карта на весь экран"
-            onClick={() => setIsMapFullscreen(false)}
+            onClick={() => {
+              setIsMapFullscreen(false);
+              setIsSearchExpanded(false);
+            }}
           >
             <div
               className="toon-home-map relative h-[90vh] w-[90vw] overflow-hidden rounded-xl border border-[#246976] bg-black shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <HomeMapPreview
-                key="fullscreen-map"
-                markers={markers}
-                className="h-full w-full"
-              />
+              {/* В попапе поиск всегда раскрыт (не зависим от isSearchExpanded) */}
+              <div className="absolute left-4 top-4 z-[100] shrink-0">
+                <MapSearch
+                  value={q}
+                  onChange={setQ}
+                  expanded={true}
+                  onExpandedChange={setIsSearchExpanded}
+                  inputId="home-search-popup"
+                />
+              </div>
+
+              <div className="absolute inset-0 z-0">
+                <HomeMapPreview
+                  key="fullscreen-map"
+                  markers={markers}
+                  className="h-full w-full"
+                />
+              </div>
               <button
                 type="button"
-                onClick={() => setIsMapFullscreen(false)}
-                className="absolute right-4 top-4 z-20 flex h-12 w-12 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 shadow-lg transition hover:bg-slate-50"
+                onClick={() => {
+                setIsMapFullscreen(false);
+                setIsSearchExpanded(false);
+              }}
+                className="absolute right-4 top-4 z-[100] flex h-12 w-12 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 shadow-lg transition hover:bg-slate-50"
                 aria-label="Закрыть полноэкранный режим"
               >
                 <svg
