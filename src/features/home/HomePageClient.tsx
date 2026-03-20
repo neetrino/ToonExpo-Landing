@@ -295,10 +295,10 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           document.body,
         )}
 
-      <main className="bg-[#246976]">
+      <main className="overflow-x-hidden bg-[#246976]">
         <section
           id="participants"
-          className="mx-auto max-w-[1680px] scroll-mt-6 px-4 py-8 sm:px-5 sm:py-10 lg:px-10 lg:py-12"
+          className="mx-auto min-w-0 max-w-[1680px] scroll-mt-6 px-4 py-8 sm:px-5 sm:py-10 lg:px-10 lg:py-12"
         >
           {filtered.length === 0 ? (
             <p className="rounded-[12px] border border-[#18fffb]/40 bg-white/8 px-4 py-10 text-center text-base text-white/80 sm:px-6 sm:py-12 sm:text-lg">
@@ -306,9 +306,9 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             </p>
           ) : (
             <>
-              <ul id="projects" className="grid scroll-mt-6 gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <ul id="projects" className="grid min-w-0 scroll-mt-6 grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {visibleProjects.map((project, index) => (
-                  <li key={project.id}>
+                  <li key={project.id} className="min-w-0">
                     <ProjectCard project={project} index={index} />
                   </li>
                 ))}
@@ -353,7 +353,7 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
   return (
     <Link
       href={`/p/${project.slug}`}
-      className="flex h-full flex-col overflow-hidden rounded-[16px] bg-white shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] transition duration-200 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2"
+      className="flex h-full min-w-0 max-w-full flex-col overflow-hidden rounded-[16px] bg-white shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] transition duration-200 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2"
     >
       {/* Блок изображения: на мобильном ниже, на десктопе 256px */}
       <div className="relative h-[200px] w-full shrink-0 overflow-hidden bg-[#e2e8f0] sm:h-[230px] lg:h-[256px]">
@@ -380,17 +380,17 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
         </div>
       </div>
 
-      {/* Контент: адаптивные отступы и размеры */}
-      <div className="flex flex-1 flex-col gap-3 px-4 pt-4 pb-4 sm:gap-4 sm:px-5 sm:pt-5 sm:pb-5 lg:px-6 lg:pt-6 lg:pb-5">
-        <div className="flex flex-col gap-1.5 sm:gap-2">
-          <h2 className="text-[17px] font-bold leading-tight tracking-[-0.45px] text-[#0f172b] sm:text-[20px] sm:leading-7">
+      {/* Контент: адаптивные отступы, min-w-0 чтобы не вылезало на мобильных */}
+      <div className="flex min-w-0 flex-1 flex-col gap-3 px-4 pt-4 pb-4 sm:gap-4 sm:px-5 sm:pt-5 sm:pb-5 lg:px-6 lg:pt-6 lg:pb-5">
+        <div className="flex min-w-0 flex-col gap-1.5 sm:gap-2">
+          <h2 className="min-w-0 truncate text-[17px] font-bold leading-tight tracking-[-0.45px] text-[#0f172b] sm:text-[20px] sm:leading-7">
             {title}
           </h2>
-          <div className="flex items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
+          <div className="flex min-w-0 items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
             <img src={FIGMA_ASSETS.refundIcon} alt="" className="h-4 w-4 shrink-0 object-contain" />
-            <span className="line-clamp-2">{taxRefund}</span>
+            <span className="min-w-0 line-clamp-2">{taxRefund}</span>
           </div>
-          <div className="flex items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
+          <div className="flex min-w-0 items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
             <img
               src={FIGMA_ASSETS.locationIcon}
               alt=""
@@ -398,21 +398,21 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
               width={20}
               height={20}
             />
-            <span>{location}</span>
+            <span className="min-w-0 truncate">{location}</span>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 border-b border-[#f1f5f9] pb-2 sm:gap-4 sm:pb-3">
-          <div className="flex items-center gap-1.5 text-[13px] text-[#45556c] sm:text-[14px]">
+        <div className="flex min-w-0 flex-wrap items-center gap-3 border-b border-[#f1f5f9] pb-2 sm:gap-4 sm:pb-3">
+          <div className="flex min-w-0 items-center gap-1.5 text-[13px] text-[#45556c] sm:text-[14px]">
             <img src={FIGMA_ASSETS.priceIcon} alt="" className="h-4 w-4 shrink-0" />
-            <span>{pricePerMeter}</span>
+            <span className="min-w-0 truncate">{pricePerMeter}</span>
           </div>
         </div>
 
-        <div className="mt-auto flex items-center justify-between gap-2 sm:gap-3">
-          <div className="flex min-w-0 items-center gap-2 text-[13px] text-[#45556c] sm:text-[14px]">
+        <div className="mt-auto flex min-w-0 items-center justify-between gap-2 sm:gap-3">
+          <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-[13px] text-[#45556c] sm:text-[14px]">
             <img src={FIGMA_ASSETS.rangeIcon} alt="" className="h-4 w-4 shrink-0" />
-            <span className="truncate">{priceRange}</span>
+            <span className="min-w-0 truncate">{priceRange}</span>
           </div>
           <span className="shrink-0 rounded-[10px] bg-[#0f172b] px-4 py-2 text-center text-[14px] font-medium leading-6 text-white sm:px-5 sm:py-2.5 sm:text-[16px]">
             Details
