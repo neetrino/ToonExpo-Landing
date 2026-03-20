@@ -125,6 +125,10 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   }
 
   useEffect(() => {
+    const onGoHome = () => {
+      if (isMapFullscreen) setIsMapFullscreen(false);
+      setTimeout(scrollToTop, isMapFullscreen ? 200 : 0);
+    };
     const onScrollToTop = () => {
       if (isMapFullscreen) setIsMapFullscreen(false);
       setTimeout(scrollToTop, isMapFullscreen ? 200 : 0);
@@ -134,6 +138,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
       setTimeout(openSearch, isMapFullscreen ? 200 : 0);
     };
     setCallbacks({
+      onGoHome,
       onScrollToTop,
       onOpenSearch,
       onOpenMap: () => setIsMapFullscreen(true),

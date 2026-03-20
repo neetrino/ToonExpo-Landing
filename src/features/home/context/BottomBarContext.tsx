@@ -9,6 +9,7 @@ import {
 } from "react";
 
 export type BottomBarCallbacks = {
+  onGoHome: () => void;
   onScrollToTop: () => void;
   onOpenSearch: () => void;
   onOpenMap: () => void;

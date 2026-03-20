@@ -6,12 +6,15 @@ import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext"
 
 const CLIP_PATH_ID = "home-bottom-bar-menu-clip";
 const DURATION = "0.56s";
-const BG_MENU = "#ffffff";
+const BG_MENU = "#192643";
+
+const FOOTER_LOGO_SRC = "/figma/home/footerLogo.svg";
 
 const ITEMS = [
-  { id: 0, title: "Главная", bgColorItem: "#ff8c00", Icon: HomeIconSvg },
-  { id: 1, title: "Поиск", bgColorItem: "#f54888", Icon: SearchIconSvg },
-  { id: 2, title: "Карта", bgColorItem: "#4343f5", Icon: MapIconSvg },
+  { id: 0, title: "На главную", bgColorItem: "#192643", logoSrc: FOOTER_LOGO_SRC },
+  { id: 1, title: "Вверх", bgColorItem: "#192643", Icon: ArrowUpIconSvg },
+  { id: 2, title: "Поиск", bgColorItem: "#192643", Icon: SearchIconSvg },
+  { id: 3, title: "Карта", bgColorItem: "#192643", Icon: MapIconSvg },
 ] as const;
 
 const MENU_CSS = `
@@ -78,12 +81,12 @@ const MENU_CSS = `
   }
   .home-menu-bar__item.active .home-menu-bar__icon {
     stroke: white;
-    animation: home-menu-bar-stroke 1.5s reverse;
   }
-  @keyframes home-menu-bar-stroke {
-    100% {
-      stroke-dashoffset: 400;
-    }
+  .home-menu-bar__logo {
+    width: 2.6em;
+    height: 2.6em;
+    object-fit: contain;
+    display: block;
   }
   .home-menu-bar__border-wrap {
     left: 0;
@@ -130,11 +133,10 @@ const MENU_CSS = `
   }
 `;
 
-function HomeIconSvg({ className }: { className?: string }) {
+function ArrowUpIconSvg({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" aria-hidden>
-      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
+      <path d="M12 19V5M5 12l7-7 7 7" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -180,14 +182,22 @@ export function HomeBottomBar() {
   const { callbacks } = useBottomBarCallbacks();
   const router = useRouter();
 
+  const defaults = useCallback(
+    () => ({
+      onGoHome: () => router.push("/"),
+      onScrollToTop: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+      onOpenSearch: () => router.push("/#search"),
+      onOpenMap: () => router.push("/#map"),
+    }),
+    [router],
+  );
+
   const actions = useCallback(
-    () =>
-      callbacks ?? {
-        onScrollToTop: () => router.push("/"),
-        onOpenSearch: () => router.push("/#search"),
-        onOpenMap: () => router.push("/#map"),
-      },
-    [callbacks, router],
+    () => ({
+      ...defaults(),
+      ...callbacks,
+    }),
+    [callbacks, defaults],
   );
 
   const updateBorder = useCallback(() => {
@@ -220,8 +230,9 @@ export function HomeBottomBar() {
       }
       setActiveIndex(index);
       const cb = actions();
-      if (index === 0) cb.onScrollToTop();
-      else if (index === 1) cb.onOpenSearch();
+      if (index === 0) cb.onGoHome();
+      else if (index === 1) cb.onScrollToTop();
+      else if (index === 2) cb.onOpenSearch();
       else cb.onOpenMap();
     },
     [activeIndex, actions],
@@ -265,7 +276,11 @@ export function HomeBottomBar() {
             aria-label={item.title}
             aria-current={activeIndex === index ? "true" : undefined}
           >
-            <item.Icon className="home-menu-bar__icon" />
+            {"logoSrc" in item ? (
+              <img src={item.logoSrc} alt="" className="home-menu-bar__logo" />
+            ) : (
+              <item.Icon className="home-menu-bar__icon" />
+            )}
           </button>
         ))}
         <div ref={borderRef} className="home-menu-bar__border-wrap" aria-hidden>
