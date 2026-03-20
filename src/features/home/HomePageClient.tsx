@@ -323,13 +323,13 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             </div>
             <div>
               <h2
-                id="featured-heading"
-                className="text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl"
-              >
-                Featured Properties
-              </h2>
+id="featured-heading"
+                  className="text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl"
+                >
+                  Ընտիր օբյեկտներ
+                </h2>
               <p className="mt-1 text-base text-white/90 sm:text-lg">
-                Handpicked exclusive listings for you
+                Ձեզ համար ձեռքով ընտրված բացառիկ առաջարկներ
               </p>
             </div>
           </div>
@@ -496,7 +496,7 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
             <span className="min-w-0 truncate">{priceRange}</span>
           </div>
           <span className="shrink-0 rounded-[10px] bg-[#0f172b] px-4 py-2 text-center text-[14px] font-medium leading-6 text-white sm:px-5 sm:py-2.5 sm:text-[16px]">
-            Details
+            Դիտել
           </span>
         </div>
       </div>
