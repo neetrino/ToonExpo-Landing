@@ -114,21 +114,15 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
               <img
                 src={FIGMA_ASSETS.siteHeaderLogo}
                 alt="Toon Expo"
-                className="h-12 w-12 object-contain sm:h-14 sm:w-14"
+                className="h-[4.5rem] w-[4.5rem] object-contain sm:h-[5.25rem] sm:w-[5.25rem]"
               />
-            </Link>
-            <Link
-              href="/admin/login"
-              className="rounded-[4px] border-2 border-white/85 px-4 py-2 text-sm font-medium uppercase tracking-[0.12em] text-white transition hover:bg-white hover:text-[#0b2530]"
-            >
-              Admin
             </Link>
           </div>
         </header>
 
         <section
           id="events"
-          className="relative z-10 scroll-mt-6 px-5 pb-16 pt-8 lg:px-10 lg:pb-28"
+          className="relative z-10 -mt-8 scroll-mt-6 px-5 pb-16 pt-8 lg:-mt-12 lg:px-10 lg:pb-28"
         >
           <div className="mx-auto max-w-[1680px]">
             <div className="mb-8 text-center">
