@@ -118,7 +118,7 @@ export function LandingPage({ fields }: Props) {
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-[#111827]">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/15 bg-black/72 text-white backdrop-blur">
-        <div className="mx-auto flex max-w-[1920px] items-center gap-5 px-5 py-4 lg:px-12">
+        <div className="mx-auto flex max-w-[1920px] items-center justify-center gap-5 px-5 py-4 lg:px-12">
           <Link
             href="/"
             className="inline-flex shrink-0 items-center transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2 focus-visible:ring-offset-black/70"

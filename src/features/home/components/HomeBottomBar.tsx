@@ -6,15 +6,16 @@ import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext"
 
 const CLIP_PATH_ID = "home-bottom-bar-menu-clip";
 const DURATION = "0.56s";
-const BG_MENU = "#192643";
+const BG_MENU = "rgba(0, 0, 0, 0.72)";
+const BG_MENU_BLUR = "blur(10px)";
 
 const FOOTER_LOGO_SRC = "/figma/home/footerLogo.svg";
 
 const ITEMS = [
-  { id: 0, title: "На главную", bgColorItem: "#192643", logoSrc: FOOTER_LOGO_SRC },
-  { id: 1, title: "Вверх", bgColorItem: "#192643", Icon: ArrowUpIconSvg },
-  { id: 2, title: "Поиск", bgColorItem: "#192643", Icon: SearchIconSvg },
-  { id: 3, title: "Карта", bgColorItem: "#192643", Icon: MapIconSvg },
+  { id: 0, title: "На главную", bgColorItem: "rgba(0, 0, 0, 0.72)", logoSrc: FOOTER_LOGO_SRC },
+  { id: 1, title: "Вверх", bgColorItem: "rgba(0, 0, 0, 0.72)", Icon: ArrowUpIconSvg },
+  { id: 2, title: "Поиск", bgColorItem: "rgba(0, 0, 0, 0.72)", Icon: SearchIconSvg },
+  { id: 3, title: "Карта", bgColorItem: "rgba(0, 0, 0, 0.72)", Icon: MapIconSvg },
 ] as const;
 
 const MENU_CSS = `
@@ -31,10 +32,12 @@ const MENU_CSS = `
     align-items: center;
     justify-content: center;
     background-color: ${BG_MENU};
+    -webkit-backdrop-filter: ${BG_MENU_BLUR};
+    backdrop-filter: ${BG_MENU_BLUR};
     -webkit-tap-highlight-color: transparent;
     z-index: 9999;
     border: none;
-    border-top: 1px solid #287691;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: none;
   }
   .home-menu-bar__item {
@@ -103,6 +106,8 @@ const MENU_CSS = `
     inset: 0;
     clip-path: url(#${CLIP_PATH_ID});
     background-color: ${BG_MENU};
+    -webkit-backdrop-filter: ${BG_MENU_BLUR};
+    backdrop-filter: ${BG_MENU_BLUR};
   }
   .home-menu-bar__border-line {
     position: absolute;
