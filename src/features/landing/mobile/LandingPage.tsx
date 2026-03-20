@@ -1,4 +1,8 @@
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { LandingPageLower } from "@/features/landing/mobile/LandingPageLower";
 import { visibleBlocks, type ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
@@ -17,6 +21,15 @@ import { MOBILE_SECTION_INSET, participantFigmaAssets } from "@/features/landing
 type Props = {
   fields: ExpoMap;
 };
+
+const MOBILE_NAV_ITEMS = [
+  { id: "about", label: "About", block: "about" },
+  { id: "investment", label: "Investment", block: "investment" },
+  { id: "gallery", label: "Gallery", block: "gallery" },
+  { id: "options", label: "Apartments", block: "hero" },
+  { id: "payment", label: "Payment", block: "payment" },
+  { id: "contacts", label: "Location", block: "location" },
+] as const;
 
 function MobileStatCard({
   value,
@@ -44,6 +57,7 @@ function MobileStatCard({
 }
 
 export function LandingPage({ fields }: Props) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const vis = visibleBlocks(fields);
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
@@ -69,19 +83,89 @@ export function LandingPage({ fields }: Props) {
   const aboutPrimaryImage = media[1] || participantFigmaAssets.aboutPrimary;
   const aboutSecondaryImage = media[2] || media[1] || participantFigmaAssets.aboutSecondary;
   const stats = getMobileStats(fields);
+  const menuItems = useMemo(
+    () =>
+      MOBILE_NAV_ITEMS.filter((item) => {
+        if (item.id === "options") {
+          return Boolean(fields.expo_field_06?.trim());
+        }
+
+        return vis[item.block];
+      }),
+    [fields.expo_field_06, vis],
+  );
+
+  useEffect(() => {
+    if (!isMenuOpen) {
+      document.body.style.removeProperty("overflow");
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.removeProperty("overflow");
+    };
+  }, [isMenuOpen]);
 
   return (
     <div className="overflow-x-hidden bg-white text-[#101828]">
       <section className="relative h-[500px] overflow-hidden text-white">
         <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
+        {isMenuOpen ? (
+          <div className="absolute inset-0 z-20 bg-[linear-gradient(180deg,rgba(5,11,16,0.50)_0%,rgba(5,11,16,0.68)_45%,rgba(5,11,16,0.82)_100%)] backdrop-blur-xl">
+            <div className={`flex h-full flex-col ${MOBILE_SECTION_INSET}`}>
+              <div className="flex items-center justify-between pt-5">
+                <Link
+                  href="/"
+                  aria-label="Go to home page"
+                  className="inline-flex"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-[52px] w-[52px]" />
+                </Link>
+                <button
+                  type="button"
+                  aria-label="Close mobile menu"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/12 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-md text-2xl leading-none text-white"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="flex flex-1 items-center">
+                <nav className="w-full rounded-[28px] border border-white/18 bg-white/10 px-5 py-6 shadow-[0_20px_60px_rgba(0,0,0,0.32)] backdrop-blur-2xl">
+                  <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.28em] text-white/60">
+                    Navigation
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {menuItems.map((item) => (
+                      <a
+                        key={item.id}
+                        href={`#${item.id}`}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="rounded-[18px] border border-white/10 bg-white/6 px-4 py-4 text-[22px] font-semibold uppercase tracking-[0.04em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md transition hover:bg-white/12"
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                </nav>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         <div className={`relative z-10 flex h-full flex-col ${MOBILE_SECTION_INSET}`}>
           <div className="flex items-center justify-between pt-5">
-            <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-[52px] w-[52px]" />
+            <Link href="/" aria-label="Go to home page" className="inline-flex">
+              <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-[52px] w-[52px]" />
+            </Link>
             <button
               type="button"
               aria-label="Open mobile menu"
+              onClick={() => setIsMenuOpen(true)}
               className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5"
             >
               <img src={participantFigmaAssets.menuIcon} alt="" className="h-6 w-6" />
