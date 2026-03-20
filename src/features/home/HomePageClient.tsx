@@ -123,7 +123,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
 
   return (
     <div className="min-h-screen bg-[#246976] text-white">
-      <div className="relative isolate overflow-hidden rounded-bl-[125px] rounded-br-[132px] bg-[#246976]">
+      <div className="relative isolate overflow-hidden rounded-b-[26px] bg-[#246976] sm:rounded-bl-[125px] sm:rounded-br-[132px] sm:rounded-b-none">
         <Image
           src={FIGMA_ASSETS.heroBg}
           alt=""
@@ -136,7 +136,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,19,26,0.58),rgba(7,27,36,0.88))]" />
         {/* Figma: Rectangle 1177 — overlay со скруглением снизу */}
         <div
-          className="absolute inset-0 rounded-bl-[125px] rounded-br-[132px] bg-[#277691] mix-blend-overlay"
+          className="absolute inset-0 rounded-b-[26px] bg-[#277691] mix-blend-overlay sm:rounded-bl-[125px] sm:rounded-br-[132px] sm:rounded-b-none"
           aria-hidden
         />
 
