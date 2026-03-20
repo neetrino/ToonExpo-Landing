@@ -318,7 +318,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                   <button
                     type="button"
                     onClick={handleShowMore}
-                    className="cursor-pointer rounded-[4px] border border-[#18fffb] px-10 py-4 text-sm font-semibold uppercase tracking-[0.24em] text-white/90 transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#18fffb] focus-visible:ring-offset-2 focus-visible:ring-offset-[#246976]"
+                    className="cursor-pointer min-w-[200px] rounded-[10px] bg-white px-10 py-3 text-center text-[16px] font-bold leading-6 text-[#0f172b] transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#246976]"
                   >
                     View more
                   </button>
