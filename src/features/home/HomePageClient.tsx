@@ -122,8 +122,8 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   }
 
   return (
-    <div className="min-h-screen bg-white text-white">
-      <div className="relative isolate overflow-hidden bg-[#0b2530]">
+    <div className="min-h-screen bg-[#246976] text-white">
+      <div className="relative isolate overflow-hidden rounded-bl-[125px] rounded-br-[132px] bg-[#246976]">
         <Image
           src={FIGMA_ASSETS.heroBg}
           alt=""
@@ -161,7 +161,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           className="relative z-10 scroll-mt-6 px-4 pb-12 pt-4 sm:px-5 sm:pb-16 sm:pt-6 lg:px-[92px] lg:pb-28 lg:pr-[107px] lg:pt-8"
         >
           <div className="mx-auto grid max-w-[1920px] grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,1063px)_24px_634px] lg:gap-0">
-            <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-hidden rounded-[12px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
+            <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-hidden rounded-[26px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
               <div className="absolute left-4 top-4 z-20 sm:right-auto">
                 <MapSearch
                   value={q}
@@ -255,7 +255,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             }}
           >
             <div
-              className="toon-home-map relative h-[90vh] w-[90vw] overflow-hidden rounded-xl border border-[#246976] bg-black shadow-2xl"
+              className="toon-home-map relative h-[90vh] w-[90vw] overflow-hidden rounded-[26px] border border-[#246976] bg-black shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* В попапе поиск всегда раскрыт (не зависим от isSearchExpanded) */}
@@ -305,6 +305,36 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
         )}
 
       <main className="overflow-x-hidden bg-[#246976] pb-20 lg:pb-0">
+        {/* Секция под hero: поиск + Featured Properties (по макету Figma) */}
+        <section
+          aria-labelledby="featured-heading"
+          className="mx-auto min-w-0 max-w-[1680px] px-4 pt-8 pb-6 sm:px-5 sm:pt-10 sm:pb-8 lg:px-10 lg:pt-12 lg:pb-10"
+        >
+          <div className="flex flex-col gap-6">
+            <div className="w-full max-w-[576px] sm:w-[576px]">
+              <MapSearch
+                value={q}
+                onChange={setQ}
+                expanded={true}
+                onExpandedChange={() => {}}
+                inputId="home-search-featured"
+                className="w-full sm:w-[576px]"
+              />
+            </div>
+            <div>
+              <h2
+                id="featured-heading"
+                className="text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl"
+              >
+                Featured Properties
+              </h2>
+              <p className="mt-1 text-base text-white/90 sm:text-lg">
+                Handpicked exclusive listings for you
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section
           id="participants"
           className="mx-auto min-w-0 max-w-[1680px] scroll-mt-6 px-4 py-8 sm:px-5 sm:py-10 lg:px-10 lg:py-12"
