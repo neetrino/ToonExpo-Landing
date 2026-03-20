@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { LandingPageLower } from "@/features/landing/mobile/LandingPageLower";
 import { visibleBlocks, type ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
@@ -112,50 +113,52 @@ export function LandingPage({ fields }: Props) {
       <section className="relative h-[500px] overflow-hidden text-white">
         <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
-        {isMenuOpen ? (
-          <div className="absolute inset-0 z-20 bg-[linear-gradient(180deg,rgba(5,11,16,0.50)_0%,rgba(5,11,16,0.68)_45%,rgba(5,11,16,0.82)_100%)] backdrop-blur-xl">
-            <div className={`flex h-full flex-col ${MOBILE_SECTION_INSET}`}>
-              <div className="flex items-center justify-between pt-5">
-                <Link
-                  href="/"
-                  aria-label="Go to home page"
-                  className="inline-flex"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-[52px] w-[52px]" />
-                </Link>
-                <button
-                  type="button"
-                  aria-label="Close mobile menu"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/12 shadow-[0_10px_30px_rgba(0,0,0,0.22)] backdrop-blur-md text-2xl leading-none text-white"
-                >
-                  ×
-                </button>
-              </div>
+        {isMenuOpen &&
+          createPortal(
+            <div className="fixed inset-0 z-[10002] flex flex-col bg-[#050b10] pt-[env(safe-area-inset-top)] pb-[max(5.5rem,env(safe-area-inset-bottom))]">
+              <div className={`flex min-h-0 flex-1 flex-col ${MOBILE_SECTION_INSET}`}>
+                <div className="flex shrink-0 items-center justify-between pt-4">
+                  <Link
+                    href="/"
+                    aria-label="Go to home page"
+                    className="inline-flex"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-9 w-9" />
+                  </Link>
+                  <button
+                    type="button"
+                    aria-label="Close mobile menu"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/12 text-lg leading-none text-white"
+                  >
+                    ×
+                  </button>
+                </div>
 
-              <div className="flex flex-1 items-center">
-                <nav className="w-full rounded-[28px] border border-white/18 bg-white/10 px-5 py-6 shadow-[0_20px_60px_rgba(0,0,0,0.32)] backdrop-blur-2xl">
-                  <div className="mb-4 text-[11px] font-medium uppercase tracking-[0.28em] text-white/60">
-                    Navigation
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    {menuItems.map((item) => (
-                      <a
-                        key={item.id}
-                        href={`#${item.id}`}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="rounded-[18px] border border-white/10 bg-white/6 px-4 py-4 text-[22px] font-semibold uppercase tracking-[0.04em] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md transition hover:bg-white/12"
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
-                </nav>
+                <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-3">
+                  <nav className="w-full shrink-0 rounded-2xl border border-white/18 bg-white/10 px-4 py-4 shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
+                    <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">
+                      Navigation
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {menuItems.map((item) => (
+                        <a
+                          key={item.id}
+                          href={`#${item.id}`}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="rounded-xl border border-white/10 bg-white/6 px-3 py-2.5 text-[15px] font-semibold uppercase tracking-[0.03em] text-white transition hover:bg-white/12"
+                        >
+                          {item.label}
+                        </a>
+                      ))}
+                    </div>
+                  </nav>
+                </div>
               </div>
-            </div>
-          </div>
-        ) : null}
+            </div>,
+            document.body,
+          )}
 
         <div className={`relative z-10 flex h-full flex-col ${MOBILE_SECTION_INSET}`}>
           <div className="flex items-center justify-between pt-5">
