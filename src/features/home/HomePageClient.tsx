@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { parseMediaUrls } from "@/shared/lib/mediaUrls";
@@ -56,6 +57,8 @@ function formatRange(minValue?: string, maxValue?: string): string {
 export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   const [q, setQ] = useState("");
   const [visibleCount, setVisibleCount] = useState(PROJECTS_PAGE_SIZE);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -80,6 +83,24 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   useEffect(() => {
     setVisibleCount(PROJECTS_PAGE_SIZE);
   }, [q]);
+
+  // Обработка ESC для выхода из полноэкранного режима
+  useEffect(() => {
+    if (!isMapFullscreen) {
+      return;
+    }
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsMapFullscreen(false);
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [isMapFullscreen]);
 
   const markers = useMemo(() => buildMapMarkersFromProjects(filtered), [filtered]);
   const visibleProjects = filtered.slice(0, visibleCount);
@@ -130,24 +151,125 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
         >
           <div className="mx-auto grid max-w-[1920px] grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,1063px)_24px_634px] lg:gap-0">
             <div className="toon-home-map relative z-0 min-w-0 overflow-hidden rounded-[12px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
-              <div className="absolute left-4 right-4 top-4 z-20 sm:right-auto sm:w-[320px]">
-                <label className="sr-only" htmlFor="home-search">
-                  Որոնում
-                </label>
-                <input
-                  id="home-search"
-                  type="search"
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                  placeholder="Որոնում՝ անուն, հասցե…"
-                  className="w-full rounded-xl border border-white/40 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#2ba8b0]"
-                />
+              {/* Поиск: сначала иконка, при клике раскрывается */}
+              <div className="absolute left-4 top-4 z-20 sm:right-auto">
+                {isSearchExpanded ? (
+                  <div className="flex items-center gap-2 sm:w-[320px]">
+                    <label className="sr-only" htmlFor="home-search">
+                      Որոնում
+                    </label>
+                    <input
+                      id="home-search"
+                      type="search"
+                      value={q}
+                      onChange={(e) => setQ(e.target.value)}
+                      onBlur={() => {
+                        if (!q.trim()) {
+                          setIsSearchExpanded(false);
+                        }
+                      }}
+                      placeholder="Որոնում՝ անուն, հասցե…"
+                      autoFocus
+                      className="w-full rounded-xl border border-white/40 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#2ba8b0]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setQ("");
+                        setIsSearchExpanded(false);
+                      }}
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 transition hover:bg-slate-50"
+                      aria-label="Закрыть поиск"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M18 6L6 18M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsSearchExpanded(true)}
+                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 transition hover:bg-slate-50"
+                    aria-label="Открыть поиск"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.35-4.35" />
+                    </svg>
+                  </button>
+                )}
               </div>
+
+              {/* Кнопка полноэкранного режима */}
+              <button
+                type="button"
+                onClick={() => setIsMapFullscreen(!isMapFullscreen)}
+                className="absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 transition hover:bg-slate-50"
+                aria-label={isMapFullscreen ? "Выйти из полноэкранного режима" : "Полноэкранный режим"}
+              >
+                {isMapFullscreen ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                  </svg>
+                )}
+              </button>
               <div
                 className="pointer-events-none absolute inset-0 z-10 bg-black/15"
                 aria-hidden
               />
-              <HomeMapPreview markers={markers} className="h-[440px] w-full md:h-[531px] lg:h-[531px]" />
+              {!isMapFullscreen ? (
+                <HomeMapPreview
+                  markers={markers}
+                  className="h-[440px] w-full md:h-[531px] lg:h-[531px]"
+                />
+              ) : (
+                <div className="h-[440px] w-full bg-[#1d5662]/50 md:h-[531px] lg:h-[531px]" />
+              )}
             </div>
 
             {/* Figma Frame 2109: 1179,441 634×254; заголовок на 110px ниже верха карты (441−331) */}
@@ -162,6 +284,50 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           </div>
         </section>
       </div>
+
+      {/* Попап карты на 90% экрана */}
+      {isMapFullscreen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Карта на весь экран"
+            onClick={() => setIsMapFullscreen(false)}
+          >
+            <div
+              className="toon-home-map relative h-[90vh] w-[90vw] overflow-hidden rounded-xl border border-[#246976] bg-black shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <HomeMapPreview
+                key="fullscreen-map"
+                markers={markers}
+                className="h-full w-full"
+              />
+              <button
+                type="button"
+                onClick={() => setIsMapFullscreen(false)}
+                className="absolute right-4 top-4 z-20 flex h-12 w-12 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 shadow-lg transition hover:bg-slate-50"
+                aria-label="Закрыть полноэкранный режим"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
 
       <main className="bg-[#246976]">
         <section
