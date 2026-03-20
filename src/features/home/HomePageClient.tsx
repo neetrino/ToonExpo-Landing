@@ -112,6 +112,15 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
     setVisibleCount((currentCount) => currentCount + PROJECTS_PAGE_SIZE);
   }
 
+  function scrollToTop() {
+    document.getElementById("top")?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function openSearch() {
+    document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => setIsSearchExpanded(true), 400);
+  }
+
   return (
     <div className="min-h-screen bg-white text-white">
       <div className="relative isolate overflow-hidden bg-[#0b2530]">
@@ -295,7 +304,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           document.body,
         )}
 
-      <main className="overflow-x-hidden bg-[#246976]">
+      <main className="overflow-x-hidden bg-[#246976] pb-20 lg:pb-0">
         <section
           id="participants"
           className="mx-auto min-w-0 max-w-[1680px] scroll-mt-6 px-4 py-8 sm:px-5 sm:py-10 lg:px-10 lg:py-12"
@@ -328,6 +337,48 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           )}
         </section>
       </main>
+
+      {/* Нижняя панель — стеклянный эффект, современный дизайн, только на мобильных */}
+      <nav
+        aria-label="Главная навигация"
+        className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 lg:hidden"
+      >
+        <div className="flex w-full max-w-[360px] items-center justify-around rounded-t-[28px] border border-white/20 bg-[#0b2530]/70 px-1 py-3 shadow-[0_-8px_40px_rgba(0,0,0,0.4)] backdrop-blur-2xl">
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="group flex flex-col items-center gap-2 rounded-2xl px-6 py-3 text-white/90 transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
+            aria-label="Главная"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 transition-colors duration-200 group-hover:bg-[#00e5ff]/25">
+              <HomeNavIcon className="h-5 w-5 shrink-0" />
+            </span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.12em]">Главная</span>
+          </button>
+          <button
+            type="button"
+            onClick={openSearch}
+            className="group flex flex-col items-center gap-2 rounded-2xl px-6 py-3 text-white/90 transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
+            aria-label="Поиск"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 transition-colors duration-200 group-hover:bg-[#00e5ff]/25">
+              <SearchNavIcon className="h-5 w-5 shrink-0" />
+            </span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.12em]">Поиск</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsMapFullscreen(true)}
+            className="group flex flex-col items-center gap-2 rounded-2xl px-6 py-3 text-white/90 transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
+            aria-label="Карта"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 transition-colors duration-200 group-hover:bg-[#00e5ff]/25">
+              <MapNavIcon className="h-5 w-5 shrink-0" />
+            </span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.12em]">Карта</span>
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }
@@ -427,6 +478,33 @@ function HeartIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0092b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+    </svg>
+  );
+}
+
+function HomeNavIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  );
+}
+
+function SearchNavIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.35-4.35" />
+    </svg>
+  );
+}
+
+function MapNavIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+      <circle cx="12" cy="10" r="3" />
     </svg>
   );
 }
