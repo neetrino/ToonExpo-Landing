@@ -1,39 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-
-export type HomeBottomBarProps = {
-  onScrollToTop: () => void;
-  onOpenSearch: () => void;
-  onOpenMap: () => void;
-};
+import { useRouter } from "next/navigation";
+import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext";
 
 const CLIP_PATH_ID = "home-bottom-bar-menu-clip";
 const DURATION = "0.56s";
 const BG_MENU = "#ffffff";
 
 const ITEMS = [
-  {
-    id: 0,
-    title: "Главная",
-    bgColorItem: "#ff8c00",
-    onSelect: (cb: HomeBottomBarProps) => cb.onScrollToTop(),
-    Icon: HomeIconSvg,
-  },
-  {
-    id: 1,
-    title: "Поиск",
-    bgColorItem: "#f54888",
-    onSelect: (cb: HomeBottomBarProps) => cb.onOpenSearch(),
-    Icon: SearchIconSvg,
-  },
-  {
-    id: 2,
-    title: "Карта",
-    bgColorItem: "#4343f5",
-    onSelect: (cb: HomeBottomBarProps) => cb.onOpenMap(),
-    Icon: MapIconSvg,
-  },
+  { id: 0, title: "Главная", bgColorItem: "#ff8c00", Icon: HomeIconSvg },
+  { id: 1, title: "Поиск", bgColorItem: "#f54888", Icon: SearchIconSvg },
+  { id: 2, title: "Карта", bgColorItem: "#4343f5", Icon: MapIconSvg },
 ] as const;
 
 const MENU_CSS = `
@@ -194,12 +172,23 @@ function offsetMenuBorder(
   borderEl.style.transform = `translate3d(${left}, 0, 0)`;
 }
 
-export function HomeBottomBar(props: HomeBottomBarProps) {
+export function HomeBottomBar() {
   const [activeIndex, setActiveIndex] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
   const borderRef = useRef<HTMLDivElement>(null);
-
   const activeItemRef = useRef<HTMLButtonElement | null>(null);
+  const { callbacks } = useBottomBarCallbacks();
+  const router = useRouter();
+
+  const actions = useCallback(
+    () =>
+      callbacks ?? {
+        onScrollToTop: () => router.push("/"),
+        onOpenSearch: () => router.push("/#search"),
+        onOpenMap: () => router.push("/#map"),
+      },
+    [callbacks, router],
+  );
 
   const updateBorder = useCallback(() => {
     const menu = menuRef.current;
@@ -230,9 +219,12 @@ export function HomeBottomBar(props: HomeBottomBarProps) {
         menuRef.current.style.removeProperty("--timeOut");
       }
       setActiveIndex(index);
-      ITEMS[index].onSelect(props);
+      const cb = actions();
+      if (index === 0) cb.onScrollToTop();
+      else if (index === 1) cb.onOpenSearch();
+      else cb.onOpenMap();
     },
-    [activeIndex, props],
+    [activeIndex, actions],
   );
 
   return (

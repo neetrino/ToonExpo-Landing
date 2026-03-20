@@ -7,7 +7,7 @@ import Image from "next/image";
 import { parseMediaUrls } from "@/shared/lib/mediaUrls";
 import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
 import { MapSearch } from "@/features/home/components/MapSearch";
-import { HomeBottomBar } from "@/features/home/components/HomeBottomBar";
+import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 
@@ -61,6 +61,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   const [visibleCount, setVisibleCount] = useState(PROJECTS_PAGE_SIZE);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+  const { setCallbacks } = useBottomBarCallbacks();
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -122,6 +123,29 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
     input?.scrollIntoView({ behavior: "smooth", block: "center" });
     setTimeout(() => (input as HTMLInputElement | null)?.focus(), 400);
   }
+
+  useEffect(() => {
+    const onScrollToTop = () => {
+      if (isMapFullscreen) setIsMapFullscreen(false);
+      setTimeout(scrollToTop, isMapFullscreen ? 200 : 0);
+    };
+    const onOpenSearch = () => {
+      if (isMapFullscreen) setIsMapFullscreen(false);
+      setTimeout(openSearch, isMapFullscreen ? 200 : 0);
+    };
+    setCallbacks({
+      onScrollToTop,
+      onOpenSearch,
+      onOpenMap: () => setIsMapFullscreen(true),
+    });
+    return () => setCallbacks(null);
+  }, [isMapFullscreen, setCallbacks]);
+
+  useEffect(() => {
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    if (hash === "#search") setTimeout(openSearch, 300);
+    if (hash === "#map") setTimeout(() => setIsMapFullscreen(true), 300);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#246976] text-white">
@@ -370,19 +394,6 @@ id="featured-heading"
         </section>
       </main>
 
-      <HomeBottomBar
-        onScrollToTop={() => {
-          if (isMapFullscreen) setIsMapFullscreen(false);
-          const delay = isMapFullscreen ? 200 : 0;
-          setTimeout(scrollToTop, delay);
-        }}
-        onOpenSearch={() => {
-          if (isMapFullscreen) setIsMapFullscreen(false);
-          const delay = isMapFullscreen ? 200 : 0;
-          setTimeout(openSearch, delay);
-        }}
-        onOpenMap={() => setIsMapFullscreen(true)}
-      />
     </div>
   );
 }
