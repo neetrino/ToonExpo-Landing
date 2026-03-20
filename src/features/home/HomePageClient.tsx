@@ -347,36 +347,73 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
   const pricePerMeter = formatRange(fields.expo_field_07, fields.expo_field_08);
   const priceRange = formatRange(fields.expo_field_17, fields.expo_field_18);
   const imageSrc = thumb ?? CARD_FALLBACK_IMAGES[index % CARD_FALLBACK_IMAGES.length];
+  const showNewBadge = index < 3;
 
   return (
     <Link
       href={`/p/${project.slug}`}
-      className="flex h-full flex-col rounded-[10px] border border-[#18fffb] bg-[rgba(43,168,176,0.45)] p-5 transition duration-200 hover:-translate-y-1 hover:bg-[rgba(43,168,176,0.62)]"
+      className="flex h-full flex-col overflow-hidden rounded-[16px] bg-white shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] transition duration-200 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2"
     >
-      <h2 className="min-h-16 text-[1.6rem] font-bold uppercase leading-tight text-white">
-        {title}
-      </h2>
-      <div className="relative mt-5 aspect-[1.5/1] overflow-hidden rounded-[10px] bg-[#1d5662]">
-        <img src={imageSrc} alt={title} loading="lazy" className="h-full w-full object-cover" />
+      {/* Блок изображения: 256px, градиент, бейдж New, кнопка избранного */}
+      <div className="relative h-[256px] w-full shrink-0 overflow-hidden">
+        <img
+          src={imageSrc}
+          alt={title}
+          loading="lazy"
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(15,23,43,0.6)] to-transparent" aria-hidden />
+        {showNewBadge && (
+          <span className="absolute left-4 top-4 rounded-full bg-[#0092b8] px-4 py-1.5 text-xs font-semibold text-white shadow-sm">
+            New
+          </span>
+        )}
+        <div className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm" aria-hidden>
+          <HeartIcon />
+        </div>
       </div>
-      <ul className="mt-5 space-y-3 text-sm text-white/95">
-        <li className="flex items-start gap-3">
-          <img src={FIGMA_ASSETS.locationIcon} alt="" className="mt-0.5 h-5 w-5 shrink-0" />
-          <span>{location}</span>
-        </li>
-        <li className="flex items-start gap-3">
-          <img src={FIGMA_ASSETS.refundIcon} alt="" className="mt-0.5 h-5 w-5 shrink-0" />
-          <span>Tax refund: {taxRefund}</span>
-        </li>
-        <li className="flex items-start gap-3">
-          <img src={FIGMA_ASSETS.priceIcon} alt="" className="mt-0.5 h-5 w-5 shrink-0" />
-          <span>Price / m²: {pricePerMeter}</span>
-        </li>
-        <li className="flex items-start gap-3">
-          <img src={FIGMA_ASSETS.rangeIcon} alt="" className="mt-0.5 h-5 w-5 shrink-0" />
-          <span>Range: {priceRange}</span>
-        </li>
-      </ul>
+
+      {/* Контент: отступ 24px, заголовок, локация, спеки, разделитель, цена + кнопка */}
+      <div className="flex flex-1 flex-col gap-4 px-6 pt-6 pb-5">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-[20px] font-bold leading-7 tracking-[-0.45px] text-[#0f172b]">
+            {title}
+          </h2>
+          <div className="flex items-center gap-2 text-[14px] leading-5 text-[#45556c]">
+            <img src={FIGMA_ASSETS.locationIcon} alt="" className="h-4 w-4 shrink-0" />
+            <span>{location}</span>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-4 border-b border-[#f1f5f9] pb-3">
+          <div className="flex items-center gap-1.5 text-[14px] text-[#45556c]">
+            <img src={FIGMA_ASSETS.refundIcon} alt="" className="h-4 w-4 shrink-0" />
+            <span>{taxRefund}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-[14px] text-[#45556c]">
+            <img src={FIGMA_ASSETS.priceIcon} alt="" className="h-4 w-4 shrink-0" />
+            <span>{pricePerMeter}</span>
+          </div>
+        </div>
+
+        <div className="mt-auto flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2 text-[14px] text-[#45556c]">
+            <img src={FIGMA_ASSETS.rangeIcon} alt="" className="h-4 w-4 shrink-0" />
+            <span className="truncate">{priceRange}</span>
+          </div>
+          <span className="shrink-0 rounded-[10px] bg-[#0f172b] px-5 py-2.5 text-center text-[16px] font-medium leading-6 text-white">
+            Details
+          </span>
+        </div>
+      </div>
     </Link>
+  );
+}
+
+function HeartIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0092b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+    </svg>
   );
 }
