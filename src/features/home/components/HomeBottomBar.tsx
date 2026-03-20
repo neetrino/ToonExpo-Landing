@@ -224,8 +224,7 @@ export function HomeBottomBar() {
 
   const handleClick = useCallback(
     (index: number) => {
-      if (activeIndex === index) return;
-      if (menuRef.current) {
+      if (menuRef.current && activeIndex !== index) {
         menuRef.current.style.removeProperty("--timeOut");
       }
       setActiveIndex(index);
