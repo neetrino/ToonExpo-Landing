@@ -10,8 +10,6 @@ import type { HomeProject } from "@/features/home/homeProject.types";
 
 export type { HomeProject } from "@/features/home/homeProject.types";
 
-const HERO_TITLE = "TOON EXPO 2026. INVEST";
-const HERO_SUBTITLE = "interactive map";
 const PROJECTS_PAGE_SIZE = 15;
 
 const FIGMA_ASSETS = {
@@ -104,6 +102,11 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           sizes="100vw"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,19,26,0.58),rgba(7,27,36,0.88))]" />
+        {/* Figma: Rectangle 1177 — overlay со скруглением снизу */}
+        <div
+          className="absolute inset-0 rounded-bl-[125px] rounded-br-[132px] bg-[#277691] mix-blend-overlay"
+          aria-hidden
+        />
 
         <header id="top" className="relative z-10 px-5 py-6 lg:px-10">
           <div className="mx-auto flex max-w-[1680px] items-center justify-between gap-4">
@@ -120,21 +123,13 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           </div>
         </header>
 
+        {/* Figma 2067:4882 — карта 92,331 1063×531; заголовок 1179,441 634×254; отступ справа 107px */}
         <section
           id="events"
-          className="relative z-10 -mt-8 scroll-mt-6 px-5 pb-16 pt-8 lg:-mt-12 lg:px-10 lg:pb-28"
+          className="relative z-10 scroll-mt-6 px-5 pb-16 pt-6 lg:px-[92px] lg:pb-28 lg:pr-[107px] lg:pt-8"
         >
-          <div className="mx-auto max-w-[1680px]">
-            <div className="mb-8 text-center">
-              <p className="text-[clamp(2rem,4vw,3rem)] font-semibold uppercase tracking-[0.08em] text-white">
-                {HERO_TITLE}
-              </p>
-              <p className="mt-3 text-base uppercase tracking-[0.32em] text-white/80">
-                {HERO_SUBTITLE}
-              </p>
-            </div>
-
-            <div className="toon-home-map relative overflow-hidden rounded-[12px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)]">
+          <div className="mx-auto grid max-w-[1920px] grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,1063px)_24px_634px] lg:gap-0">
+            <div className="toon-home-map relative z-0 min-w-0 overflow-hidden rounded-[12px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
               <div className="absolute left-4 right-4 top-4 z-20 sm:right-auto sm:w-[320px]">
                 <label className="sr-only" htmlFor="home-search">
                   Որոնում
@@ -152,7 +147,17 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 className="pointer-events-none absolute inset-0 z-10 bg-black/15"
                 aria-hidden
               />
-              <HomeMapPreview markers={markers} className="h-[440px] w-full md:h-[540px] lg:h-[700px]" />
+              <HomeMapPreview markers={markers} className="h-[440px] w-full md:h-[531px] lg:h-[531px]" />
+            </div>
+
+            {/* Figma Frame 2109: 1179,441 634×254; заголовок на 110px ниже верха карты (441−331) */}
+            <div className="relative z-10 mt-6 flex w-full max-w-[634px] flex-col items-end gap-[11px] lg:mt-[110px] lg:w-[634px] lg:max-w-none">
+              <p className="text-right font-semibold uppercase leading-[0.98] text-white [font-size:clamp(2rem,5.5vw,5.5rem)] lg:text-[88px]">
+                TOON EXPO <span className="text-[#008999]">2026.</span> INVEST
+              </p>
+              <p className="text-right text-[24px] font-semibold leading-normal text-white">
+                interactive map
+              </p>
             </div>
           </div>
         </section>
