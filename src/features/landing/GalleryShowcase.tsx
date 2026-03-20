@@ -44,12 +44,12 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc }: Props) {
   };
 
   return (
-    <div className="mx-auto max-w-[1920px]">
+    <div className="w-full">
       <div className="relative">
-        <div className="grid gap-2 lg:grid-cols-[minmax(0,820px)_400px_400px] lg:gap-3">
+        <div className="grid gap-2 lg:grid-cols-[1fr_400px_400px] lg:gap-3">
           {mainItem ? (
-            <div className="relative min-h-[320px] overflow-hidden lg:min-h-[580px]">
-              <img src={mainItem.image} alt={mainItem.label} className="h-full w-full object-cover" />
+            <div className="relative h-[320px] overflow-hidden lg:h-[580px]">
+              <img src={mainItem.image} alt={mainItem.label} className="h-full w-full object-cover object-center" />
               <div className="absolute inset-0 bg-black/35" />
               <div className="absolute bottom-6 left-5 text-white lg:left-[140px]">
                 <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">Gallery</h2>
@@ -59,16 +59,16 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc }: Props) {
           ) : null}
 
           {secondItem ? (
-            <div className="relative min-h-[220px] overflow-hidden lg:min-h-[580px]">
-              <img src={secondItem.image} alt={secondItem.label} className="h-full w-full object-cover" />
+            <div className="relative h-[220px] overflow-hidden lg:h-[580px]">
+              <img src={secondItem.image} alt={secondItem.label} className="h-full w-full object-cover object-center" />
               <div className="absolute inset-0 bg-black/15" />
               <p className="absolute bottom-5 left-5 text-xl text-white lg:text-2xl">{secondItem.label}</p>
             </div>
           ) : null}
 
           {thirdItem ? (
-            <div className="relative min-h-[220px] overflow-hidden lg:min-h-[580px]">
-              <img src={thirdItem.image} alt={thirdItem.label} className="h-full w-full object-cover" />
+            <div className="relative h-[220px] overflow-hidden lg:h-[580px]">
+              <img src={thirdItem.image} alt={thirdItem.label} className="h-full w-full object-cover object-center" />
               <div className="absolute inset-0 bg-black/18" />
               <p className="absolute bottom-5 left-5 max-w-[220px] text-xl text-white lg:text-2xl">{thirdItem.label}</p>
             </div>
@@ -89,7 +89,7 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc }: Props) {
               type="button"
               onClick={showNext}
               aria-label="Next gallery image"
-              className="absolute left-[660px] top-1/2 z-10 hidden -translate-y-1/2 transition hover:scale-110 lg:block"
+              className="absolute left-[calc(100%-400px-400px-1.5rem-2.5rem)] top-1/2 z-10 hidden -translate-y-1/2 transition hover:scale-110 lg:block"
             >
               <img src={rightArrowSrc} alt="" className="h-[56px] w-[22px]" />
             </button>
