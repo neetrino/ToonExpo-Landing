@@ -118,7 +118,7 @@ export function SiteReachMapFooter({
               <img
                 src={FIGMA_ASSETS.footerLogo}
                 alt="Toon Expo"
-                className="-mt-8 h-32 w-32 shrink-0 sm:h-40 sm:w-40 lg:-mt-12"
+                className="-mt-8 hidden h-32 w-32 shrink-0 sm:block sm:h-40 sm:w-40 lg:-mt-12"
               />
               <div className="-mt-8 flex min-w-0 flex-1 flex-col items-center lg:-mt-12 lg:items-end lg:justify-end">
                 <FooterBottomNav
