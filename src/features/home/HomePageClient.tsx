@@ -146,13 +146,13 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           </div>
         </header>
 
-        {/* Figma 2067:4882 — карта 92,331 1063×531; заголовок 1179,441 634×254; отступ справа 107px */}
+        {/* Мобильный: сверху текст, потом карта. Десктоп: карта слева, текст справа. */}
         <section
           id="events"
-          className="relative z-10 scroll-mt-6 px-5 pb-16 pt-6 lg:px-[92px] lg:pb-28 lg:pr-[107px] lg:pt-8"
+          className="relative z-10 scroll-mt-6 px-4 pb-12 pt-4 sm:px-5 sm:pb-16 sm:pt-6 lg:px-[92px] lg:pb-28 lg:pr-[107px] lg:pt-8"
         >
           <div className="mx-auto grid max-w-[1920px] grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,1063px)_24px_634px] lg:gap-0">
-            <div className="toon-home-map relative z-0 min-w-0 overflow-hidden rounded-[12px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
+            <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-hidden rounded-[12px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
               <div className="absolute left-4 top-4 z-20 sm:right-auto">
                 <MapSearch
                   value={q}
@@ -212,19 +212,19 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
               {!isMapFullscreen ? (
                 <HomeMapPreview
                   markers={markers}
-                  className="h-[440px] w-full md:h-[531px] lg:h-[531px]"
+                  className="h-[280px] w-full sm:h-[360px] md:h-[440px] lg:h-[531px]"
                 />
               ) : (
-                <div className="h-[440px] w-full bg-[#1d5662]/50 md:h-[531px] lg:h-[531px]" />
+                <div className="h-[280px] w-full bg-[#1d5662]/50 sm:h-[360px] md:h-[440px] lg:h-[531px]" />
               )}
             </div>
 
-            {/* Figma Frame 2109: 1179,441 634×254; заголовок на 110px ниже верха карты (441−331) */}
-            <div className="relative z-10 mt-6 flex w-full max-w-[634px] flex-col items-end gap-[11px] lg:mt-[110px] lg:w-[634px] lg:max-w-none">
-              <p className="text-right font-semibold uppercase leading-[0.98] text-white [font-size:clamp(2rem,5.5vw,5.5rem)] lg:text-[88px]">
+            {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. */}
+            <div className="order-1 relative z-10 mb-6 flex w-full max-w-[634px] flex-col items-center gap-[11px] lg:order-2 lg:mb-0 lg:mt-[110px] lg:w-[634px] lg:max-w-none lg:items-end">
+              <p className="text-center font-semibold uppercase leading-[0.98] text-white [font-size:clamp(1.75rem,5vw,5.5rem)] lg:text-right lg:text-[88px]">
                 TOON EXPO <span className="text-[#008999]">2026.</span> INVEST
               </p>
-              <p className="text-right text-[24px] font-semibold leading-normal text-white">
+              <p className="text-center text-lg font-semibold leading-normal text-white sm:text-[24px] lg:text-right">
                 interactive map
               </p>
             </div>
@@ -298,15 +298,15 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
       <main className="bg-[#246976]">
         <section
           id="participants"
-          className="mx-auto max-w-[1680px] scroll-mt-6 px-5 py-10 lg:px-10 lg:py-12"
+          className="mx-auto max-w-[1680px] scroll-mt-6 px-4 py-8 sm:px-5 sm:py-10 lg:px-10 lg:py-12"
         >
           {filtered.length === 0 ? (
-            <p className="rounded-[12px] border border-[#18fffb]/40 bg-white/8 px-6 py-12 text-center text-lg text-white/80">
+            <p className="rounded-[12px] border border-[#18fffb]/40 bg-white/8 px-4 py-10 text-center text-base text-white/80 sm:px-6 sm:py-12 sm:text-lg">
               Արդյունք չկա
             </p>
           ) : (
             <>
-              <ul id="projects" className="grid scroll-mt-6 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <ul id="projects" className="grid scroll-mt-6 gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {visibleProjects.map((project, index) => (
                   <li key={project.id}>
                     <ProjectCard project={project} index={index} />
@@ -314,7 +314,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 ))}
               </ul>
               {hasMoreProjects ? (
-                <div className="mt-10 flex justify-center">
+                <div className="mt-8 flex justify-center sm:mt-10">
                   <button
                     type="button"
                     onClick={handleShowMore}
@@ -355,8 +355,8 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
       href={`/p/${project.slug}`}
       className="flex h-full flex-col overflow-hidden rounded-[16px] bg-white shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] transition duration-200 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2"
     >
-      {/* Блок изображения: 256px; при отсутствии фото — иконка-плейсхолдер */}
-      <div className="relative h-[256px] w-full shrink-0 overflow-hidden bg-[#e2e8f0]">
+      {/* Блок изображения: на мобильном ниже, на десктопе 256px */}
+      <div className="relative h-[200px] w-full shrink-0 overflow-hidden bg-[#e2e8f0] sm:h-[230px] lg:h-[256px]">
         {hasPhoto ? (
           <img
             src={imageSrc}
@@ -380,17 +380,17 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
         </div>
       </div>
 
-      {/* Контент: заголовок, жёлтый пункт (tax refund) вверху, локация ниже, спеки, разделитель, цена + кнопка */}
-      <div className="flex flex-1 flex-col gap-4 px-6 pt-6 pb-5">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-[20px] font-bold leading-7 tracking-[-0.45px] text-[#0f172b]">
+      {/* Контент: адаптивные отступы и размеры */}
+      <div className="flex flex-1 flex-col gap-3 px-4 pt-4 pb-4 sm:gap-4 sm:px-5 sm:pt-5 sm:pb-5 lg:px-6 lg:pt-6 lg:pb-5">
+        <div className="flex flex-col gap-1.5 sm:gap-2">
+          <h2 className="text-[17px] font-bold leading-tight tracking-[-0.45px] text-[#0f172b] sm:text-[20px] sm:leading-7">
             {title}
           </h2>
-          <div className="flex items-center gap-2 text-[14px] leading-5 text-[#45556c]">
+          <div className="flex items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
             <img src={FIGMA_ASSETS.refundIcon} alt="" className="h-4 w-4 shrink-0 object-contain" />
-            <span>{taxRefund}</span>
+            <span className="line-clamp-2">{taxRefund}</span>
           </div>
-          <div className="flex items-center gap-2 text-[14px] leading-5 text-[#45556c]">
+          <div className="flex items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
             <img
               src={FIGMA_ASSETS.locationIcon}
               alt=""
@@ -402,19 +402,19 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 border-b border-[#f1f5f9] pb-3">
-          <div className="flex items-center gap-1.5 text-[14px] text-[#45556c]">
+        <div className="flex flex-wrap items-center gap-3 border-b border-[#f1f5f9] pb-2 sm:gap-4 sm:pb-3">
+          <div className="flex items-center gap-1.5 text-[13px] text-[#45556c] sm:text-[14px]">
             <img src={FIGMA_ASSETS.priceIcon} alt="" className="h-4 w-4 shrink-0" />
             <span>{pricePerMeter}</span>
           </div>
         </div>
 
-        <div className="mt-auto flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2 text-[14px] text-[#45556c]">
+        <div className="mt-auto flex items-center justify-between gap-2 sm:gap-3">
+          <div className="flex min-w-0 items-center gap-2 text-[13px] text-[#45556c] sm:text-[14px]">
             <img src={FIGMA_ASSETS.rangeIcon} alt="" className="h-4 w-4 shrink-0" />
             <span className="truncate">{priceRange}</span>
           </div>
-          <span className="shrink-0 rounded-[10px] bg-[#0f172b] px-5 py-2.5 text-center text-[16px] font-medium leading-6 text-white">
+          <span className="shrink-0 rounded-[10px] bg-[#0f172b] px-4 py-2 text-center text-[14px] font-medium leading-6 text-white sm:px-5 sm:py-2.5 sm:text-[16px]">
             Details
           </span>
         </div>
