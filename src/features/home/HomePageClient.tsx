@@ -115,7 +115,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   }
 
   function scrollToTop() {
-    document.getElementById("top")?.scrollIntoView({ behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function openSearch() {

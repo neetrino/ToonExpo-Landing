@@ -233,10 +233,13 @@ export function HomeBottomBar() {
       }
       setActiveIndex(index);
       const cb = actions();
-      if (index === 0) cb.onGoHome();
-      else if (index === 1) cb.onScrollToTop();
-      else if (index === 2) cb.onOpenSearch();
-      else cb.onOpenMap();
+      const run = () => {
+        if (index === 0) cb.onGoHome();
+        else if (index === 1) cb.onScrollToTop();
+        else if (index === 2) cb.onOpenSearch();
+        else cb.onOpenMap();
+      };
+      setTimeout(run, 0);
     },
     [activeIndex, actions],
   );
