@@ -64,7 +64,7 @@ export function LandingPage({ fields }: Props) {
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
   const heroBg = getHeroMedia(fields) || participantFigmaAssets.heroBackground;
-  const heroLogo = getLogoUrl(fields) || participantFigmaAssets.fallbackLogo;
+  const heroLogoUrl = getLogoUrl(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const leadText = getLeadText(fields);
   const rawAboutText = aboutParagraphs[0] ?? "";
@@ -166,12 +166,14 @@ export function LandingPage({ fields }: Props) {
           className={`relative z-10 flex h-full min-h-0 flex-col gap-4 ${MOBILE_SECTION_INSET} pt-[calc(0.75rem+3.25rem+max(1.25rem,env(safe-area-inset-top)))] pb-[max(1.5rem,env(safe-area-inset-bottom))]`}
         >
           <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto overscroll-contain text-center">
-            <img
-              src={heroLogo}
-              alt=""
-              className="absolute top-[2px] h-[105px] w-[133px] object-contain"
-            />
-            <h1 className="mt-20 max-w-[288px] text-[30px] font-bold uppercase leading-[1.25]">
+            {heroLogoUrl ? (
+              <img
+                src={heroLogoUrl}
+                alt=""
+                className="mb-8 h-[105px] w-[133px] shrink-0 object-contain"
+              />
+            ) : null}
+            <h1 className="max-w-[288px] text-[30px] font-bold uppercase leading-[1.25]">
               {title}
             </h1>
             <p className="mt-2 text-[18px] font-light leading-7">{heroLead}</p>

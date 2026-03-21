@@ -91,7 +91,7 @@ export function LandingPage({ fields }: Props) {
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
   const heroBg = media[0] || participantFigmaAssets.heroBackground;
-  const heroLogo = getLogoUrl(fields) || participantFigmaAssets.fallbackLogo;
+  const heroLogoUrl = getLogoUrl(fields);
   const leadText = getLeadText(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const aboutPrimaryImage = media[1] || media[0] || participantFigmaAssets.aboutPrimary;
@@ -148,11 +148,13 @@ export function LandingPage({ fields }: Props) {
         <div className="absolute left-0 right-0 top-[89px] h-px bg-white/30" />
         <div className="relative z-10 mx-auto flex min-h-[calc(92svh-72px)] max-w-[1920px] items-end px-5 py-8 lg:px-0 lg:py-0">
           <div className="flex w-full flex-col justify-end gap-6 lg:min-h-[860px] lg:w-1/2 lg:px-12 lg:pb-16">
-            <img
-              src={heroLogo}
-              alt=""
-              className="h-auto w-[92px] object-contain lg:w-[138px]"
-            />
+            {heroLogoUrl ? (
+              <img
+                src={heroLogoUrl}
+                alt=""
+                className="h-auto w-[92px] object-contain lg:w-[138px]"
+              />
+            ) : null}
             <div className="max-w-[640px]">
               <h1 className="max-w-[620px] text-[clamp(2.2rem,4.3vw,4.2rem)] font-semibold uppercase leading-[0.98]">
                 {title}

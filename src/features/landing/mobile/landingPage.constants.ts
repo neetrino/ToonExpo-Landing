@@ -2,7 +2,6 @@ export const participantFigmaAssets = {
   heroBackground: "/figma/project-mobile/hero-background.jpg",
   headerLogo: "/figma/project-mobile/toon-logo.svg",
   menuIcon: "/figma/project-mobile/menu.svg",
-  fallbackLogo: "/figma/project-mobile/project-logo.svg",
   aboutPrimary: "/figma/project-mobile/about-photo-1.jpg",
   aboutSecondary: "/figma/project-mobile/about-photo-2.jpg",
   galleryMain: "/figma/project-mobile/gallery-main.jpg",
