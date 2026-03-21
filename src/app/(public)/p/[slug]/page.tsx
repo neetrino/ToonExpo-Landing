@@ -41,7 +41,7 @@ export default async function PublicLandingPage({ params }: Props) {
     expoFields: fields,
   };
   return (
-    <LandingBottomBarCallbacks>
+    <LandingBottomBarCallbacks project={projectData}>
       <LandingAutoRedirect slug={project.slug} />
       <LandingPage fields={fields} />
       <SiteReachMapFooter variant="participant" projects={[projectData]} />

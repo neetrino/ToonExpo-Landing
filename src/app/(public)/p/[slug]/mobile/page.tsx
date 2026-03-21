@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { prisma } from "@/shared/lib/db";
 import { LandingPage } from "@/features/landing/mobile/LandingPage";
-import { LandingBottomBarCallbacks } from "@/features/landing/mobile/LandingBottomBarCallbacks";
+import { LandingBottomBarCallbacks } from "@/features/landing/LandingBottomBarCallbacks";
 import { SiteReachMapFooter } from "@/features/home/mobile/SiteReachMapFooter";
 import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
 
@@ -40,7 +40,7 @@ export default async function PublicLandingMobilePage({ params }: Props) {
     expoFields: fields,
   };
   return (
-    <LandingBottomBarCallbacks>
+    <LandingBottomBarCallbacks project={projectData}>
       <LandingPage fields={fields} />
       <SiteReachMapFooter variant="participant" projects={[projectData]} />
     </LandingBottomBarCallbacks>
