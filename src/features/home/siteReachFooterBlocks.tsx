@@ -25,8 +25,6 @@ const BLOCK_FIGMA = {
 
 const FOOTER_NAV_ITEMS = [
   { href: "/#top", label: "About" },
-  { href: "/#events", label: "Events" },
-  { href: "/#participants", label: "Participants" },
   { href: "/#projects", label: "Projects" },
   { href: "/#contacts", label: "Contacts" },
 ] as const;
