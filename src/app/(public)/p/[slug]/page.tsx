@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/shared/lib/db";
 import { LandingPage } from "@/features/landing/LandingPage";
 import { LandingBottomBarCallbacks } from "@/features/landing/LandingBottomBarCallbacks";
+import { LandingAutoRedirect } from "@/features/landing/mobile/LandingAutoRedirect";
 import { SiteReachMapFooter } from "@/features/home/SiteReachMapFooter";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 
@@ -41,6 +42,7 @@ export default async function PublicLandingPage({ params }: Props) {
   };
   return (
     <LandingBottomBarCallbacks>
+      <LandingAutoRedirect slug={project.slug} />
       <LandingPage fields={fields} />
       <SiteReachMapFooter variant="participant" projects={[projectData]} />
     </LandingBottomBarCallbacks>
