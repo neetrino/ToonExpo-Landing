@@ -163,9 +163,9 @@ export function LandingPage({ fields }: Props) {
           )}
 
         <div
-          className={`relative z-10 flex h-full flex-col ${MOBILE_SECTION_INSET} pt-[calc(0.75rem+3.25rem+max(1.25rem,env(safe-area-inset-top)))]`}
+          className={`relative z-10 flex h-full min-h-0 flex-col gap-4 ${MOBILE_SECTION_INSET} pt-[calc(0.75rem+3.25rem+max(1.25rem,env(safe-area-inset-top)))] pb-[max(1.5rem,env(safe-area-inset-bottom))]`}
         >
-          <div className="relative flex flex-1 flex-col items-center justify-center pb-16 text-center">
+          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto overscroll-contain text-center">
             <img
               src={heroLogo}
               alt=""
@@ -183,7 +183,7 @@ export function LandingPage({ fields }: Props) {
 
           <a
             href="#options"
-            className="absolute bottom-6 left-4 right-4 inline-flex h-14 items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
+            className="inline-flex h-14 w-full shrink-0 items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
           >
             View Apartments
           </a>
