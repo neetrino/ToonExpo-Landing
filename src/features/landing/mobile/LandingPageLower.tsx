@@ -2,8 +2,6 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useMemo, useState } from "react";
-import { isFieldNonEmpty } from "@/shared/lib/expoFields";
-import { parseMediaUrls } from "@/shared/lib/mediaUrls";
 import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/mobile/lib/blockVisibility";
 import {
@@ -17,6 +15,7 @@ import {
   parseSizeOptions,
   splitListItems,
 } from "@/features/landing/mobile/landingPage.helpers";
+import { PaymentCard } from "@/features/landing/mobile/PaymentCard";
 
 type Props = {
   fields: ExpoMap;
@@ -41,41 +40,6 @@ function InvestmentCard({
           <p className="mt-1 text-[14px] leading-5 text-white/90">{text}</p>
         </div>
       </div>
-    </div>
-  );
-}
-
-function PaymentCard({
-  title,
-  text,
-  tone,
-  icon,
-}: {
-  title: string;
-  text: string;
-  tone: "teal" | "gold" | "navy";
-  icon: string;
-}) {
-  const toneClass =
-    tone === "gold"
-      ? "from-[#ffd24d] to-[rgba(255,210,77,0.9)] text-black"
-      : tone === "navy"
-        ? "from-[#192643] to-[rgba(25,38,67,0.9)] text-white"
-        : "from-[#2ba8b0] to-[rgba(43,168,176,0.9)] text-white";
-  const iconShellClass = tone === "gold" ? "bg-black/10" : "bg-white/20";
-  const textClass = tone === "gold" ? "text-black/70" : "text-white/80";
-  const arrow = tone === "gold" ? participantFigmaAssets.paymentArrowDark : participantFigmaAssets.paymentArrowLight;
-
-  return (
-    <div className={`flex items-center gap-4 rounded-[14px] bg-gradient-to-r px-4 py-4 ${toneClass}`}>
-      <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${iconShellClass}`}>
-        <img src={icon} alt="" className="h-6 w-6" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-[14px] font-bold leading-5">{title}</p>
-        <p className={`mt-1 text-[12px] leading-4 ${textClass}`}>{text}</p>
-      </div>
-      <img src={arrow} alt="" className="h-3 w-3 shrink-0" />
     </div>
   );
 }
