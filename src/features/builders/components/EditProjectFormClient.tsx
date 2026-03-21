@@ -14,6 +14,7 @@ type Props = {
   projectId: string;
   defaultSlug: string;
   defaultPublished: boolean;
+  defaultMediaFolderId: string | null;
   defaults: ExpoFieldsFormValues;
 };
 
@@ -21,6 +22,7 @@ export function EditProjectFormClient({
   projectId,
   defaultSlug,
   defaultPublished,
+  defaultMediaFolderId,
   defaults,
 }: Props) {
   const [state, formAction, pending] = useActionState(updateProjectFormAction, {
@@ -47,6 +49,7 @@ export function EditProjectFormClient({
       <EditProjectMetaCard
         defaultSlug={defaultSlug}
         defaultPublished={defaultPublished}
+        defaultMediaFolderId={defaultMediaFolderId}
         showSaved={showSaved}
         pending={pending}
         landingButtonClass={LANDING_BTN_CLASS}

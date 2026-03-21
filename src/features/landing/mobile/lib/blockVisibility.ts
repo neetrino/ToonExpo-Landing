@@ -34,13 +34,7 @@ const KEYS = {
     "expo_field_36",
   ],
   parking: ["expo_field_37", "expo_field_38", "expo_field_39", "expo_field_40", "expo_field_41"],
-  tours: [
-    "expo_field_45",
-    "expo_field_46",
-    "expo_field_47",
-    "expo_field_48",
-    "expo_field_49",
-  ],
+  tours: ["expo_field_45", "expo_field_46"],
   location: ["expo_field_15", "expo_field_16"],
   footer: ["expo_field_51", "expo_field_52", "expo_field_53", "expo_field_11"],
 } as const;

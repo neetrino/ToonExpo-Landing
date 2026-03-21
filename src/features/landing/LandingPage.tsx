@@ -17,9 +17,11 @@ import {
   participantNav,
 } from "@/features/landing/landingPage.constants";
 import { LandingStickyHeader } from "@/features/landing/components/LandingStickyHeader";
+import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 
 type Props = {
   fields: ExpoMap;
+  folderMedia: ResolvedProjectFolderMedia | null;
 };
 
 function Section({
@@ -85,17 +87,32 @@ function AboutSupportingGearIcon() {
   );
 }
 
-export function LandingPage({ fields }: Props) {
+export function LandingPage({ fields, folderMedia }: Props) {
   const vis = visibleBlocks(fields);
-  const navItems = participantNav.filter((item) => vis[item.block]);
+  const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
+  const infrastructureFromFolder = Boolean(
+    folderMedia?.infrastructureLeftUrl || folderMedia?.infrastructureRightUrl,
+  );
+  const navItems = participantNav.filter((item) => {
+    if (item.block === "gallery") {
+      return vis.gallery || galleryFromFolder;
+    }
+    if (item.block === "infrastructure") {
+      return vis.infrastructure || infrastructureFromFolder;
+    }
+    return vis[item.block];
+  });
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
-  const heroBg = media[0] || participantFigmaAssets.heroBackground;
+  const heroBg =
+    folderMedia?.heroUrl || media[0] || participantFigmaAssets.heroBackground;
   const heroLogoUrl = getLogoUrl(fields);
   const leadText = getLeadText(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
-  const aboutPrimaryImage = media[1] || media[0] || participantFigmaAssets.aboutPrimary;
-  const aboutSecondaryImage = media[2] || media[1] || media[0] || "";
+  const aboutPrimaryImage =
+    folderMedia?.aboutLargeUrl || media[1] || media[0] || participantFigmaAssets.aboutPrimary;
+  const aboutSecondaryImage =
+    folderMedia?.aboutSmallUrl || media[2] || media[1] || media[0] || "";
   const aboutFacts = [
     { label: "Developer", value: fields.expo_field_11 },
     { label: "Architect", value: fields.expo_field_12 },
@@ -254,7 +271,7 @@ export function LandingPage({ fields }: Props) {
         </Section>
       ) : null}
 
-      <LandingPageLower fields={fields} title={title} />
+      <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
     </div>
   );
 }

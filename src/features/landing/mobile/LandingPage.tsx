@@ -19,9 +19,11 @@ import {
 } from "@/features/landing/mobile/landingPage.helpers";
 import { MOBILE_SECTION_INSET, participantFigmaAssets } from "@/features/landing/mobile/landingPage.constants";
 import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
+import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 
 type Props = {
   fields: ExpoMap;
+  folderMedia: ResolvedProjectFolderMedia | null;
 };
 
 const MOBILE_NAV_ITEMS = [
@@ -58,12 +60,14 @@ function MobileStatCard({
   );
 }
 
-export function LandingPage({ fields }: Props) {
+export function LandingPage({ fields, folderMedia }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const vis = visibleBlocks(fields);
+  const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
-  const heroBg = getHeroMedia(fields) || participantFigmaAssets.heroBackground;
+  const heroBg =
+    folderMedia?.heroUrl || getHeroMedia(fields) || participantFigmaAssets.heroBackground;
   const heroLogoUrl = getLogoUrl(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const leadText = getLeadText(fields);
@@ -82,8 +86,9 @@ export function LandingPage({ fields }: Props) {
     addressText ? `${title} is a residential project located at ${addressText}.` : "",
     "Modern residential project designed for comfortable living and long-term value.",
   );
-  const aboutPrimaryImage = media[1] || participantFigmaAssets.aboutPrimary;
-  const aboutSecondaryImage = media[2] || media[1] || participantFigmaAssets.aboutSecondary;
+  const aboutPrimaryImage =
+    folderMedia?.aboutLargeUrl || media[1] || media[0] || participantFigmaAssets.aboutPrimary;
+  const aboutSecondaryImage = folderMedia?.aboutSmallUrl || media[2] || media[1] || "";
   const stats = getMobileStats(fields);
   const menuItems = useMemo(
     () =>
@@ -91,10 +96,13 @@ export function LandingPage({ fields }: Props) {
         if (item.id === "options") {
           return Boolean(fields.expo_field_06?.trim());
         }
+        if (item.block === "gallery") {
+          return vis.gallery || galleryFromFolder;
+        }
 
         return vis[item.block];
       }),
-    [fields.expo_field_06, vis],
+    [fields.expo_field_06, galleryFromFolder, vis],
   );
 
   useEffect(() => {
@@ -220,12 +228,14 @@ export function LandingPage({ fields }: Props) {
         <div className="overflow-hidden rounded-[16px] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
           <img src={aboutPrimaryImage} alt="" className="h-64 w-full object-cover" />
         </div>
-        <div className="overflow-hidden rounded-[16px]">
-          <img src={aboutSecondaryImage} alt="" className="h-56 w-full object-cover" />
-        </div>
+        {aboutSecondaryImage ? (
+          <div className="overflow-hidden rounded-[16px]">
+            <img src={aboutSecondaryImage} alt="" className="h-56 w-full object-cover" />
+          </div>
+        ) : null}
       </section>
 
-      <LandingPageLower fields={fields} title={title} />
+      <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
     </div>
   );
 }

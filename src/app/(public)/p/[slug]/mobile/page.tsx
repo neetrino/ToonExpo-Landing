@@ -8,6 +8,7 @@ import { LandingDesktopRedirect } from "@/features/landing/mobile/LandingAutoRed
 import { LandingBottomBarCallbacks } from "@/features/landing/LandingBottomBarCallbacks";
 import { SiteReachMapFooter } from "@/features/home/mobile/SiteReachMapFooter";
 import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
+import { resolveProjectFolderMedia } from "@/features/landing/lib/resolveProjectFolderMedia";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -29,12 +30,14 @@ export default async function PublicLandingMobilePage({ params }: Props) {
       id: true,
       slug: true,
       expoFields: true,
+      mediaFolderId: true,
     },
   });
   if (!project) {
     notFound();
   }
   const fields = (project.expoFields as Record<string, string>) ?? {};
+  const folderMedia = resolveProjectFolderMedia(project.mediaFolderId);
   const projectData = {
     id: project.id,
     slug: project.slug,
@@ -43,7 +46,7 @@ export default async function PublicLandingMobilePage({ params }: Props) {
   return (
     <LandingBottomBarCallbacks project={projectData}>
       <LandingDesktopRedirect slug={project.slug} />
-      <LandingPage fields={fields} />
+      <LandingPage fields={fields} folderMedia={folderMedia} />
       <SiteReachMapFooter variant="participant" projects={[projectData]} />
     </LandingBottomBarCallbacks>
   );

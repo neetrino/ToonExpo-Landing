@@ -141,6 +141,7 @@ function PublishedToggle({ published, setPublished, pending }: PublishedTogglePr
 type Props = {
   defaultSlug: string;
   defaultPublished: boolean;
+  defaultMediaFolderId: string | null;
   showSaved: boolean;
   pending: boolean;
   landingButtonClass: string;
@@ -151,6 +152,7 @@ type Props = {
 export function EditProjectMetaCard({
   defaultSlug,
   defaultPublished,
+  defaultMediaFolderId,
   showSaved,
   pending,
   landingButtonClass,
@@ -159,12 +161,14 @@ export function EditProjectMetaCard({
 }: Props) {
   const [published, setPublished] = useState(defaultPublished);
   const [slugValue, setSlugValue] = useState(defaultSlug);
+  const [mediaFolderValue, setMediaFolderValue] = useState(defaultMediaFolderId ?? "");
   const [slugEditing, setSlugEditing] = useState(false);
 
   useEffect(() => {
     setSlugValue(defaultSlug);
     setPublished(defaultPublished);
-  }, [defaultSlug, defaultPublished]);
+    setMediaFolderValue(defaultMediaFolderId ?? "");
+  }, [defaultSlug, defaultPublished, defaultMediaFolderId]);
 
   useEffect(() => {
     if (showSaved) {
@@ -185,6 +189,28 @@ export function EditProjectMetaCard({
             onToggleEdit={() => setSlugEditing((v) => !v)}
             pending={pending}
           />
+          <div className="flex min-w-0 max-w-full flex-col gap-1 rounded-xl border border-slate-200 bg-slate-50/95 px-2.5 py-2 sm:max-w-[16rem]">
+            <label
+              htmlFor="project-media-folder-id"
+              className="text-[11px] font-bold uppercase tracking-wider text-slate-500"
+            >
+              Project ID (media folder)
+            </label>
+            <input
+              id="project-media-folder-id"
+              name="mediaFolderId"
+              value={mediaFolderValue}
+              onChange={(e) => setMediaFolderValue(e.target.value)}
+              disabled={pending}
+              autoComplete="off"
+              spellCheck={false}
+              placeholder="e.g. 1"
+              className="min-w-0 border-0 bg-transparent font-mono text-sm text-slate-800 outline-none focus:ring-0 disabled:opacity-60"
+            />
+            <p className="text-[10px] leading-snug text-slate-500">
+              public/project/…/Exterior, Interior, …
+            </p>
+          </div>
           <PublishedToggle
             published={published}
             setPublished={setPublished}

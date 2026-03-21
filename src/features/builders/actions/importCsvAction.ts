@@ -9,6 +9,7 @@ import {
   slugFromRow,
   rowToExpoJson,
 } from "@/features/import/csvImport";
+import { sanitizeMediaFolderId } from "@/shared/lib/mediaFolderId";
 
 async function ensureUniqueSlug(base: string): Promise<string> {
   let slug = base;
@@ -45,11 +46,13 @@ export async function importProjectsFromCsvAction(
       const row = rows[i];
       const base = slugFromRow(row, i);
       const slug = await ensureUniqueSlug(base);
+      const folderId = sanitizeMediaFolderId(row.mediaFolderId ?? undefined);
       await prisma.project.create({
         data: {
           slug,
           published: true,
           expoFields: rowToExpoJson(row),
+          mediaFolderId: folderId,
         },
       });
       imported += 1;

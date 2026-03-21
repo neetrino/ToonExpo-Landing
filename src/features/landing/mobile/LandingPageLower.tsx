@@ -16,10 +16,12 @@ import {
   splitListItems,
 } from "@/features/landing/mobile/landingPage.helpers";
 import { PaymentCard } from "@/features/landing/mobile/PaymentCard";
+import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 
 type Props = {
   fields: ExpoMap;
   title: string;
+  folderMedia: ResolvedProjectFolderMedia | null;
 };
 
 function InvestmentCard({
@@ -44,20 +46,21 @@ function InvestmentCard({
   );
 }
 
-export function LandingPageLower({ fields, title }: Props) {
+export function LandingPageLower({ fields, title, folderMedia }: Props) {
   const vis = visibleBlocks(fields);
   const media = getProjectMedia(fields);
-  const galleryImages = useMemo(
-    () =>
-      Array.from(
-        new Set([
-          media[3] || media[2] || participantFigmaAssets.galleryMain,
-          media[4] || media[1] || participantFigmaAssets.galleryUpper,
-          media[5] || media[0] || participantFigmaAssets.galleryUpdates,
-        ]),
-      ),
-    [media],
-  );
+  const galleryImages = useMemo(() => {
+    if (folderMedia && folderMedia.galleryUrls.length > 0) {
+      return folderMedia.galleryUrls.slice(0, 3);
+    }
+    return Array.from(
+      new Set([
+        media[3] || media[2] || participantFigmaAssets.galleryMain,
+        media[4] || media[1] || participantFigmaAssets.galleryUpper,
+        media[5] || media[0] || participantFigmaAssets.galleryUpdates,
+      ]),
+    );
+  }, [folderMedia, media]);
   const sizeOptions = useMemo(() => parseSizeOptions(fields.expo_field_06), [fields.expo_field_06]);
   const defaultSizeIndex = sizeOptions.length > 3 ? 3 : 0;
   const [selectedSize, setSelectedSize] = useState(defaultSizeIndex);
@@ -111,7 +114,8 @@ export function LandingPageLower({ fields, title }: Props) {
     },
   ];
   const showGallery = Boolean(
-    galleryImages[0] ||
+    (folderMedia?.galleryUrls.length ?? 0) > 0 ||
+      galleryImages[0] ||
       galleryImages[1] ||
       galleryImages[2] ||
       participantFigmaAssets.galleryMain ||

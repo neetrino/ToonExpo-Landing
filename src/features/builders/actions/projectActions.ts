@@ -10,6 +10,7 @@ import {
   expoFieldsToJson,
 } from "@/shared/lib/expoFields";
 import { slugifyTitle } from "@/shared/lib/slug";
+import { sanitizeMediaFolderId } from "@/shared/lib/mediaFolderId";
 import { z } from "zod";
 
 const projectMetaSchema = z.object({
@@ -71,11 +72,13 @@ export async function createProjectAction(
 
   let created: { id: string };
   try {
+    const mediaFolderId = sanitizeMediaFolderId((formData.get("mediaFolderId") as string) ?? "");
     created = await prisma.project.create({
       data: {
         slug,
         published,
         expoFields: expoJson,
+        mediaFolderId,
       },
     });
   } catch (e) {
@@ -120,6 +123,7 @@ export async function updateProjectAction(
       return { ok: false, error: "Դաշտերի վալիդացիա" };
     }
     const expoJson = expoFieldsToJson(parsedFields.data);
+    const mediaFolderId = sanitizeMediaFolderId((formData.get("mediaFolderId") as string) ?? "");
 
     await prisma.project.update({
       where: { id: projectId },
@@ -127,6 +131,7 @@ export async function updateProjectAction(
         slug,
         published: meta.data.published,
         expoFields: expoJson,
+        mediaFolderId,
       },
     });
     revalidatePath("/");

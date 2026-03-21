@@ -7,6 +7,7 @@ import {
   rowToExpoJson,
   slugFromRow,
 } from "../src/features/import/csvImport";
+import { sanitizeMediaFolderId } from "../src/shared/lib/mediaFolderId";
 
 const prisma = new PrismaClient();
 
@@ -78,6 +79,7 @@ async function main(): Promise<void> {
         slug,
         published: true,
         expoFields: expoJson,
+        mediaFolderId: sanitizeMediaFolderId(row.mediaFolderId ?? undefined),
       },
     });
     created += 1;
