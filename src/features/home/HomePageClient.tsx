@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,7 +13,10 @@ import type { HomeProject } from "@/features/home/homeProject.types";
 
 export type { HomeProject } from "@/features/home/homeProject.types";
 
-const PROJECTS_PAGE_SIZE = 15;
+/** Ниже Tailwind `lg` — мобильная/планшетная колонка списка. */
+const MOBILE_LIST_QUERY = "(max-width: 1023px)" as const;
+const PROJECTS_PAGE_SIZE_DESKTOP = 15;
+const PROJECTS_PAGE_SIZE_MOBILE = 10;
 
 const FIGMA_ASSETS = {
   heroBg: "/figma/home/heroBg.jpg",
@@ -58,7 +61,8 @@ function formatRange(minValue?: string, maxValue?: string): string {
 
 export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   const [q, setQ] = useState("");
-  const [visibleCount, setVisibleCount] = useState(PROJECTS_PAGE_SIZE);
+  const [pageSize, setPageSize] = useState(PROJECTS_PAGE_SIZE_DESKTOP);
+  const [visibleCount, setVisibleCount] = useState(PROJECTS_PAGE_SIZE_DESKTOP);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const { setCallbacks } = useBottomBarCallbacks();
@@ -83,9 +87,19 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
     });
   }, [projects, q]);
 
-  useEffect(() => {
-    setVisibleCount(PROJECTS_PAGE_SIZE);
-  }, [q]);
+  useLayoutEffect(() => {
+    const mq = window.matchMedia(MOBILE_LIST_QUERY);
+    const sync = () => {
+      setPageSize(mq.matches ? PROJECTS_PAGE_SIZE_MOBILE : PROJECTS_PAGE_SIZE_DESKTOP);
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useLayoutEffect(() => {
+    setVisibleCount(pageSize);
+  }, [q, pageSize]);
 
   // Обработка ESC для выхода из полноэкранного режима
   useEffect(() => {
@@ -111,7 +125,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   const hasMoreProjects = filtered.length > visibleProjects.length;
 
   function handleShowMore() {
-    setVisibleCount((currentCount) => currentCount + PROJECTS_PAGE_SIZE);
+    setVisibleCount((currentCount) => currentCount + pageSize);
   }
 
   function scrollToTop() {
