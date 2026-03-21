@@ -12,4 +12,11 @@ describe("visibleBlocks", () => {
     const v = visibleBlocks({ expo_field_07: "1000" });
     expect(v.investment).toBe(true);
   });
+
+  it("tours block only for expo_field_45 or expo_field_46", () => {
+    expect(visibleBlocks({}).tours).toBe(false);
+    expect(visibleBlocks({ expo_field_45: "https://example.com/tour" }).tours).toBe(true);
+    expect(visibleBlocks({ expo_field_46: "https://youtube.com/x" }).tours).toBe(true);
+    expect(visibleBlocks({ expo_field_47: "https://x.com" }).tours).toBe(false);
+  });
 });

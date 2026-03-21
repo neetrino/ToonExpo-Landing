@@ -1,3 +1,5 @@
+import "server-only";
+
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
