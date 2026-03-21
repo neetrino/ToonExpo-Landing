@@ -43,13 +43,7 @@ export function SiteReachMapFooter({
   const mapFrameClass = isParticipant
     ? "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-[#246976]/25 shadow-[0_25px_60px_rgba(0,0,0,0.08)]"
     : "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)]";
-  const firstProjectWithSite = useMemo(
-    () => projects.find((p) => (p.expoFields?.expo_field_51 ?? "").trim() !== ""),
-    [projects],
-  );
-  const footerSite =
-    (isParticipant ? anchor?.expoFields.expo_field_51 : firstProjectWithSite?.expoFields?.expo_field_51)?.trim() ??
-    "";
+  const footerSite = isParticipant ? (anchor?.expoFields.expo_field_51 ?? "").trim() : "";
   const footerInstagram = anchor?.expoFields.expo_field_52?.trim() ?? "";
   const footerFacebook = anchor?.expoFields.expo_field_53?.trim() ?? "";
 
@@ -73,42 +67,44 @@ export function SiteReachMapFooter({
           </div>
         </section>
 
-        <section className="relative z-10 -mt-12 border-t border-white/10 bg-[#2ba8b0] pt-12 lg:-mt-40 lg:pt-40">
-          <div className="relative mx-auto max-w-[1680px] px-5 py-10 lg:min-h-[6rem] lg:px-10 lg:py-12">
-            <div className="relative z-[2] flex flex-col gap-5 lg:flex-row lg:items-center">
-              <div className="flex shrink-0 flex-wrap items-center justify-center lg:justify-start">
-                <Link
-                  href="/#projects"
-                  className="text-xl font-semibold uppercase tracking-[0.14em] text-white lg:text-[2rem]"
-                >
-                  View Apartments
-                </Link>
-              </div>
-              <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-2 sm:gap-3">
-                {footerSite ? (
-                  <a
-                    href={footerSite}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={TEAL_BAR_VISIT_SITE_CLASS}
+        {isParticipant ? (
+          <section className="relative z-10 -mt-12 border-t border-white/10 bg-[#2ba8b0] pt-12 lg:-mt-40 lg:pt-40">
+            <div className="relative mx-auto max-w-[1680px] px-5 py-10 lg:min-h-[6rem] lg:px-10 lg:py-12">
+              <div className="relative z-[2] flex flex-col gap-5 lg:flex-row lg:items-center">
+                <div className="flex shrink-0 flex-wrap items-center justify-center lg:justify-start">
+                  <Link
+                    href="/#projects"
+                    className="text-xl font-semibold uppercase tracking-[0.14em] text-white lg:text-[2rem]"
                   >
-                    <img src={FIGMA_ASSETS.visitSiteButton} alt="" className="absolute inset-0 h-full w-full" />
-                    <span className="relative z-10">Visit Site</span>
-                  </a>
-                ) : null}
-                <SocialTilesRow
-                  facebookUrl={footerFacebook}
-                  instagramUrl={footerInstagram}
-                  iconClassName={TEAL_BAR_SOCIAL_ICON_CLASS}
-                  className="flex items-center gap-1.5"
-                />
-              </div>
-              <div className="flex w-full shrink-0 justify-end lg:w-auto">
-                <ReachOutCta className="shrink-0" />
+                    View Apartments
+                  </Link>
+                </div>
+                <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-2 sm:gap-3">
+                  {footerSite ? (
+                    <a
+                      href={footerSite}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={TEAL_BAR_VISIT_SITE_CLASS}
+                    >
+                      <img src={FIGMA_ASSETS.visitSiteButton} alt="" className="absolute inset-0 h-full w-full" />
+                      <span className="relative z-10">Visit Site</span>
+                    </a>
+                  ) : null}
+                  <SocialTilesRow
+                    facebookUrl={footerFacebook}
+                    instagramUrl={footerInstagram}
+                    iconClassName={TEAL_BAR_SOCIAL_ICON_CLASS}
+                    className="flex items-center gap-1.5"
+                  />
+                </div>
+                <div className="flex w-full shrink-0 justify-end lg:w-auto">
+                  <ReachOutCta className="shrink-0" />
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        ) : null}
       </div>
 
       <footer className="relative flex min-h-[20rem] flex-col bg-black px-5 py-[5.2rem] lg:min-h-[24rem] lg:px-10 lg:py-[6.5rem]">
@@ -121,11 +117,7 @@ export function SiteReachMapFooter({
                 className="-mt-8 hidden h-32 w-32 shrink-0 sm:block sm:h-40 sm:w-40 lg:-mt-12"
               />
               <div className="-mt-8 flex min-w-0 flex-1 flex-col items-center lg:-mt-12 lg:items-end lg:justify-end">
-                <FooterBottomNav
-                  facebookUrl={footerFacebook}
-                  instagramUrl={footerInstagram}
-                  alignWithIllustration={false}
-                />
+                <FooterBottomNav alignWithIllustration={false} />
               </div>
             </div>
           </div>

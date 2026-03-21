@@ -40,6 +40,7 @@ export default async function EditProjectPage({ params }: Props) {
         projectId={project.id}
         defaultSlug={project.slug}
         defaultPublished={project.published}
+        defaultMediaFolderId={project.mediaFolderId}
         defaults={defaults}
       />
     </div>

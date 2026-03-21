@@ -31,14 +31,16 @@ export function SiteReachMapFooter({
         <div className="toon-home-map mt-7 overflow-hidden rounded-[10px] border border-[#246976]/12 shadow-[0_8px_24px_rgba(16,24,40,0.08)]">
           <HomeMapPreview markers={markers} className="h-64 w-full" />
         </div>
-        <a
-          href={footerHref}
-          target={footerSite ? "_blank" : undefined}
-          rel={footerSite ? "noreferrer" : undefined}
-          className="mt-5 inline-flex h-14 w-full items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
-        >
-          Visit Site
-        </a>
+        {variant === "participant" ? (
+          <a
+            href={footerHref}
+            target={footerSite ? "_blank" : undefined}
+            rel={footerSite ? "noreferrer" : undefined}
+            className="mt-5 inline-flex h-14 w-full items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
+          >
+            Visit Site
+          </a>
+        ) : null}
       </section>
 
       <footer className="px-5 pb-8 pt-8 text-center">

@@ -31,3 +31,5 @@ temp/
 # .vscode/
 # *.swp
 # *.swo
+# Local dev folder at repo root only (not public/project/)
+/project/

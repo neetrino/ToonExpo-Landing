@@ -18,9 +18,12 @@ import {
   splitParagraphs,
 } from "@/features/landing/mobile/landingPage.helpers";
 import { MOBILE_SECTION_INSET, participantFigmaAssets } from "@/features/landing/mobile/landingPage.constants";
+import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
+import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 
 type Props = {
   fields: ExpoMap;
+  folderMedia: ResolvedProjectFolderMedia | null;
 };
 
 const MOBILE_NAV_ITEMS = [
@@ -57,13 +60,15 @@ function MobileStatCard({
   );
 }
 
-export function LandingPage({ fields }: Props) {
+export function LandingPage({ fields, folderMedia }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const vis = visibleBlocks(fields);
+  const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
-  const heroBg = getHeroMedia(fields) || participantFigmaAssets.heroBackground;
-  const heroLogo = getLogoUrl(fields) || participantFigmaAssets.fallbackLogo;
+  const heroBg =
+    folderMedia?.heroUrl || getHeroMedia(fields) || participantFigmaAssets.heroBackground;
+  const heroLogoUrl = getLogoUrl(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const leadText = getLeadText(fields);
   const rawAboutText = aboutParagraphs[0] ?? "";
@@ -81,8 +86,9 @@ export function LandingPage({ fields }: Props) {
     addressText ? `${title} is a residential project located at ${addressText}.` : "",
     "Modern residential project designed for comfortable living and long-term value.",
   );
-  const aboutPrimaryImage = media[1] || participantFigmaAssets.aboutPrimary;
-  const aboutSecondaryImage = media[2] || media[1] || participantFigmaAssets.aboutSecondary;
+  const aboutPrimaryImage =
+    folderMedia?.aboutLargeUrl || media[1] || media[0] || participantFigmaAssets.aboutPrimary;
+  const aboutSecondaryImage = folderMedia?.aboutSmallUrl || media[2] || media[1] || "";
   const stats = getMobileStats(fields);
   const menuItems = useMemo(
     () =>
@@ -90,10 +96,13 @@ export function LandingPage({ fields }: Props) {
         if (item.id === "options") {
           return Boolean(fields.expo_field_06?.trim());
         }
+        if (item.block === "gallery") {
+          return vis.gallery || galleryFromFolder;
+        }
 
         return vis[item.block];
       }),
-    [fields.expo_field_06, vis],
+    [fields.expo_field_06, galleryFromFolder, vis],
   );
 
   useEffect(() => {
@@ -110,6 +119,7 @@ export function LandingPage({ fields }: Props) {
 
   return (
     <div className="overflow-x-hidden bg-white text-[#101828]">
+      <MobileLandingStickyHeader onMenuClick={() => setIsMenuOpen(true)} />
       <section className="relative h-[500px] overflow-hidden text-white">
         <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
@@ -160,28 +170,18 @@ export function LandingPage({ fields }: Props) {
             document.body,
           )}
 
-        <div className={`relative z-10 flex h-full flex-col ${MOBILE_SECTION_INSET}`}>
-          <div className="flex items-center justify-between pt-5">
-            <Link href="/" aria-label="Go to home page" className="inline-flex">
-              <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-[52px] w-[52px]" />
-            </Link>
-            <button
-              type="button"
-              aria-label="Open mobile menu"
-              onClick={() => setIsMenuOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5"
-            >
-              <img src={participantFigmaAssets.menuIcon} alt="" className="h-6 w-6" />
-            </button>
-          </div>
-
-          <div className="relative flex flex-1 flex-col items-center justify-center pb-16 text-center">
-            <img
-              src={heroLogo}
-              alt=""
-              className="absolute top-[2px] h-[105px] w-[133px] object-contain"
-            />
-            <h1 className="mt-20 max-w-[288px] text-[30px] font-bold uppercase leading-[1.25]">
+        <div
+          className={`relative z-10 flex h-full min-h-0 flex-col gap-4 ${MOBILE_SECTION_INSET} pt-[calc(0.75rem+3.25rem+max(1.25rem,env(safe-area-inset-top)))] pb-[max(1.5rem,env(safe-area-inset-bottom))]`}
+        >
+          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto overscroll-contain text-center">
+            {heroLogoUrl ? (
+              <img
+                src={heroLogoUrl}
+                alt=""
+                className="mb-8 h-[105px] w-[133px] shrink-0 object-contain"
+              />
+            ) : null}
+            <h1 className="max-w-[288px] text-[30px] font-bold uppercase leading-[1.25]">
               {title}
             </h1>
             <p className="mt-2 text-[18px] font-light leading-7">{heroLead}</p>
@@ -193,7 +193,7 @@ export function LandingPage({ fields }: Props) {
 
           <a
             href="#options"
-            className="absolute bottom-6 left-4 right-4 inline-flex h-14 items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
+            className="inline-flex h-14 w-full shrink-0 items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
           >
             View Apartments
           </a>
@@ -228,12 +228,14 @@ export function LandingPage({ fields }: Props) {
         <div className="overflow-hidden rounded-[16px] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
           <img src={aboutPrimaryImage} alt="" className="h-64 w-full object-cover" />
         </div>
-        <div className="overflow-hidden rounded-[16px]">
-          <img src={aboutSecondaryImage} alt="" className="h-56 w-full object-cover" />
-        </div>
+        {aboutSecondaryImage ? (
+          <div className="overflow-hidden rounded-[16px]">
+            <img src={aboutSecondaryImage} alt="" className="h-56 w-full object-cover" />
+          </div>
+        ) : null}
       </section>
 
-      <LandingPageLower fields={fields} title={title} />
+      <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
     </div>
   );
 }

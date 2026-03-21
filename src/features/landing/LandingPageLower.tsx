@@ -18,6 +18,7 @@ import {
   getProjectMedia,
   splitListItems,
 } from "@/features/landing/landingPage.helpers";
+import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 
 function Section({
   id,
@@ -38,20 +39,20 @@ function Section({
 type Props = {
   fields: ExpoMap;
   title: string;
+  folderMedia: ResolvedProjectFolderMedia | null;
 };
 
-export function LandingPageLower({ fields, title }: Props) {
+export function LandingPageLower({ fields, title: _title, folderMedia }: Props) {
   const vis = visibleBlocks(fields);
   const media = getProjectMedia(fields);
   const exteriorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_43)));
-  const interiorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_44)));
   const infrastructureItems = splitListItems(fields.expo_field_33);
   const investmentIntro = firstNonEmpty(
     fields.expo_field_17,
     fields.expo_field_18,
     "Price varies by view and floor. Higher floors and better views command premium.",
   );
-  const galleryImages = Array.from(
+  const legacyGalleryPool = Array.from(
     new Set([
       ...media,
       participantFigmaAssets.galleryMain,
@@ -59,19 +60,31 @@ export function LandingPageLower({ fields, title }: Props) {
       participantFigmaAssets.galleryUpdates,
     ]),
   );
-  const galleryItems = [
-    { label: "Typical Renders", image: galleryImages[0] },
-    { label: "Upper Levels", image: galleryImages[1] ?? galleryImages[0] },
-    { label: "Floorplan Updates", image: galleryImages[2] ?? galleryImages[0] },
-    ...galleryImages.slice(3).map((image, index) => ({
-      label: `Gallery View ${index + 4}`,
-      image,
-    })),
-  ];
+  const galleryImages =
+    folderMedia && folderMedia.galleryUrls.length > 0
+      ? folderMedia.galleryUrls
+      : legacyGalleryPool;
+  const galleryItems = galleryImages.map((image) => ({
+    label: "Gallery",
+    image,
+  }));
   const infrastructureImages = [
-    exteriorMedia[1] || exteriorMedia[0] || media[3] || participantFigmaAssets.infrastructureLeft,
-    interiorMedia[1] || interiorMedia[0] || media[4] || participantFigmaAssets.infrastructureRight,
+    folderMedia?.infrastructureLeftUrl ||
+      exteriorMedia[1] ||
+      exteriorMedia[0] ||
+      media[3] ||
+      participantFigmaAssets.infrastructureLeft,
+    folderMedia?.infrastructureRightUrl ||
+      exteriorMedia[2] ||
+      exteriorMedia[1] ||
+      media[4] ||
+      participantFigmaAssets.infrastructureRight,
   ];
+  const showGalleryBlock =
+    vis.gallery || (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryImages.length > 0;
+  const showInfrastructureBlock =
+    vis.infrastructure ||
+    Boolean(folderMedia?.infrastructureLeftUrl || folderMedia?.infrastructureRightUrl);
 
   return (
     <>
@@ -110,7 +123,7 @@ export function LandingPageLower({ fields, title }: Props) {
         </Section>
       ) : null}
 
-      {vis.gallery ? (
+      {showGalleryBlock ? (
         <Section id="gallery" className="bg-white px-2 py-5 sm:px-3 lg:px-0 lg:py-0">
           <GalleryShowcase
             items={galleryItems}
@@ -153,7 +166,7 @@ export function LandingPageLower({ fields, title }: Props) {
         </Section>
       ) : null}
 
-      {vis.infrastructure ? (
+      {showInfrastructureBlock ? (
         <Section id="infrastructure" className="bg-white py-10 lg:py-14">
           <div
             className={`mx-auto grid max-w-[1920px] gap-6 lg:grid-cols-[minmax(0,1fr)_400px_400px] ${PARTICIPANT_SECTION_INSET} lg:pr-0 xl:pr-0`}
@@ -170,8 +183,8 @@ export function LandingPageLower({ fields, title }: Props) {
                 ))}
               </ul>
             </div>
-            {infrastructureImages.map((image) => (
-              <div key={image} className="overflow-hidden">
+            {infrastructureImages.map((image, index) => (
+              <div key={`${image}-${index}`} className="overflow-hidden">
                 <img src={image} alt="" className="h-full min-h-[220px] w-full object-cover lg:min-h-[320px]" />
               </div>
             ))}
@@ -242,17 +255,6 @@ export function LandingPageLower({ fields, title }: Props) {
                 <VideoEmbedBlock
                   url={fields.expo_field_46}
                   title={fields.expo_field_02}
-                />
-              </div>
-            ) : null}
-            {isFieldNonEmpty(fields.expo_field_47) ? (
-              <div>
-                <div className="mb-0 inline-flex rounded-t-[10px] bg-[#ffd24d] px-6 py-2 text-base font-semibold uppercase text-white lg:px-7">
-                  Media
-                </div>
-                <Tour3DBlock
-                  url={fields.expo_field_47}
-                  title={fields.expo_field_02 || "Media"}
                 />
               </div>
             ) : null}

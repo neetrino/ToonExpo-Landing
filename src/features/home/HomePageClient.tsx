@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useScrolledPastThreshold } from "@/shared/hooks/useScrolledPastThreshold";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,7 +14,10 @@ import type { HomeProject } from "@/features/home/homeProject.types";
 
 export type { HomeProject } from "@/features/home/homeProject.types";
 
-const PROJECTS_PAGE_SIZE = 15;
+/** Ниже Tailwind `lg` — мобильная/планшетная колонка списка. */
+const MOBILE_LIST_QUERY = "(max-width: 1023px)" as const;
+const PROJECTS_PAGE_SIZE_DESKTOP = 15;
+const PROJECTS_PAGE_SIZE_MOBILE = 10;
 
 const FIGMA_ASSETS = {
   heroBg: "/figma/home/heroBg.jpg",
@@ -58,9 +62,11 @@ function formatRange(minValue?: string, maxValue?: string): string {
 
 export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   const [q, setQ] = useState("");
-  const [visibleCount, setVisibleCount] = useState(PROJECTS_PAGE_SIZE);
+  const [pageSize, setPageSize] = useState(PROJECTS_PAGE_SIZE_DESKTOP);
+  const [visibleCount, setVisibleCount] = useState(PROJECTS_PAGE_SIZE_DESKTOP);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+  const headerScrolled = useScrolledPastThreshold(20);
   const { setCallbacks } = useBottomBarCallbacks();
 
   const filtered = useMemo(() => {
@@ -83,9 +89,19 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
     });
   }, [projects, q]);
 
-  useEffect(() => {
-    setVisibleCount(PROJECTS_PAGE_SIZE);
-  }, [q]);
+  useLayoutEffect(() => {
+    const mq = window.matchMedia(MOBILE_LIST_QUERY);
+    const sync = () => {
+      setPageSize(mq.matches ? PROJECTS_PAGE_SIZE_MOBILE : PROJECTS_PAGE_SIZE_DESKTOP);
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useLayoutEffect(() => {
+    setVisibleCount(pageSize);
+  }, [q, pageSize]);
 
   // Обработка ESC для выхода из полноэкранного режима
   useEffect(() => {
@@ -111,7 +127,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   const hasMoreProjects = filtered.length > visibleProjects.length;
 
   function handleShowMore() {
-    setVisibleCount((currentCount) => currentCount + PROJECTS_PAGE_SIZE);
+    setVisibleCount((currentCount) => currentCount + pageSize);
   }
 
   function scrollToTop() {
@@ -156,7 +172,11 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
     <div className="min-h-screen bg-[#246976] text-white">
       <header
         id="top"
-        className="fixed inset-x-0 top-0 z-[90] border-b border-white/15 bg-black/72 text-white backdrop-blur lg:hidden"
+        className={`fixed inset-x-0 top-0 z-[90] text-white transition-[background-color,backdrop-filter,border-color] duration-200 lg:hidden ${
+          headerScrolled
+            ? "border-b border-white/15 bg-black/72 backdrop-blur"
+            : "border-b border-transparent bg-transparent"
+        }`}
       >
         <div className="mx-auto flex max-w-[1680px] items-center justify-center gap-4 px-5 py-4">
           <Link
@@ -438,7 +458,6 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
   const priceRange = formatRange(fields.expo_field_17, fields.expo_field_18);
   const imageSrc = thumb ?? CARD_FALLBACK_IMAGES[index % CARD_FALLBACK_IMAGES.length];
   const hasPhoto = Boolean(thumb);
-  const showNewBadge = index < 3;
 
   return (
     <Link
@@ -460,14 +479,6 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[rgba(15,23,43,0.6)] to-transparent" aria-hidden />
-        {showNewBadge && (
-          <span className="absolute left-4 top-4 rounded-full bg-[#0092b8] px-4 py-1.5 text-xs font-semibold text-white shadow-sm">
-            New
-          </span>
-        )}
-        <div className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm" aria-hidden>
-          <HeartIcon />
-        </div>
       </div>
 
       {/* Контент: адаптивные отступы, min-w-0 чтобы не вылезало на мобильных */}
@@ -510,14 +521,6 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
         </div>
       </div>
     </Link>
-  );
-}
-
-function HeartIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0092b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-    </svg>
   );
 }
 

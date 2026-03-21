@@ -16,9 +16,12 @@ import {
   participantFigmaAssets,
   participantNav,
 } from "@/features/landing/landingPage.constants";
+import { LandingStickyHeader } from "@/features/landing/components/LandingStickyHeader";
+import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 
 type Props = {
   fields: ExpoMap;
+  folderMedia: ResolvedProjectFolderMedia | null;
 };
 
 function Section({
@@ -84,17 +87,32 @@ function AboutSupportingGearIcon() {
   );
 }
 
-export function LandingPage({ fields }: Props) {
+export function LandingPage({ fields, folderMedia }: Props) {
   const vis = visibleBlocks(fields);
-  const navItems = participantNav.filter((item) => vis[item.block]);
+  const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
+  const infrastructureFromFolder = Boolean(
+    folderMedia?.infrastructureLeftUrl || folderMedia?.infrastructureRightUrl,
+  );
+  const navItems = participantNav.filter((item) => {
+    if (item.block === "gallery") {
+      return vis.gallery || galleryFromFolder;
+    }
+    if (item.block === "infrastructure") {
+      return vis.infrastructure || infrastructureFromFolder;
+    }
+    return vis[item.block];
+  });
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
-  const heroBg = media[0] || participantFigmaAssets.heroBackground;
-  const heroLogo = getLogoUrl(fields) || participantFigmaAssets.fallbackLogo;
+  const heroBg =
+    folderMedia?.heroUrl || media[0] || participantFigmaAssets.heroBackground;
+  const heroLogoUrl = getLogoUrl(fields);
   const leadText = getLeadText(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
-  const aboutPrimaryImage = media[1] || media[0] || participantFigmaAssets.aboutPrimary;
-  const aboutSecondaryImage = media[2] || media[1] || media[0] || "";
+  const aboutPrimaryImage =
+    folderMedia?.aboutLargeUrl || media[1] || media[0] || participantFigmaAssets.aboutPrimary;
+  const aboutSecondaryImage =
+    folderMedia?.aboutSmallUrl || media[2] || media[1] || media[0] || "";
   const aboutFacts = [
     { label: "Developer", value: fields.expo_field_11 },
     { label: "Architect", value: fields.expo_field_12 },
@@ -117,7 +135,7 @@ export function LandingPage({ fields }: Props) {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-[#111827]">
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/15 bg-black/72 text-white backdrop-blur">
+      <LandingStickyHeader>
         <div className="mx-auto flex max-w-[1920px] items-center justify-center gap-5 px-5 py-4 lg:px-12">
           <Link
             href="/"
@@ -137,7 +155,7 @@ export function LandingPage({ fields }: Props) {
             ))}
           </nav>
         </div>
-      </header>
+      </LandingStickyHeader>
 
       <section className="relative min-h-[92svh] overflow-hidden bg-black pt-[72px] text-white">
         <div className="absolute inset-0">
@@ -147,11 +165,13 @@ export function LandingPage({ fields }: Props) {
         <div className="absolute left-0 right-0 top-[89px] h-px bg-white/30" />
         <div className="relative z-10 mx-auto flex min-h-[calc(92svh-72px)] max-w-[1920px] items-end px-5 py-8 lg:px-0 lg:py-0">
           <div className="flex w-full flex-col justify-end gap-6 lg:min-h-[860px] lg:w-1/2 lg:px-12 lg:pb-16">
-            <img
-              src={heroLogo}
-              alt=""
-              className="h-auto w-[92px] object-contain lg:w-[138px]"
-            />
+            {heroLogoUrl ? (
+              <img
+                src={heroLogoUrl}
+                alt=""
+                className="h-auto w-[92px] object-contain lg:w-[138px]"
+              />
+            ) : null}
             <div className="max-w-[640px]">
               <h1 className="max-w-[620px] text-[clamp(2.2rem,4.3vw,4.2rem)] font-semibold uppercase leading-[0.98]">
                 {title}
@@ -251,7 +271,7 @@ export function LandingPage({ fields }: Props) {
         </Section>
       ) : null}
 
-      <LandingPageLower fields={fields} title={title} />
+      <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
     </div>
   );
 }

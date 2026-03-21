@@ -23,7 +23,6 @@ export const PARTICIPANT_SECTION_INSET =
 
 export const participantFigmaAssets = {
   heroBackground: "/figma/participant/heroBackground.jpg",
-  fallbackLogo: "/figma/participant/fallbackLogo.svg",
   aboutPrimary: "/figma/participant/aboutPrimary.jpg",
   aboutSecondary: "/figma/participant/aboutSecondary.jpg",
   galleryMain: "/figma/participant/galleryMain.jpg",
