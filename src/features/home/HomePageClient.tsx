@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useScrolledPastThreshold } from "@/shared/hooks/useScrolledPastThreshold";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
@@ -65,6 +66,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   const [visibleCount, setVisibleCount] = useState(PROJECTS_PAGE_SIZE_DESKTOP);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+  const headerScrolled = useScrolledPastThreshold(20);
   const { setCallbacks } = useBottomBarCallbacks();
 
   const filtered = useMemo(() => {
@@ -170,7 +172,11 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
     <div className="min-h-screen bg-[#246976] text-white">
       <header
         id="top"
-        className="fixed inset-x-0 top-0 z-[90] border-b border-white/15 bg-black/72 text-white backdrop-blur lg:hidden"
+        className={`fixed inset-x-0 top-0 z-[90] text-white transition-[background-color,backdrop-filter,border-color] duration-200 lg:hidden ${
+          headerScrolled
+            ? "border-b border-white/15 bg-black/72 backdrop-blur"
+            : "border-b border-transparent bg-transparent"
+        }`}
       >
         <div className="mx-auto flex max-w-[1680px] items-center justify-center gap-4 px-5 py-4">
           <Link

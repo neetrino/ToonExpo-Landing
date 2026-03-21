@@ -18,6 +18,7 @@ import {
   splitParagraphs,
 } from "@/features/landing/mobile/landingPage.helpers";
 import { MOBILE_SECTION_INSET, participantFigmaAssets } from "@/features/landing/mobile/landingPage.constants";
+import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
 
 type Props = {
   fields: ExpoMap;
@@ -110,6 +111,7 @@ export function LandingPage({ fields }: Props) {
 
   return (
     <div className="overflow-x-hidden bg-white text-[#101828]">
+      <MobileLandingStickyHeader onMenuClick={() => setIsMenuOpen(true)} />
       <section className="relative h-[500px] overflow-hidden text-white">
         <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
@@ -160,21 +162,9 @@ export function LandingPage({ fields }: Props) {
             document.body,
           )}
 
-        <div className={`relative z-10 flex h-full flex-col ${MOBILE_SECTION_INSET}`}>
-          <div className="flex items-center justify-between pt-5">
-            <Link href="/" aria-label="Go to home page" className="inline-flex">
-              <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-[52px] w-[52px]" />
-            </Link>
-            <button
-              type="button"
-              aria-label="Open mobile menu"
-              onClick={() => setIsMenuOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5"
-            >
-              <img src={participantFigmaAssets.menuIcon} alt="" className="h-6 w-6" />
-            </button>
-          </div>
-
+        <div
+          className={`relative z-10 flex h-full flex-col ${MOBILE_SECTION_INSET} pt-[calc(0.75rem+3.25rem+max(1.25rem,env(safe-area-inset-top)))]`}
+        >
           <div className="relative flex flex-1 flex-col items-center justify-center pb-16 text-center">
             <img
               src={heroLogo}

@@ -16,6 +16,7 @@ import {
   participantFigmaAssets,
   participantNav,
 } from "@/features/landing/landingPage.constants";
+import { LandingStickyHeader } from "@/features/landing/components/LandingStickyHeader";
 
 type Props = {
   fields: ExpoMap;
@@ -117,7 +118,7 @@ export function LandingPage({ fields }: Props) {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-[#111827]">
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/15 bg-black/72 text-white backdrop-blur">
+      <LandingStickyHeader>
         <div className="mx-auto flex max-w-[1920px] items-center justify-center gap-5 px-5 py-4 lg:px-12">
           <Link
             href="/"
@@ -137,7 +138,7 @@ export function LandingPage({ fields }: Props) {
             ))}
           </nav>
         </div>
-      </header>
+      </LandingStickyHeader>
 
       <section className="relative min-h-[92svh] overflow-hidden bg-black pt-[72px] text-white">
         <div className="absolute inset-0">
