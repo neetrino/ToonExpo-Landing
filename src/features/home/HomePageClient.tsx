@@ -452,7 +452,6 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
   const priceRange = formatRange(fields.expo_field_17, fields.expo_field_18);
   const imageSrc = thumb ?? CARD_FALLBACK_IMAGES[index % CARD_FALLBACK_IMAGES.length];
   const hasPhoto = Boolean(thumb);
-  const showNewBadge = index < 3;
 
   return (
     <Link
@@ -474,14 +473,6 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[rgba(15,23,43,0.6)] to-transparent" aria-hidden />
-        {showNewBadge && (
-          <span className="absolute left-4 top-4 rounded-full bg-[#0092b8] px-4 py-1.5 text-xs font-semibold text-white shadow-sm">
-            New
-          </span>
-        )}
-        <div className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-sm" aria-hidden>
-          <HeartIcon />
-        </div>
       </div>
 
       {/* Контент: адаптивные отступы, min-w-0 чтобы не вылезало на мобильных */}
@@ -524,14 +515,6 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
         </div>
       </div>
     </Link>
-  );
-}
-
-function HeartIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0092b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-    </svg>
   );
 }
 

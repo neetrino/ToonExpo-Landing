@@ -2,6 +2,10 @@
 
 import { Fragment } from "react";
 import Link from "next/link";
+import {
+  FOOTER_PUBLIC_FACEBOOK_HREF,
+  FOOTER_PUBLIC_INSTAGRAM_HREF,
+} from "@/features/home/footerPublicLinks.constants";
 
 const FOOTER_SOCIAL_FB_IMG_CLASS = "h-[40px] w-[18px] shrink-0 object-contain object-left";
 const FOOTER_SOCIAL_IG_IMG_CLASS = "h-[40px] w-[40px] shrink-0 object-contain";
@@ -27,15 +31,7 @@ const FOOTER_NAV_ITEMS = [
   { href: "/#contacts", label: "Contacts" },
 ] as const;
 
-export function FooterBottomNav({
-  facebookUrl,
-  instagramUrl,
-  alignWithIllustration = false,
-}: {
-  facebookUrl: string;
-  instagramUrl: string;
-  alignWithIllustration?: boolean;
-}) {
+export function FooterBottomNav({ alignWithIllustration = false }: { alignWithIllustration?: boolean }) {
   const fbIcon = (
     <img
       src={BLOCK_FIGMA.footerBadgeMark}
@@ -81,36 +77,24 @@ export function FooterBottomNav({
       <div
         className={`flex shrink-0 flex-nowrap items-center gap-5 pl-3 sm:pl-6 ${alignWithIllustration ? "lg:pl-4" : "lg:pl-8"}`}
       >
-        {facebookUrl ? (
-          <a
-            href={facebookUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Facebook"
-            className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80"
-          >
-            {fbIcon}
-          </a>
-        ) : (
-          <span className="inline-flex opacity-45" aria-hidden>
-            {fbIcon}
-          </span>
-        )}
-        {instagramUrl ? (
-          <a
-            href={instagramUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Instagram"
-            className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80"
-          >
-            {igIcon}
-          </a>
-        ) : (
-          <span className="inline-flex opacity-45" aria-hidden>
-            {igIcon}
-          </span>
-        )}
+        <a
+          href={FOOTER_PUBLIC_FACEBOOK_HREF}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Facebook"
+          className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80"
+        >
+          {fbIcon}
+        </a>
+        <a
+          href={FOOTER_PUBLIC_INSTAGRAM_HREF}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Instagram"
+          className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80"
+        >
+          {igIcon}
+        </a>
       </div>
     </nav>
   );
