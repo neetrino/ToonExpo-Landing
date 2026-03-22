@@ -21,6 +21,9 @@ export const participantFigmaAssets = {
 export const MOBILE_SECTION_INSET = "px-4" as const;
 export const MOBILE_CONTACT_EMAIL = "info@toonexpo2026.com";
 
+/** Hero-ում լրիվ տեքստը մոդալում բացելու կոճակ (միայն հայերեն) */
+export const MOBILE_HERO_READ_FULL_LABEL_HY = "Կարդալ ամբողջը" as const;
+
 /**
  * Hero-ի վերին padding՝ ֆիքսված `MobileLandingStickyHeader`-ից ներքև (նույն բարձրությունը՝
  * վերին pt + 52px լոգո + pb-3), որպեսզի նախագծի լոգոն չկտրվի `overflow-hidden` + `justify-center`-ով։

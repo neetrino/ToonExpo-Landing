@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { LandingPageLower } from "@/features/landing/mobile/LandingPageLower";
@@ -23,6 +23,7 @@ import {
   SITE_HEADER_LOGO_SRC,
 } from "@/features/landing/landingPage.constants";
 import {
+  MOBILE_HERO_READ_FULL_LABEL_HY,
   MOBILE_PARTICIPANT_HERO_INSET_TOP_CLASS,
   MOBILE_SECTION_INSET,
   participantFigmaAssets,
@@ -71,6 +72,9 @@ function MobileStatCard({
 
 export function LandingPage({ fields, folderMedia }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHeroReadFullOpen, setIsHeroReadFullOpen] = useState(false);
+  const [heroShowReadFull, setHeroShowReadFull] = useState(false);
+  const heroTextBlockRef = useRef<HTMLParagraphElement>(null);
   const vis = visibleBlocks(fields);
   const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
   const title = getLandingTitle(fields);
@@ -115,7 +119,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   );
 
   useEffect(() => {
-    if (!isMenuOpen) {
+    if (!isMenuOpen && !isHeroReadFullOpen) {
       document.body.style.removeProperty("overflow");
       return;
     }
@@ -124,7 +128,54 @@ export function LandingPage({ fields, folderMedia }: Props) {
     return () => {
       document.body.style.removeProperty("overflow");
     };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, isHeroReadFullOpen]);
+
+  useLayoutEffect(() => {
+    setHeroShowReadFull(false);
+  }, [title, heroLead, heroSummary, addressText]);
+
+  useLayoutEffect(() => {
+    const el = heroTextBlockRef.current;
+    if (!el) {
+      return;
+    }
+
+    let observer: ResizeObserver | null = null;
+
+    const checkOverflow = () => {
+      if (el.scrollHeight > el.clientHeight + 1) {
+        setHeroShowReadFull(true);
+      }
+    };
+
+    const frameId = window.requestAnimationFrame(() => {
+      checkOverflow();
+      observer = new ResizeObserver(checkOverflow);
+      observer.observe(el);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      observer?.disconnect();
+    };
+  }, [title, heroLead, heroSummary, addressText]);
+
+  useEffect(() => {
+    if (!isHeroReadFullOpen) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsHeroReadFullOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isHeroReadFullOpen]);
 
   return (
     <div className="overflow-x-hidden bg-white text-[#101828]">
@@ -182,20 +233,43 @@ export function LandingPage({ fields, folderMedia }: Props) {
         <div
           className={`relative z-10 flex h-full min-h-0 flex-col gap-4 ${MOBILE_SECTION_INSET} ${MOBILE_PARTICIPANT_HERO_INSET_TOP_CLASS} pb-[max(1.5rem,env(safe-area-inset-bottom))]`}
         >
-          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-start overflow-y-auto overscroll-contain pt-1 text-center">
+          <div className="relative flex min-h-0 min-w-0 flex-1 flex-col items-center justify-start overflow-hidden pt-1 text-center">
             {heroLogoUrl ? (
-              <div className={`${MOBILE_HERO_PROJECT_LOGO_BOX_CLASS} mb-6`}>
+              <div className={`${MOBILE_HERO_PROJECT_LOGO_BOX_CLASS} mb-6 shrink-0`}>
                 <img src={heroLogoUrl} alt="" className={MOBILE_HERO_PROJECT_LOGO_IMG_CLASS} />
               </div>
             ) : null}
-            <h1 className="max-w-[288px] text-[30px] font-bold uppercase leading-[1.25]">
+            <h1 className="w-full min-w-0 max-w-full shrink-0 break-words text-[clamp(1.125rem,5.2vw,1.875rem)] font-bold uppercase leading-[1.2]">
               {title}
             </h1>
-            <p className="mt-2 text-[18px] font-light leading-7">{heroLead}</p>
-            <p className="mt-2 max-w-[338px] text-[14px] leading-5 text-white/90">{heroSummary}</p>
-            {addressText ? (
-              <p className="mt-2 max-w-[338px] text-[14px] leading-5 text-white/90">{addressText}</p>
-            ) : null}
+            <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden">
+              <p
+                ref={heroTextBlockRef}
+                className={`mt-2 min-h-0 w-full min-w-0 flex-1 overflow-hidden break-words text-center [overflow-wrap:anywhere] ${
+                  heroShowReadFull ? "line-clamp-[6]" : ""
+                }`}
+              >
+                <span className="font-light text-[clamp(0.9375rem,4vw,1.125rem)] leading-snug">{heroLead}</span>
+                <br />
+                <span className="text-[clamp(0.75rem,3.5vw,0.875rem)] leading-5 text-white/90">{heroSummary}</span>
+                {addressText ? (
+                  <>
+                    <br />
+                    <span className="text-[clamp(0.75rem,3.5vw,0.875rem)] leading-5 text-white/90">{addressText}</span>
+                  </>
+                ) : null}
+              </p>
+              {heroShowReadFull ? (
+                <button
+                  type="button"
+                  onClick={() => setIsHeroReadFullOpen(true)}
+                  className="mt-2 inline-flex shrink-0 items-center justify-center gap-2 self-center rounded-full border border-white/35 bg-white/12 px-4 py-2.5 text-[13px] font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.2)] backdrop-blur-md transition active:scale-[0.98]"
+                >
+                  {MOBILE_HERO_READ_FULL_LABEL_HY}
+                  <img src={participantFigmaAssets.readMoreIcon} alt="" className="h-4 w-4 opacity-90" />
+                </button>
+              ) : null}
+            </div>
           </div>
 
           <a
@@ -205,6 +279,50 @@ export function LandingPage({ fields, folderMedia }: Props) {
             View Apartments
           </a>
         </div>
+
+        {isHeroReadFullOpen
+          ? createPortal(
+              <div
+                className="fixed inset-0 z-[10001] flex items-end justify-center p-4 pt-[env(safe-area-inset-top)] pb-[max(1rem,env(safe-area-inset-bottom))] sm:items-center"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="mobile-hero-read-full-title"
+              >
+                <button
+                  type="button"
+                  aria-label="Close full text"
+                  className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
+                  onClick={() => setIsHeroReadFullOpen(false)}
+                />
+                <div className="relative z-10 flex max-h-[min(85vh,720px)] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#0b1220]/94 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+                  <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/10 px-5 pb-3 pt-4">
+                    <p
+                      id="mobile-hero-read-full-title"
+                      className="min-w-0 flex-1 text-left text-[15px] font-bold uppercase leading-snug text-white"
+                    >
+                      {title}
+                    </p>
+                    <button
+                      type="button"
+                      aria-label="Close"
+                      onClick={() => setIsHeroReadFullOpen(false)}
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-lg leading-none text-white transition hover:bg-white/16"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-5 pt-3 text-left">
+                    <p className="text-[15px] font-light leading-relaxed text-white/95">{heroLead}</p>
+                    <p className="mt-3 text-[14px] leading-relaxed text-white/88">{heroSummary}</p>
+                    {addressText ? (
+                      <p className="mt-3 text-[14px] leading-relaxed text-white/88">{addressText}</p>
+                    ) : null}
+                  </div>
+                </div>
+              </div>,
+              document.body,
+            )
+          : null}
       </section>
 
       <section className={`${MOBILE_SECTION_INSET} relative z-10 -mt-[7px]`}>
