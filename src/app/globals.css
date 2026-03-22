@@ -69,3 +69,45 @@ body {
     "Segoe UI",
     sans-serif;
 }
+
+/* Մոբայլ լենդինգ — նավիգացիոն մենյու վերևից սահելով, կիսաթափանցիկ */
+@keyframes mobile-landing-nav-slide-down {
+  from {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0.92;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes mobile-landing-nav-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mobile-landing-nav-panel-motion {
+  animation: mobile-landing-nav-slide-down 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.mobile-landing-nav-backdrop-in {
+  animation: mobile-landing-nav-backdrop-in 0.28s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-landing-nav-panel-motion {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+
+  .mobile-landing-nav-backdrop-in {
+    animation: none;
+    opacity: 1;
+  }
+}

@@ -1,7 +1,6 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import Link from "next/link";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
@@ -20,7 +19,6 @@ import {
 import {
   MOBILE_HERO_PROJECT_LOGO_BOX_CLASS,
   MOBILE_HERO_PROJECT_LOGO_IMG_CLASS,
-  SITE_HEADER_LOGO_SRC,
 } from "@/features/landing/landingPage.constants";
 import {
   MOBILE_HERO_READ_FULL_LABEL_HY,
@@ -28,6 +26,7 @@ import {
   MOBILE_SECTION_INSET,
   participantFigmaAssets,
 } from "@/features/landing/mobile/landingPage.constants";
+import { MobileLandingNavMenu } from "@/features/landing/mobile/MobileLandingNavMenu";
 import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
@@ -181,55 +180,14 @@ export function LandingPage({ fields, folderMedia }: Props) {
   return (
     <div className="overflow-x-hidden bg-white text-[#101828]">
       <MobileLandingStickyHeader onMenuClick={() => setIsMenuOpen(true)} />
+      <MobileLandingNavMenu
+        open={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        items={menuItems}
+      />
       <section className="relative h-[500px] overflow-hidden text-white">
         <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
-        {isMenuOpen &&
-          createPortal(
-            <div className="fixed inset-0 z-[10002] flex flex-col bg-[#050b10] pt-[env(safe-area-inset-top)] pb-[max(5.5rem,env(safe-area-inset-bottom))]">
-              <div className={`flex min-h-0 flex-1 flex-col ${MOBILE_SECTION_INSET}`}>
-                <div className="flex shrink-0 items-center justify-between pt-4">
-                  <Link
-                    href="/"
-                    aria-label={HY_UI.GO_HOME}
-                    className="inline-flex"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <img src={SITE_HEADER_LOGO_SRC} alt="" className="h-9 w-9 object-contain" />
-                  </Link>
-                  <button
-                    type="button"
-                    aria-label={HY_UI.ARIA_CLOSE_MENU}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/12 text-lg leading-none text-white"
-                  >
-                    ×
-                  </button>
-                </div>
-
-                <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-3">
-                  <nav className="w-full shrink-0 rounded-2xl border border-white/18 bg-white/10 px-4 py-4 shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
-                    <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">
-                      {HY_UI.MENU_TITLE}
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      {menuItems.map((item) => (
-                        <a
-                          key={item.id}
-                          href={`#${item.id}`}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="rounded-xl border border-white/10 bg-white/6 px-3 py-2.5 text-[15px] font-semibold uppercase tracking-[0.03em] text-white transition hover:bg-white/12"
-                        >
-                          {item.label}
-                        </a>
-                      ))}
-                    </div>
-                  </nav>
-                </div>
-              </div>
-            </div>,
-            document.body,
-          )}
 
         <div
           className={`relative z-10 flex h-full min-h-0 flex-col gap-4 ${MOBILE_SECTION_INSET} ${MOBILE_PARTICIPANT_HERO_INSET_TOP_CLASS} pb-[max(1.5rem,env(safe-area-inset-bottom))]`}
