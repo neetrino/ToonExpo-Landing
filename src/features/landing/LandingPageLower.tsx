@@ -59,20 +59,20 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
     label: HY_UI.SECTION_GALLERY,
     image,
   }));
-  const infrastructureImages = [
+  const infrastructureImages: [string | null, string | null] = [
     folderMedia?.infrastructureLeftUrl ||
       exteriorMedia[1] ||
       exteriorMedia[0] ||
       media[3] ||
-      participantFigmaAssets.infrastructureLeft,
+      null,
     folderMedia?.infrastructureRightUrl ||
       exteriorMedia[2] ||
       exteriorMedia[1] ||
       media[4] ||
-      participantFigmaAssets.infrastructureRight,
+      null,
   ];
   const showGalleryBlock =
-    vis.gallery || (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryImages.length > 0;
+    (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryImages.length > 0;
   const showInfrastructureBlock =
     vis.infrastructure ||
     Boolean(folderMedia?.infrastructureLeftUrl || folderMedia?.infrastructureRightUrl);
@@ -176,8 +176,15 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
               </ul>
             </div>
             {infrastructureImages.map((image, index) => (
-              <div key={`${image}-${index}`} className="overflow-hidden">
-                <img src={image} alt="" className="h-full min-h-[220px] w-full object-cover lg:min-h-[320px]" />
+              <div key={`infra-${index}`} className="overflow-hidden">
+                {image ? (
+                  <img src={image} alt="" className="h-full min-h-[220px] w-full object-cover lg:min-h-[320px]" />
+                ) : (
+                  <div
+                    className="h-full min-h-[220px] w-full bg-neutral-900 lg:min-h-[320px]"
+                    aria-hidden
+                  />
+                )}
               </div>
             ))}
           </div>

@@ -1,5 +1,6 @@
 import type { LandingBlockId } from "@/features/landing/lib/blockVisibility";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 export const participantNav: Array<{
   id: string;
@@ -23,7 +24,7 @@ export const PARTICIPANT_SECTION_INSET =
   "px-5 sm:px-8 lg:pl-12 lg:pr-10 xl:pl-14" as const;
 
 /** Toon Expo — գլխավոր էջի հեդերի հետ նույն ակտիվը (լենդինգի sticky header) */
-export const SITE_HEADER_LOGO_SRC = "/figma/home/footerLogo.svg" as const;
+export const SITE_HEADER_LOGO_SRC = publicAssetUrl("/figma/home/footerLogo.svg");
 
 /**
  * Hero-ում նախագծի լոգո՝ ֆիքսված տուփի չափ (տարբեր լոգոներ նույն ուղղահայաց դիրքում)։
@@ -41,33 +42,25 @@ export const MOBILE_HERO_PROJECT_LOGO_BOX_CLASS =
 export const MOBILE_HERO_PROJECT_LOGO_IMG_CLASS =
   "max-h-full max-w-full object-contain" as const;
 
+/** Միայն SVG/քիչ ակտիվներ — լուսանկար-զանգվածներ հանված են (դատարկ slot → սև ֆոն UI-ում)։ */
 export const participantFigmaAssets = {
-  heroBackground: "/figma/participant/heroBackground.jpg",
-  aboutPrimary: "/figma/participant/aboutPrimary.jpg",
-  aboutSecondary: "/figma/participant/aboutSecondary.jpg",
-  galleryMain: "/figma/participant/galleryMain.jpg",
-  galleryUpper: "/figma/participant/galleryUpper.jpg",
-  galleryUpdates: "/figma/participant/galleryUpdates.jpg",
-  infrastructureLeft: "/figma/participant/infrastructureLeft.jpg",
-  infrastructureRight: "/figma/participant/infrastructureRight.jpg",
-  locationFallback: "/figma/participant/locationFallback.jpg",
-  investmentIcon: "/figma/participant/investmentIcon.svg",
-  paymentInstallmentIcon: "/figma/participant/paymentInstallmentIcon.svg",
-  paymentMortgageIcon: "/figma/participant/paymentMortgageIcon.svg",
-  paymentTaxIcon: "/figma/participant/paymentTaxIcon.svg",
-  constructionStructureIcon: "/figma/participant/constructionStructureIcon.svg",
-  constructionMaterialsIcon: "/figma/participant/constructionMaterialsIcon.svg",
-  constructionInsulationIcon: "/figma/participant/constructionInsulationIcon.svg",
-  constructionCompletionIcon: "/figma/participant/constructionCompletionIcon.svg",
-  constructionCeilingIcon: "/figma/participant/constructionCeilingIcon.svg",
-  constructionFloorsIcon: "/figma/participant/constructionFloorsIcon.svg",
-  parkingOpenIcon: "/figma/participant/parkingOpenIcon.svg",
-  parkingClosedIcon: "/figma/participant/parkingClosedIcon.svg",
-  parkingPriceIcon: "/figma/participant/parkingPriceIcon.svg",
-  parkingStandardIcon: "/figma/participant/parkingStandardIcon.svg",
-  parkingCommercialIcon: "/figma/participant/parkingCommercialIcon.svg",
-  galleryArrowLeft: "/figma/participant/galleryArrowLeft.svg",
-  galleryArrowRight: "/figma/participant/galleryArrowRight.svg",
+  investmentIcon: publicAssetUrl("/figma/participant/investmentIcon.svg"),
+  paymentInstallmentIcon: publicAssetUrl("/figma/participant/paymentInstallmentIcon.svg"),
+  paymentMortgageIcon: publicAssetUrl("/figma/participant/paymentMortgageIcon.svg"),
+  paymentTaxIcon: publicAssetUrl("/figma/participant/paymentTaxIcon.svg"),
+  constructionStructureIcon: publicAssetUrl("/figma/participant/constructionStructureIcon.svg"),
+  constructionMaterialsIcon: publicAssetUrl("/figma/participant/constructionMaterialsIcon.svg"),
+  constructionInsulationIcon: publicAssetUrl("/figma/participant/constructionInsulationIcon.svg"),
+  constructionCompletionIcon: publicAssetUrl("/figma/participant/constructionCompletionIcon.svg"),
+  constructionCeilingIcon: publicAssetUrl("/figma/participant/constructionCeilingIcon.svg"),
+  constructionFloorsIcon: publicAssetUrl("/figma/participant/constructionFloorsIcon.svg"),
+  parkingOpenIcon: publicAssetUrl("/figma/participant/parkingOpenIcon.svg"),
+  parkingClosedIcon: publicAssetUrl("/figma/participant/parkingClosedIcon.svg"),
+  parkingPriceIcon: publicAssetUrl("/figma/participant/parkingPriceIcon.svg"),
+  parkingStandardIcon: publicAssetUrl("/figma/participant/parkingStandardIcon.svg"),
+  parkingCommercialIcon: publicAssetUrl("/figma/participant/parkingCommercialIcon.svg"),
+  galleryArrowLeft: publicAssetUrl("/figma/participant/galleryArrowLeft.svg"),
+  galleryArrowRight: publicAssetUrl("/figma/participant/galleryArrowRight.svg"),
 } as const;
 
 export const constructionCards = [

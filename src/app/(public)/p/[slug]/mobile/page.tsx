@@ -37,7 +37,7 @@ export default async function PublicLandingMobilePage({ params }: Props) {
     notFound();
   }
   const fields = (project.expoFields as Record<string, string>) ?? {};
-  const folderMedia = resolveProjectFolderMedia(project.mediaFolderId);
+  const folderMedia = await resolveProjectFolderMedia(project.mediaFolderId);
   const projectData = {
     id: project.id,
     slug: project.slug,

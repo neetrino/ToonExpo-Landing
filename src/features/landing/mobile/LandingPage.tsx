@@ -79,8 +79,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
-  const heroBg =
-    folderMedia?.heroUrl || getHeroMedia(fields) || participantFigmaAssets.heroBackground;
+  const heroBg = folderMedia?.heroUrl || getHeroMedia(fields) || null;
   const heroLogoUrl = firstNonEmpty(folderMedia?.logoUrl, getLogoUrl(fields));
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const leadText = getLeadText(fields);
@@ -100,7 +99,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
     "Modern residential project designed for comfortable living and long-term value.",
   );
   const aboutPrimaryImage =
-    folderMedia?.aboutLargeUrl || media[1] || media[0] || participantFigmaAssets.aboutPrimary;
+    folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
   const stats = getMobileStats(fields);
   const menuItems = useMemo(
@@ -186,7 +185,11 @@ export function LandingPage({ fields, folderMedia }: Props) {
         items={menuItems}
       />
       <section className="relative h-[500px] overflow-hidden text-white">
-        <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        {heroBg ? (
+          <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          <div className="absolute inset-0 bg-black" aria-hidden />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
 
         <div
@@ -310,7 +313,11 @@ export function LandingPage({ fields, folderMedia }: Props) {
 
       <section className={`${MOBILE_SECTION_INSET} flex flex-col gap-4 pt-11`}>
         <div className="overflow-hidden rounded-[16px] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
-          <img src={aboutPrimaryImage} alt="" className="h-64 w-full object-cover" />
+          {aboutPrimaryImage ? (
+            <img src={aboutPrimaryImage} alt="" className="h-64 w-full object-cover" />
+          ) : (
+            <div className="h-64 w-full bg-black" aria-hidden />
+          )}
         </div>
         {aboutInteriorOneOverlayUrl ? (
           <div className="overflow-hidden rounded-[16px]">

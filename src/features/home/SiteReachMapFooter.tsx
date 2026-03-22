@@ -7,16 +7,17 @@ import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 const FOOTER_LEGAL_TEXT_CLASS =
   "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
 const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_TEXT_CLASS} shrink-0 transition hover:text-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black`;
 
 const FIGMA_ASSETS = {
-  footerLogo: "/figma/home/footerLogo.svg",
-  footerIllustration: "/figma/home/footerIllustration.svg",
-  locationDivider: "/figma/home/locationDivider.svg",
-  visitSiteButton: "/figma/home/visitSiteButton.svg",
+  footerLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
+  footerIllustration: publicAssetUrl("/figma/home/footerIllustration.svg"),
+  locationDivider: publicAssetUrl("/figma/home/locationDivider.svg"),
+  visitSiteButton: publicAssetUrl("/figma/home/visitSiteButton.svg"),
 } as const;
 
 /** Home և /p — նույն չափեր (Visit Site, FB/IG teal գոտում) */

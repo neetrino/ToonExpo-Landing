@@ -11,12 +11,12 @@ import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 /**
  * Նույն աղբյուրները, ինչ լենդինգի hero / լոգոն (`LandingPage`)։
  */
-export function resolveHomeCardMedia(
+export async function resolveHomeCardMedia(
   mediaFolderId: string | null,
   expoFields: Record<string, string>,
-): { cardHeroUrl: string | null; cardLogoUrl: string | null } {
+): Promise<{ cardHeroUrl: string | null; cardLogoUrl: string | null }> {
   const fields = expoFields as ExpoMap;
-  const folderMedia = resolveProjectFolderMedia(mediaFolderId);
+  const folderMedia = await resolveProjectFolderMedia(mediaFolderId);
   const media = getProjectMedia(fields);
   const hero = firstNonEmpty(folderMedia.heroUrl, media[0]);
   const logo = firstNonEmpty(folderMedia.logoUrl, getLogoUrl(fields));

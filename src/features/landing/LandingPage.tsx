@@ -15,7 +15,6 @@ import {
 import {
   HERO_PROJECT_LOGO_BOX_CLASS,
   HERO_PROJECT_LOGO_IMG_CLASS,
-  participantFigmaAssets,
   participantNav,
   SITE_HEADER_LOGO_SRC,
 } from "@/features/landing/landingPage.constants";
@@ -108,13 +107,12 @@ export function LandingPage({ fields, folderMedia }: Props) {
   });
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
-  const heroBg =
-    folderMedia?.heroUrl || media[0] || participantFigmaAssets.heroBackground;
+  const heroBg = folderMedia?.heroUrl || media[0] || null;
   const heroLogoUrl = firstNonEmpty(folderMedia?.logoUrl, getLogoUrl(fields));
   const leadText = getLeadText(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const aboutPrimaryImage =
-    folderMedia?.aboutLargeUrl || media[1] || media[0] || participantFigmaAssets.aboutPrimary;
+    folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
   const aboutFacts = [
     { label: "Developer", value: fields.expo_field_11 },
@@ -162,7 +160,11 @@ export function LandingPage({ fields, folderMedia }: Props) {
 
       <section className="relative min-h-[92svh] overflow-hidden bg-black pt-[72px] text-white">
         <div className="absolute inset-0">
-          <img src={heroBg} alt="" className="h-full w-full object-cover object-center" />
+          {heroBg ? (
+            <img src={heroBg} alt="" className="h-full w-full object-cover object-center" />
+          ) : (
+            <div className="h-full w-full bg-black" aria-hidden />
+          )}
         </div>
         <div className="absolute inset-y-0 left-0 w-full bg-black/55 lg:w-1/2 lg:bg-black/70" />
         <div className="absolute left-0 right-0 top-[89px] h-px bg-white/30" />
@@ -249,11 +251,18 @@ export function LandingPage({ fields, folderMedia }: Props) {
               </div>
             </div>
             <div className="relative z-10 min-h-[360px] w-full overflow-visible lg:-mt-[76px] lg:-mb-[190px] lg:-mr-[96px] lg:w-[calc(50%+96px)] lg:self-start">
-              <img
-                src={aboutPrimaryImage}
-                alt=""
-                className="h-full min-h-[360px] w-full rounded-l-[6px] rounded-r-none object-cover lg:min-h-[1120px]"
-              />
+              {aboutPrimaryImage ? (
+                <img
+                  src={aboutPrimaryImage}
+                  alt=""
+                  className="h-full min-h-[360px] w-full rounded-l-[6px] rounded-r-none object-cover lg:min-h-[1120px]"
+                />
+              ) : (
+                <div
+                  className="h-full min-h-[360px] w-full rounded-l-[6px] rounded-r-none bg-black lg:min-h-[1120px]"
+                  aria-hidden
+                />
+              )}
               <div className="absolute inset-0 rounded-l-[6px] rounded-r-none bg-black/18" />
               {aboutInteriorOneOverlayUrl ? (
                 <div className="absolute bottom-4 left-4 z-20 w-[72%] max-w-[380px] overflow-hidden rounded-[6px] border-4 border-white shadow-[0_20px_45px_rgba(0,0,0,0.35)] lg:bottom-[220px] lg:left-[-116px] lg:w-[64%] lg:max-w-[480px]">

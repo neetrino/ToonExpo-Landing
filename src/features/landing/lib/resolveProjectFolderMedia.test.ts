@@ -21,7 +21,7 @@ describe("resolveProjectFolderMedia", () => {
     fsMock.readdirSync.mockReset();
   });
 
-  it("returns empty URLs when id is null or invalid", () => {
+  it("returns empty URLs when id is null or invalid", async () => {
     const empty = {
       heroUrl: null,
       aboutLargeUrl: null,
@@ -31,12 +31,12 @@ describe("resolveProjectFolderMedia", () => {
       infrastructureLeftUrl: null,
       infrastructureRightUrl: null,
     };
-    expect(resolveProjectFolderMedia(null)).toEqual(empty);
-    expect(resolveProjectFolderMedia("")).toEqual(empty);
-    expect(resolveProjectFolderMedia("../x")).toEqual(empty);
+    await expect(resolveProjectFolderMedia(null)).resolves.toEqual(empty);
+    await expect(resolveProjectFolderMedia("")).resolves.toEqual(empty);
+    await expect(resolveProjectFolderMedia("../x")).resolves.toEqual(empty);
   });
 
-  it("resolves hero, about, infra and gallery from mocked fs for folder 42", () => {
+  it("resolves hero, about, infra and gallery from mocked fs for folder 42", async () => {
     fsMock.existsSync.mockImplementation((p: string) => {
       const n = p.split(sep).join("/");
       return (
@@ -64,7 +64,7 @@ describe("resolveProjectFolderMedia", () => {
       return [];
     });
 
-    const r = resolveProjectFolderMedia("42");
+    const r = await resolveProjectFolderMedia("42");
 
     expect(r.logoUrl).toBe("/project/42/Logo/Logo.png");
     expect(r.heroUrl).toBe("/project/42/Exterior/1.webp");

@@ -106,7 +106,8 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
       text: firstNonEmpty(fields.expo_field_10, fields.expo_field_09, "Ski season premium rates"),
     },
   ];
-  const showGallery = Boolean(vis.gallery || (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryImages.length > 0);
+  const showGallery =
+    (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryImages.length > 0;
   const showPayment = vis.payment || vis.construction || vis.parking;
   const showOptions = sizeOptions.length > 0;
 

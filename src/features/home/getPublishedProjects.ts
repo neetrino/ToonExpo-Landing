@@ -39,15 +39,17 @@ export const getPublishedProjectsForSite = cache(async (): Promise<HomeProject[]
     select: { id: true, slug: true, expoFields: true, mediaFolderId: true },
   });
   const sorted = [...projects].sort(compareByProjectPublicId);
-  return sorted.map((p) => {
-    const expoFields = (p.expoFields as Record<string, string>) ?? {};
-    const { cardHeroUrl, cardLogoUrl } = resolveHomeCardMedia(p.mediaFolderId, expoFields);
-    return {
-      id: p.id,
-      slug: p.slug,
-      expoFields,
-      cardHeroUrl,
-      cardLogoUrl,
-    } satisfies HomeProject;
-  });
+  return Promise.all(
+    sorted.map(async (p) => {
+      const expoFields = (p.expoFields as Record<string, string>) ?? {};
+      const { cardHeroUrl, cardLogoUrl } = await resolveHomeCardMedia(p.mediaFolderId, expoFields);
+      return {
+        id: p.id,
+        slug: p.slug,
+        expoFields,
+        cardHeroUrl,
+        cardLogoUrl,
+      } satisfies HomeProject;
+    }),
+  );
 });

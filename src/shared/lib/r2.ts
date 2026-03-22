@@ -1,4 +1,5 @@
 import {
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
   type PutObjectCommandInput,
@@ -59,4 +60,38 @@ export function isR2Configured(): boolean {
       process.env.R2_BUCKET_NAME &&
       process.env.R2_PUBLIC_URL,
   );
+}
+
+/**
+ * Բոլոր object key-երը `prefix`-ով (R2 / S3 ListObjectsV2)։
+ */
+export async function listR2ObjectKeysUnderPrefix(prefix: string): Promise<string[]> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET_NAME;
+  if (!client || !bucket) {
+    return [];
+  }
+  const keys: string[] = [];
+  let continuationToken: string | undefined;
+  try {
+    do {
+      const res = await client.send(
+        new ListObjectsV2Command({
+          Bucket: bucket,
+          Prefix: prefix,
+          ContinuationToken: continuationToken,
+        }),
+      );
+      for (const obj of res.Contents ?? []) {
+        if (obj.Key) {
+          keys.push(obj.Key);
+        }
+      }
+      continuationToken = res.IsTruncated ? res.NextContinuationToken : undefined;
+    } while (continuationToken);
+  } catch (e) {
+    logger.error("R2 listObjects failed", { error: String(e), prefix });
+    return [];
+  }
+  return keys;
 }

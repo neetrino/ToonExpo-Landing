@@ -12,6 +12,7 @@ import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext"
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 export type { HomeProject } from "@/features/home/homeProject.types";
 
@@ -21,12 +22,11 @@ const PROJECTS_PAGE_SIZE_DESKTOP = 15;
 const PROJECTS_PAGE_SIZE_MOBILE = 10;
 
 const FIGMA_ASSETS = {
-  heroBg: "/figma/home/heroBg.jpg",
-  siteHeaderLogo: "/figma/home/footerLogo.svg",
-  refundIcon: "/figma/home/refundIcon.svg",
-  locationIcon: "/figma/home/loocation.svg",
-  priceIcon: "/figma/home/priceIcon.svg",
-  rangeIcon: "/figma/home/rangeIcon.svg",
+  siteHeaderLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
+  refundIcon: publicAssetUrl("/figma/home/refundIcon.svg"),
+  locationIcon: publicAssetUrl("/figma/home/loocation.svg"),
+  priceIcon: publicAssetUrl("/figma/home/priceIcon.svg"),
+  rangeIcon: publicAssetUrl("/figma/home/rangeIcon.svg"),
 } as const;
 
 /** Համապատասխանում է `#participants` grid-ին՝ 1 / 2 / 3 սյուն և padding-ներին (`max-w-[1680px]` px-4 … lg:px-10)։ */
@@ -194,14 +194,9 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
       </header>
 
       <div className="relative isolate overflow-hidden rounded-b-[26px] bg-[#246976] sm:rounded-bl-[125px] sm:rounded-br-[132px] sm:rounded-b-none">
-        <Image
-          src={FIGMA_ASSETS.heroBg}
-          alt=""
-          fill
-          priority
-          unoptimized
-          className="object-cover object-center"
-          sizes="100vw"
+        <div
+          className="absolute inset-0 bg-[linear-gradient(165deg,#0a2830_0%,#1d6b7a_45%,#0d1f26_100%)]"
+          aria-hidden
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,19,26,0.58),rgba(7,27,36,0.88))]" />
         {/* Figma: Rectangle 1177 — overlay со скруглением снизу */}
