@@ -1,7 +1,6 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import Image from "next/image";
 import { useMemo, useState } from "react";
 import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/mobile/lib/blockVisibility";
@@ -10,6 +9,7 @@ import {
   participantFigmaAssets,
 } from "@/features/landing/mobile/landingPage.constants";
 import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
+import { RemoteAwareImage } from "@/shared/components/RemoteAwareImage";
 import { resolveGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import {
@@ -154,7 +154,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
                 className="relative block h-48 w-full cursor-zoom-in overflow-hidden p-0"
                 aria-label={`Open gallery: ${title}`}
               >
-                <Image
+                <RemoteAwareImage
                   src={galleryResolved[0].thumbUrl}
                   alt={`${title} gallery`}
                   fill
@@ -172,7 +172,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
                 className="relative block h-40 w-full cursor-zoom-in overflow-hidden p-0"
                 aria-label="Gallery image 2"
               >
-                <Image
+                <RemoteAwareImage
                   src={galleryResolved[1].thumbUrl}
                   alt=""
                   fill
@@ -191,7 +191,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
                   className="relative block h-40 w-full cursor-zoom-in overflow-hidden p-0"
                   aria-label="Gallery image 2"
                 >
-                  <Image
+                  <RemoteAwareImage
                     src={galleryResolved[1].thumbUrl}
                     alt=""
                     fill
@@ -207,7 +207,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
                   className="relative block h-40 w-full cursor-zoom-in overflow-hidden p-0"
                   aria-label="Gallery image 3"
                 >
-                  <Image
+                  <RemoteAwareImage
                     src={galleryResolved[2].thumbUrl}
                     alt=""
                     fill

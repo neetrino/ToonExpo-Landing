@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { RemoteAwareImage } from "@/shared/components/RemoteAwareImage";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 const GALLERY_FILMSTRIP_SIZES = "56px";
@@ -51,7 +51,7 @@ export function GalleryLightboxFilmstrip({ images, targetIndex, onSelectIndex, i
               isActive ? "border-white ring-2 ring-white/35" : "border-white/20 opacity-80 hover:opacity-100"
             }`}
           >
-            <Image
+            <RemoteAwareImage
               src={url}
               alt=""
               fill
