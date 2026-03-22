@@ -26,6 +26,7 @@ describe("resolveProjectFolderMedia", () => {
       heroUrl: null,
       aboutLargeUrl: null,
       aboutSmallUrl: null,
+      logoUrl: null,
       galleryUrls: [] as string[],
       infrastructureLeftUrl: null,
       infrastructureRightUrl: null,
@@ -42,7 +43,8 @@ describe("resolveProjectFolderMedia", () => {
         n.includes("/project/42/Exterior") ||
         n.includes("/project/42/Interior") ||
         n.includes("/project/42/3DFloorplan") ||
-        n.includes("/project/42/2Dfloorplan")
+        n.includes("/project/42/2Dfloorplan") ||
+        n.includes("/project/42/Logo/Logo.png")
       );
     });
     fsMock.readdirSync.mockImplementation((p: string) => {
@@ -64,6 +66,7 @@ describe("resolveProjectFolderMedia", () => {
 
     const r = resolveProjectFolderMedia("42");
 
+    expect(r.logoUrl).toBe("/project/42/Logo/Logo.png");
     expect(r.heroUrl).toBe("/project/42/Exterior/1.webp");
     expect(r.aboutLargeUrl).toBe("/project/42/Exterior/2.jpg");
     expect(r.aboutSmallUrl).toBe("/project/42/Interior/1.jpg");

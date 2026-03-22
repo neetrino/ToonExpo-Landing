@@ -47,9 +47,8 @@ export function EditProjectFormClient({
       ) : null}
 
       <EditProjectMetaCard
-        defaultSlug={defaultSlug}
+        defaultProjectPublicId={defaultMediaFolderId ?? defaultSlug}
         defaultPublished={defaultPublished}
-        defaultMediaFolderId={defaultMediaFolderId}
         showSaved={showSaved}
         pending={pending}
         landingButtonClass={LANDING_BTN_CLASS}

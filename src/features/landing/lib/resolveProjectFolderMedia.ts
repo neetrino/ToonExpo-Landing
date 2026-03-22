@@ -12,6 +12,15 @@ const IMAGE_EXT_RE = /\.(jpe?g|png|webp|gif)$/i;
 
 const GALLERY_SUBDIRS = ["Exterior", "Interior", "3DFloorplan", "2Dfloorplan"] as const;
 
+/** Հերթականություն՝ առաջին գտնվածը օգտագործվում է (Linux-ում case-sensitive է)։ */
+const LOGO_RELATIVE_CANDIDATES = [
+  "Logo/Logo.png",
+  "Logo/Logo.webp",
+  "Logo/Logo.jpg",
+  "Logo/Logo.jpeg",
+  "Logo/logo.png",
+] as const;
+
 function projectRootAbs(mediaFolderId: string): string {
   return join(process.cwd(), PUBLIC_PROJECT_REL, mediaFolderId);
 }
@@ -33,6 +42,16 @@ function findNumberedFile(absDir: string, baseName: string): string | null {
 
 function escapeRegExp(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function findLogoUrl(mediaFolderId: string, baseAbs: string): string | null {
+  for (const rel of LOGO_RELATIVE_CANDIDATES) {
+    const abs = join(baseAbs, ...rel.split("/"));
+    if (existsSync(abs)) {
+      return toPublicUrl(mediaFolderId, rel);
+    }
+  }
+  return null;
 }
 
 function listImageFilesSorted(absDir: string): string[] {
@@ -69,6 +88,7 @@ export function resolveProjectFolderMedia(
     heroUrl: null,
     aboutLargeUrl: null,
     aboutSmallUrl: null,
+    logoUrl: null,
     galleryUrls: [],
     infrastructureLeftUrl: null,
     infrastructureRightUrl: null,
@@ -88,11 +108,13 @@ export function resolveProjectFolderMedia(
   const aboutSmallFile = findNumberedFile(interior, "1");
   const infraLeftFile = findNumberedFile(exterior, "2");
   const infraRightFile = findNumberedFile(exterior, "3");
+  const logoUrl = findLogoUrl(id, base);
 
   return {
     heroUrl: heroFile ? toPublicUrl(id, `Exterior/${heroFile}`) : null,
     aboutLargeUrl: aboutLargeFile ? toPublicUrl(id, `Exterior/${aboutLargeFile}`) : null,
     aboutSmallUrl: aboutSmallFile ? toPublicUrl(id, `Interior/${aboutSmallFile}`) : null,
+    logoUrl,
     galleryUrls: collectGalleryUrls(id, base),
     infrastructureLeftUrl: infraLeftFile ? toPublicUrl(id, `Exterior/${infraLeftFile}`) : null,
     infrastructureRightUrl: infraRightFile ? toPublicUrl(id, `Exterior/${infraRightFile}`) : null,

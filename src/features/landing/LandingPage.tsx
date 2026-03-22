@@ -106,7 +106,8 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const media = getProjectMedia(fields);
   const heroBg =
     folderMedia?.heroUrl || media[0] || participantFigmaAssets.heroBackground;
-  const heroLogoUrl = getLogoUrl(fields);
+  const heroLogoUrl = firstNonEmpty(folderMedia?.logoUrl, getLogoUrl(fields));
+  const headerBrandSrc = firstNonEmpty(folderMedia?.logoUrl, "/figma/home/footerLogo.svg");
   const leadText = getLeadText(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const aboutPrimaryImage =
@@ -142,8 +143,8 @@ export function LandingPage({ fields, folderMedia }: Props) {
             className="inline-flex shrink-0 items-center transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2 focus-visible:ring-offset-black/70"
           >
             <img
-              src="/figma/home/footerLogo.svg"
-              alt="Toon Expo"
+              src={headerBrandSrc}
+              alt=""
               className="h-10 w-10 object-contain lg:h-12 lg:w-12"
             />
           </Link>

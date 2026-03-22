@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   IconCheck,
   IconExternal,
@@ -9,86 +9,71 @@ import {
   IconPencil,
 } from "@/features/admin/components/AdminUiIcons";
 
-function sanitizeSlugInput(raw: string): string {
+function sanitizeProjectIdInput(raw: string): string {
   return raw
     .toLowerCase()
-    .replace(/[^a-z0-9-]/g, "")
-    .replace(/-+/g, "-");
+    .replace(/[^a-z0-9_-]/g, "")
+    .replace(/-{2,}/g, "-");
 }
 
 const SEGMENT_BTN =
   "inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition sm:text-sm";
 
-type SlugRowProps = {
-  slugValue: string;
-  setSlugValue: (v: string) => void;
-  slugEditing: boolean;
+type ProjectIdRowProps = {
+  value: string;
+  setValue: (v: string) => void;
+  editing: boolean;
   onToggleEdit: () => void;
   pending: boolean;
 };
 
-function SlugRow({
-  slugValue,
-  setSlugValue,
-  slugEditing,
-  onToggleEdit,
-  pending,
-}: SlugRowProps) {
-  const slugInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!slugEditing) {
-      return;
-    }
-    const el = slugInputRef.current;
-    if (el) {
-      el.focus();
-      el.select();
-    }
-  }, [slugEditing]);
-
+function ProjectIdRow({ value, setValue, editing, onToggleEdit, pending }: ProjectIdRowProps) {
   return (
-    <div className="flex min-w-0 max-w-full items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/95 py-1.5 pl-2.5 pr-1 sm:max-w-[22rem]">
-      <IconLink2 className="h-3.5 w-3.5 shrink-0 text-[#2eb0b4]" />
-      <label
-        htmlFor="project-slug-input"
-        className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-slate-500"
-      >
-        Slug
-      </label>
-      <input
-        ref={slugInputRef}
-        id="project-slug-input"
-        name="slug"
-        value={slugValue}
-        onChange={(e) => setSlugValue(sanitizeSlugInput(e.target.value))}
-        readOnly={!slugEditing}
-        required
-        minLength={1}
-        maxLength={100}
-        pattern="[a-z0-9]+(-[a-z0-9]+)*"
-        disabled={pending}
-        autoComplete="off"
-        spellCheck={false}
-        className={`min-w-0 flex-1 border-0 bg-transparent py-0.5 font-mono text-sm outline-none focus:ring-0 disabled:opacity-60 ${
-          slugEditing
-            ? "text-slate-900"
-            : "cursor-default text-slate-600 selection:bg-slate-200"
-        }`}
-      />
-      <button
-        type="button"
-        disabled={pending}
-        onClick={onToggleEdit}
-        title={slugEditing ? "Ավարտել խմբագրումը" : "Խմբագրել slug"}
-        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition ${
-          slugEditing
-            ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-            : "border-slate-200 bg-white text-slate-500 hover:border-[#2eb0b4]/40 hover:text-[#2eb0b4]"
-        } disabled:opacity-50`}
-      >
-        {slugEditing ? <IconCheck className="h-4 w-4" /> : <IconPencil className="h-4 w-4" />}
-      </button>
+    <div className="flex min-w-0 max-w-full flex-col gap-1 rounded-xl border border-slate-200 bg-slate-50/95 px-2.5 py-2 sm:max-w-[22rem]">
+      <div className="flex min-w-0 items-center gap-2">
+        <IconLink2 className="h-3.5 w-3.5 shrink-0 text-[#2eb0b4]" />
+        <label
+          htmlFor="project-public-id-input"
+          className="text-[11px] font-bold uppercase tracking-wider text-slate-500"
+        >
+          Project ID
+        </label>
+      </div>
+      <div className="flex min-w-0 items-center gap-1">
+        <input
+          id="project-public-id-input"
+          name="projectId"
+          value={value}
+          onChange={(e) => setValue(sanitizeProjectIdInput(e.target.value))}
+          readOnly={!editing}
+          required
+          minLength={1}
+          maxLength={100}
+          pattern="[a-z0-9]+([-_][a-z0-9]+)*"
+          disabled={pending}
+          autoComplete="off"
+          spellCheck={false}
+          className={`min-w-0 flex-1 border-0 bg-transparent font-mono text-sm outline-none focus:ring-0 disabled:opacity-60 ${
+            editing ? "text-slate-900" : "cursor-default text-slate-600 selection:bg-slate-200"
+          }`}
+        />
+        <button
+          type="button"
+          disabled={pending}
+          onClick={onToggleEdit}
+          title={editing ? "Ավարտել խմբագրումը" : "Խմբագրել Project ID"}
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition ${
+            editing
+              ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+              : "border-slate-200 bg-white text-slate-500 hover:border-[#2eb0b4]/40 hover:text-[#2eb0b4]"
+          } disabled:opacity-50`}
+        >
+          {editing ? <IconCheck className="h-4 w-4" /> : <IconPencil className="h-4 w-4" />}
+        </button>
+      </div>
+      <p className="text-[10px] leading-snug text-slate-500">
+        URL /p/… և public/project/…/ (նույն Project ID արժեքը)
+      </p>
     </div>
   );
 }
@@ -139,9 +124,8 @@ function PublishedToggle({ published, setPublished, pending }: PublishedTogglePr
 }
 
 type Props = {
-  defaultSlug: string;
+  defaultProjectPublicId: string;
   defaultPublished: boolean;
-  defaultMediaFolderId: string | null;
   showSaved: boolean;
   pending: boolean;
   landingButtonClass: string;
@@ -150,9 +134,8 @@ type Props = {
 };
 
 export function EditProjectMetaCard({
-  defaultSlug,
+  defaultProjectPublicId,
   defaultPublished,
-  defaultMediaFolderId,
   showSaved,
   pending,
   landingButtonClass,
@@ -160,57 +143,33 @@ export function EditProjectMetaCard({
   saveButton,
 }: Props) {
   const [published, setPublished] = useState(defaultPublished);
-  const [slugValue, setSlugValue] = useState(defaultSlug);
-  const [mediaFolderValue, setMediaFolderValue] = useState(defaultMediaFolderId ?? "");
-  const [slugEditing, setSlugEditing] = useState(false);
+  const [projectIdValue, setProjectIdValue] = useState(defaultProjectPublicId);
+  const [idEditing, setIdEditing] = useState(false);
 
   useEffect(() => {
-    setSlugValue(defaultSlug);
+    setProjectIdValue(defaultProjectPublicId);
     setPublished(defaultPublished);
-    setMediaFolderValue(defaultMediaFolderId ?? "");
-  }, [defaultSlug, defaultPublished, defaultMediaFolderId]);
+  }, [defaultProjectPublicId, defaultPublished]);
 
   useEffect(() => {
     if (showSaved) {
-      setSlugEditing(false);
+      setIdEditing(false);
     }
   }, [showSaved]);
 
-  const landingPath = slugValue.trim() ? `/p/${slugValue.trim()}` : `/p/${defaultSlug}`;
+  const landingPath = projectIdValue.trim() ? `/p/${projectIdValue.trim()}` : `/p/${defaultProjectPublicId}`;
 
   return (
     <div className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm sm:p-5">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
         <div className="flex min-w-0 flex-1 flex-col items-stretch gap-4 sm:flex-row sm:flex-wrap sm:items-center lg:gap-5">
-          <SlugRow
-            slugValue={slugValue}
-            setSlugValue={setSlugValue}
-            slugEditing={slugEditing}
-            onToggleEdit={() => setSlugEditing((v) => !v)}
+          <ProjectIdRow
+            value={projectIdValue}
+            setValue={setProjectIdValue}
+            editing={idEditing}
+            onToggleEdit={() => setIdEditing((v) => !v)}
             pending={pending}
           />
-          <div className="flex min-w-0 max-w-full flex-col gap-1 rounded-xl border border-slate-200 bg-slate-50/95 px-2.5 py-2 sm:max-w-[16rem]">
-            <label
-              htmlFor="project-media-folder-id"
-              className="text-[11px] font-bold uppercase tracking-wider text-slate-500"
-            >
-              Project ID (media folder)
-            </label>
-            <input
-              id="project-media-folder-id"
-              name="mediaFolderId"
-              value={mediaFolderValue}
-              onChange={(e) => setMediaFolderValue(e.target.value)}
-              disabled={pending}
-              autoComplete="off"
-              spellCheck={false}
-              placeholder="e.g. 1"
-              className="min-w-0 border-0 bg-transparent font-mono text-sm text-slate-800 outline-none focus:ring-0 disabled:opacity-60"
-            />
-            <p className="text-[10px] leading-snug text-slate-500">
-              public/project/…/Exterior, Interior, …
-            </p>
-          </div>
           <PublishedToggle
             published={published}
             setPublished={setPublished}

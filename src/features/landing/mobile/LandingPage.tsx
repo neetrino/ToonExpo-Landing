@@ -68,7 +68,8 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const media = getProjectMedia(fields);
   const heroBg =
     folderMedia?.heroUrl || getHeroMedia(fields) || participantFigmaAssets.heroBackground;
-  const heroLogoUrl = getLogoUrl(fields);
+  const heroLogoUrl = firstNonEmpty(folderMedia?.logoUrl, getLogoUrl(fields));
+  const stickyBrandLogoSrc = folderMedia?.logoUrl ?? participantFigmaAssets.headerLogo;
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const leadText = getLeadText(fields);
   const rawAboutText = aboutParagraphs[0] ?? "";
@@ -119,7 +120,10 @@ export function LandingPage({ fields, folderMedia }: Props) {
 
   return (
     <div className="overflow-x-hidden bg-white text-[#101828]">
-      <MobileLandingStickyHeader onMenuClick={() => setIsMenuOpen(true)} />
+      <MobileLandingStickyHeader
+        onMenuClick={() => setIsMenuOpen(true)}
+        brandLogoSrc={stickyBrandLogoSrc}
+      />
       <section className="relative h-[500px] overflow-hidden text-white">
         <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
@@ -134,7 +138,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
                     className="inline-flex"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-9 w-9" />
+                    <img src={stickyBrandLogoSrc} alt="" className="h-9 w-9 object-contain" />
                   </Link>
                   <button
                     type="button"

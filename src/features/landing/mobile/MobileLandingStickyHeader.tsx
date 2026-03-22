@@ -6,12 +6,14 @@ import { useScrolledPastThreshold } from "@/shared/hooks/useScrolledPastThreshol
 
 type Props = {
   onMenuClick: () => void;
+  /** Եթե տրված է — նախագծի լոգո `public/project/.../Logo/`-ից։ */
+  brandLogoSrc?: string;
 };
 
 /**
  * Ստիկի հեդեր `/p/.../mobile` — վերևում թափանցիկ, սքրոլից հետո՝ կիսաթափանցիկ։
  */
-export function MobileLandingStickyHeader({ onMenuClick }: Props) {
+export function MobileLandingStickyHeader({ onMenuClick, brandLogoSrc }: Props) {
   const scrolled = useScrolledPastThreshold(20);
 
   const bar = scrolled
@@ -23,7 +25,11 @@ export function MobileLandingStickyHeader({ onMenuClick }: Props) {
       className={`fixed inset-x-0 top-0 z-[60] flex items-center justify-between ${MOBILE_SECTION_INSET} pb-3 pt-[max(1.25rem,env(safe-area-inset-top))] text-white transition-[background-color,backdrop-filter,border-color] duration-200 ${bar}`}
     >
       <Link href="/" aria-label="Go to home page" className="inline-flex">
-        <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-[52px] w-[52px]" />
+        <img
+          src={brandLogoSrc ?? participantFigmaAssets.headerLogo}
+          alt=""
+          className="h-[52px] w-[52px] object-contain"
+        />
       </Link>
       <button
         type="button"
