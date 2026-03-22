@@ -18,7 +18,7 @@ import {
   getProjectMedia,
   splitListItems,
 } from "@/features/landing/landingPage.helpers";
-import { resolveGalleryImageUrls } from "@/features/landing/lib/resolveGalleryImageUrls";
+import { resolveGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
@@ -49,11 +49,12 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
   const media = getProjectMedia(fields);
   const exteriorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_43)));
   const infrastructureItems = splitListItems(fields.expo_field_33);
-  const galleryImages = resolveGalleryImageUrls(media, folderMedia);
+  const galleryResolved = resolveGalleryItems(media, folderMedia);
   /** Պլիտկայի ենթագրեր՝ միայն եթե տվյալներում կա առանձին տեքստ (հակառակ դեպքում կկրկնվի h2-ի SECTION_GALLERY)։ */
-  const galleryItems = galleryImages.map((image) => ({
+  const galleryItems = galleryResolved.map(({ fullUrl, thumbUrl }) => ({
     label: "",
-    image,
+    image: fullUrl,
+    thumb: thumbUrl,
   }));
   const infrastructureImages: [string | null, string | null] = [
     folderMedia?.infrastructureLeftUrl ||
@@ -68,7 +69,7 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
       null,
   ];
   const showGalleryBlock =
-    (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryImages.length > 0;
+    (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryResolved.length > 0;
   const showInfrastructureBlock =
     vis.infrastructure ||
     Boolean(folderMedia?.infrastructureLeftUrl || folderMedia?.infrastructureRightUrl);

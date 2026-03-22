@@ -169,4 +169,24 @@ body {
     animation: none;
     opacity: 1;
   }
+
+  .gallery-lightbox-indeterminate-bar {
+    animation: none;
+    transform: translateX(0);
+    left: 35%;
+  }
+}
+
+/* Լայթբոքսի անորոշք (indeterminate) բեռնման գիծ */
+@keyframes gallery-lightbox-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+.gallery-lightbox-indeterminate-bar {
+  animation: gallery-lightbox-indeterminate 1.15s ease-in-out infinite;
 }
