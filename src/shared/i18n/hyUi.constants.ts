@@ -6,7 +6,8 @@ export const HY_UI = {
   NAV_INVESTMENT: "Ներդրում",
   NAV_GALLERY: "Պատկերներ",
   NAV_PAYMENT: "Վճարում",
-  NAV_INFRASTRUCTURE: "Ինֆրա",
+  /** Infrastructure & amenities */
+  NAV_INFRASTRUCTURE: "Ինֆրակառուցվածք և հարմարություններ",
   NAV_CONSTRUCTION: "Կառուցում",
   /** Նավիգացիայում՝ կարճ */
   NAV_PARKING: "Կայանատեղի",
@@ -27,7 +28,7 @@ export const HY_UI = {
   SECTION_ABOUT_PROJECT: "Մասին",
   SECTION_GALLERY: "Պատկերներ",
   SECTION_PAYMENT: "Վճարման պայմաններ",
-  SECTION_INFRA: "Ինֆրա",
+  SECTION_INFRA: "Ենթակառուցվածքներ",
   SECTION_CONSTRUCTION: "Կառուցման մանրամասներ",
   /** Սեկցիայի վերնագիր (#192643) */
   SECTION_PARKING: "Կայանատեղի",
