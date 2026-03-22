@@ -13,6 +13,8 @@ import {
   splitListItems,
 } from "@/features/landing/landingPage.helpers";
 import {
+  HERO_PROJECT_LOGO_BOX_CLASS,
+  HERO_PROJECT_LOGO_IMG_CLASS,
   participantFigmaAssets,
   participantNav,
   SITE_HEADER_LOGO_SRC,
@@ -112,8 +114,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const aboutPrimaryImage =
     folderMedia?.aboutLargeUrl || media[1] || media[0] || participantFigmaAssets.aboutPrimary;
-  const aboutSecondaryImage =
-    folderMedia?.aboutSmallUrl || media[2] || media[1] || media[0] || "";
+  const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
   const aboutFacts = [
     { label: "Developer", value: fields.expo_field_11 },
     { label: "Architect", value: fields.expo_field_12 },
@@ -164,27 +165,31 @@ export function LandingPage({ fields, folderMedia }: Props) {
         </div>
         <div className="absolute inset-y-0 left-0 w-full bg-black/55 lg:w-1/2 lg:bg-black/70" />
         <div className="absolute left-0 right-0 top-[89px] h-px bg-white/30" />
-        <div className="relative z-10 mx-auto flex min-h-[calc(92svh-72px)] max-w-[1920px] items-end px-5 py-8 lg:px-0 lg:py-0">
-          <div className="flex w-full flex-col justify-end gap-6 lg:min-h-[860px] lg:w-1/2 lg:px-12 lg:pb-16">
-            {heroLogoUrl ? (
-              <img
-                src={heroLogoUrl}
-                alt=""
-                className="h-auto w-[92px] object-contain lg:w-[138px]"
-              />
-            ) : null}
-            <div className="max-w-[640px]">
-              <h1 className="max-w-[620px] text-[clamp(2.2rem,4.3vw,4.2rem)] font-semibold uppercase leading-[0.98]">
-                {title}
-              </h1>
-              <p className="mt-4 max-w-[470px] text-[clamp(1rem,1.8vw,1.55rem)] font-light leading-[1.28]">
-                {leadText}
-              </p>
-              {isFieldNonEmpty(fields.expo_field_03) ? (
-                <p className="mt-3 max-w-[500px] text-sm text-white/78 lg:text-base">
-                  {fields.expo_field_03}
-                </p>
+        <div className="relative z-10 mx-auto flex min-h-[calc(92svh-72px)] max-w-[1920px] items-start px-5 py-8 lg:px-0 lg:py-0">
+          <div className="flex w-full flex-col gap-6 lg:min-h-[min(860px,calc(92svh-72px))] lg:w-1/2 lg:px-12 lg:pb-16 lg:pt-6">
+            <div className="flex min-w-0 w-full max-w-[640px] flex-col gap-5">
+              {heroLogoUrl ? (
+                <div className={HERO_PROJECT_LOGO_BOX_CLASS}>
+                  <img
+                    src={heroLogoUrl}
+                    alt=""
+                    className={HERO_PROJECT_LOGO_IMG_CLASS}
+                  />
+                </div>
               ) : null}
+              <div className="min-w-0 w-full max-w-[640px] break-words">
+                <h1 className="text-[clamp(2.2rem,4.3vw,4.2rem)] font-semibold uppercase leading-[0.98]">
+                  {title}
+                </h1>
+                <p className="mt-4 max-w-full text-[clamp(1rem,1.8vw,1.55rem)] font-light leading-[1.28]">
+                  {leadText}
+                </p>
+                {isFieldNonEmpty(fields.expo_field_03) ? (
+                  <p className="mt-3 max-w-full text-sm text-white/78 lg:text-base">
+                    {fields.expo_field_03}
+                  </p>
+                ) : null}
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-4">
               <a
@@ -208,20 +213,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
                 </h2>
                 <div className="mt-10 lg:mt-[126px]">
                   <div className="flex items-start gap-4 lg:gap-5">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width={40}
-                      height={56}
-                      viewBox="0 0 40 56"
-                      fill="none"
-                      aria-hidden
-                      className="mt-0.5 h-10 w-10 shrink-0 lg:mt-1 lg:h-14 lg:w-10"
-                    >
-                      <path
-                        d="M39.9969 19.8089C39.9613 23.1196 39.2004 26.7162 37.7374 30.1507C33.8401 39.2937 27.9044 47.0941 21.2604 54.4188C20.5289 55.2262 19.6907 55.4663 18.9004 54.5733C11.2388 45.9242 3.91584 37.0382 0.779427 25.6442C-2.38637 14.1295 4.39063 2.7937 15.6897 0.457111C28.2014 -2.13026 39.3102 6.52796 40 19.8074H39.9969V19.8089ZM31.9657 19.6422C31.9889 12.9995 26.6517 7.57392 20.0758 7.55404C13.4844 7.53416 7.94151 12.9566 7.91213 19.4648C7.88274 26.0602 13.2617 31.3756 19.9706 31.3848C26.6533 31.394 31.9425 26.2162 31.9641 19.6407L31.9657 19.6422Z"
-                        fill="#2BA8B0"
-                      />
-                    </svg>
+                    <AboutIntroPinIcon />
                     <p className="min-w-0 flex-1 text-[1rem] font-light leading-[1.45] text-white/90 lg:text-[1.55rem] lg:leading-[1.2]">
                       {aboutIntroText}
                     </p>
@@ -262,9 +254,9 @@ export function LandingPage({ fields, folderMedia }: Props) {
                 className="h-full min-h-[360px] w-full rounded-l-[6px] rounded-r-none object-cover lg:min-h-[1120px]"
               />
               <div className="absolute inset-0 rounded-l-[6px] rounded-r-none bg-black/18" />
-              {aboutSecondaryImage ? (
+              {aboutInteriorOneOverlayUrl ? (
                 <div className="absolute bottom-4 left-4 z-20 w-[72%] max-w-[380px] overflow-hidden rounded-[6px] border-4 border-white shadow-[0_20px_45px_rgba(0,0,0,0.35)] lg:bottom-[220px] lg:left-[-116px] lg:w-[64%] lg:max-w-[480px]">
-                  <img src={aboutSecondaryImage} alt="" className="h-[232px] w-full object-cover lg:h-[264px]" />
+                  <img src={aboutInteriorOneOverlayUrl} alt="" className="h-[232px] w-full object-cover lg:h-[264px]" />
                 </div>
               ) : null}
             </div>

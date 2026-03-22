@@ -24,6 +24,22 @@ export const PARTICIPANT_SECTION_INSET =
 /** Toon Expo — գլխավոր էջի հեդերի հետ նույն ակտիվը (լենդինգի sticky header) */
 export const SITE_HEADER_LOGO_SRC = "/figma/home/footerLogo.svg" as const;
 
+/**
+ * Hero-ում նախագծի լոգո՝ ֆիքսված տուփի չափ (տարբեր լոգոներ նույն ուղղահայաց դիրքում)։
+ * Դեսքտոպում՝ նույն տողում `h1`-ի հետ (`items-start`)։
+ */
+export const HERO_PROJECT_LOGO_BOX_CLASS =
+  "flex h-[92px] w-[100px] shrink-0 items-center justify-start lg:h-[118px] lg:w-[152px]" as const;
+
+export const HERO_PROJECT_LOGO_IMG_CLASS =
+  "max-h-full max-w-full object-contain object-left" as const;
+
+export const MOBILE_HERO_PROJECT_LOGO_BOX_CLASS =
+  "flex h-[100px] w-[133px] shrink-0 items-center justify-center" as const;
+
+export const MOBILE_HERO_PROJECT_LOGO_IMG_CLASS =
+  "max-h-full max-w-full object-contain" as const;
+
 export const participantFigmaAssets = {
   heroBackground: "/figma/participant/heroBackground.jpg",
   aboutPrimary: "/figma/participant/aboutPrimary.jpg",

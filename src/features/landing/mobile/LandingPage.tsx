@@ -17,7 +17,11 @@ import {
   getProjectMedia,
   splitParagraphs,
 } from "@/features/landing/mobile/landingPage.helpers";
-import { SITE_HEADER_LOGO_SRC } from "@/features/landing/landingPage.constants";
+import {
+  MOBILE_HERO_PROJECT_LOGO_BOX_CLASS,
+  MOBILE_HERO_PROJECT_LOGO_IMG_CLASS,
+  SITE_HEADER_LOGO_SRC,
+} from "@/features/landing/landingPage.constants";
 import { MOBILE_SECTION_INSET, participantFigmaAssets } from "@/features/landing/mobile/landingPage.constants";
 import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
@@ -89,7 +93,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   );
   const aboutPrimaryImage =
     folderMedia?.aboutLargeUrl || media[1] || media[0] || participantFigmaAssets.aboutPrimary;
-  const aboutSecondaryImage = folderMedia?.aboutSmallUrl || media[2] || media[1] || "";
+  const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
   const stats = getMobileStats(fields);
   const menuItems = useMemo(
     () =>
@@ -176,11 +180,9 @@ export function LandingPage({ fields, folderMedia }: Props) {
         >
           <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto overscroll-contain text-center">
             {heroLogoUrl ? (
-              <img
-                src={heroLogoUrl}
-                alt=""
-                className="mb-8 h-[105px] w-[133px] shrink-0 object-contain"
-              />
+              <div className={`${MOBILE_HERO_PROJECT_LOGO_BOX_CLASS} mb-6`}>
+                <img src={heroLogoUrl} alt="" className={MOBILE_HERO_PROJECT_LOGO_IMG_CLASS} />
+              </div>
             ) : null}
             <h1 className="max-w-[288px] text-[30px] font-bold uppercase leading-[1.25]">
               {title}
@@ -229,9 +231,9 @@ export function LandingPage({ fields, folderMedia }: Props) {
         <div className="overflow-hidden rounded-[16px] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
           <img src={aboutPrimaryImage} alt="" className="h-64 w-full object-cover" />
         </div>
-        {aboutSecondaryImage ? (
+        {aboutInteriorOneOverlayUrl ? (
           <div className="overflow-hidden rounded-[16px]">
-            <img src={aboutSecondaryImage} alt="" className="h-56 w-full object-cover" />
+            <img src={aboutInteriorOneOverlayUrl} alt="" className="h-56 w-full object-cover" />
           </div>
         ) : null}
       </section>
