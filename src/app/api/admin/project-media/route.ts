@@ -5,20 +5,27 @@ import { logger } from "@/shared/lib/logger";
 import {
   deleteObjectFromR2,
   isR2Configured,
-  listR2ObjectKeysUnderPrefix,
+  listR2ObjectsAtLevel,
 } from "@/shared/lib/r2";
 import { sanitizeMediaFolderId } from "@/shared/lib/mediaFolderId";
 import {
   PROJECT_MEDIA_SUBFOLDERS,
+  buildProjectPrefixFromRelativePath,
+  relativePathFromAbsolutePrefix,
   validateProjectMediaObjectKey,
 } from "@/shared/lib/projectMediaR2Key";
 
 export const runtime = "nodejs";
 
-type GroupedFile = {
+type FileEntry = {
   key: string;
   name: string;
   publicUrl: string;
+};
+
+type FolderEntry = {
+  name: string;
+  path: string;
 };
 
 function publicUrlForKey(key: string): string {
@@ -26,51 +33,14 @@ function publicUrlForKey(key: string): string {
   return `${base}/${key}`;
 }
 
-function groupKeysBySubfolder(
-  mediaFolderId: string,
-  keys: string[],
-): Record<string, GroupedFile[]> {
-  const id = sanitizeMediaFolderId(mediaFolderId);
-  if (!id) {
-    return {};
-  }
-  const prefix = `projects/${id}/`;
-  const out: Record<string, GroupedFile[]> = {};
-  for (const sub of PROJECT_MEDIA_SUBFOLDERS) {
-    out[sub] = [];
-  }
-  for (const key of keys) {
-    if (!key.startsWith(prefix)) {
-      continue;
-    }
-    const rest = key.slice(prefix.length);
-    const parts = rest.split("/").filter(Boolean);
-    if (parts.length < 2) {
-      continue;
-    }
-    const sub = parts[0];
-    if (!out[sub]) {
-      continue;
-    }
-    const name = parts.slice(1).join("/");
-    out[sub].push({
-      key,
-      name,
-      publicUrl: publicUrlForKey(key),
-    });
-  }
-  for (const sub of PROJECT_MEDIA_SUBFOLDERS) {
-    out[sub].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-  }
-  return out;
-}
-
 export async function GET(req: Request): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const projectId = new URL(req.url).searchParams.get("projectId")?.trim();
+  const url = new URL(req.url);
+  const projectId = url.searchParams.get("projectId")?.trim();
+  const pathParam = url.searchParams.get("path")?.trim() ?? "";
   if (!projectId) {
     return NextResponse.json({ error: "projectId required" }, { status: 400 });
   }
@@ -78,8 +48,10 @@ export async function GET(req: Request): Promise<NextResponse> {
     return NextResponse.json({
       configured: false as const,
       error: "R2 not configured",
-      groups: {} as Record<string, GroupedFile[]>,
       mediaFolderId: null as string | null,
+      relativePath: "",
+      folders: [] as FolderEntry[],
+      files: [] as FileEntry[],
     });
   }
   const project = await prisma.project.findUnique({
@@ -96,10 +68,63 @@ export async function GET(req: Request): Promise<NextResponse> {
       { status: 400 },
     );
   }
-  const prefix = `projects/${mf}/`;
-  const keys = await listR2ObjectKeysUnderPrefix(prefix);
-  const groups = groupKeysBySubfolder(mf, keys);
-  return NextResponse.json({ configured: true as const, mediaFolderId: mf, groups });
+
+  const levelPrefix = buildProjectPrefixFromRelativePath(mf, pathParam);
+  if (!levelPrefix) {
+    return NextResponse.json({ error: "Invalid path" }, { status: 400 });
+  }
+
+  const { commonPrefixes, objectKeys } = await listR2ObjectsAtLevel(levelPrefix);
+
+  const folders: FolderEntry[] = [];
+  for (const cp of commonPrefixes) {
+    const rel = relativePathFromAbsolutePrefix(mf, cp);
+    if (!rel) {
+      continue;
+    }
+    const name = rel.split("/").filter(Boolean).pop() ?? rel;
+    folders.push({ name, path: rel });
+  }
+  /**
+   * R2/S3-ում «դատարկ պանակ» գոյություն չունի — առանց օբյեկտի CommonPrefixes չի գալիս։
+   * Ռութում ավելացնում ենք allowlist-ի ենթապանակները, որպեսզի դատարկ Interior-ը նույնպես երևա։
+   */
+  if (pathParam === "") {
+    const seen = new Set(folders.map((f) => f.path));
+    for (const sub of PROJECT_MEDIA_SUBFOLDERS) {
+      if (!seen.has(sub)) {
+        folders.push({ name: sub, path: sub });
+        seen.add(sub);
+      }
+    }
+  }
+  folders.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+  const files: FileEntry[] = [];
+  const normalizedLevel = levelPrefix.endsWith("/") ? levelPrefix : `${levelPrefix}/`;
+  for (const key of objectKeys) {
+    if (!key.startsWith(normalizedLevel)) {
+      continue;
+    }
+    const name = key.slice(normalizedLevel.length);
+    if (!name || name.includes("/")) {
+      continue;
+    }
+    files.push({
+      key,
+      name,
+      publicUrl: publicUrlForKey(key),
+    });
+  }
+  files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+  return NextResponse.json({
+    configured: true as const,
+    mediaFolderId: mf,
+    relativePath: pathParam,
+    folders,
+    files,
+  });
 }
 
 export async function DELETE(req: Request): Promise<NextResponse> {

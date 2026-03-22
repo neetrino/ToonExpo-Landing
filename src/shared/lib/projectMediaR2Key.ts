@@ -79,10 +79,73 @@ export function buildProjectMediaObjectKey(
   subfolder: ProjectMediaSubfolder,
   fileName: string,
 ): string | null {
+  return buildProjectMediaObjectKeyFromRelativePath(mediaFolderId, subfolder, fileName);
+}
+
+const REL_PATH_SEGMENT_RE = /^[a-zA-Z0-9._\- ]+$/;
+
+/**
+ * `relativePath` — `""` | `Exterior` | `Exterior/nested` — առաջին հատվածը allowlist-ից։
+ */
+export function buildProjectPrefixFromRelativePath(
+  mediaFolderId: string,
+  relativePath: string,
+): string | null {
   const id = sanitizeMediaFolderId(mediaFolderId);
-  const safe = safeUploadFileName(fileName);
-  if (!id || !safe) {
+  if (!id) {
     return null;
   }
-  return `${normalizeProjectsPrefix(id)}${subfolder}/${safe}`;
+  const root = normalizeProjectsPrefix(id);
+  const t = relativePath.trim();
+  if (!t) {
+    return root;
+  }
+  const segments = t.split("/").filter(Boolean);
+  if (segments.length === 0) {
+    return root;
+  }
+  if (!SUBFOLDER_SET.has(segments[0])) {
+    return null;
+  }
+  for (const seg of segments) {
+    if (!REL_PATH_SEGMENT_RE.test(seg) || seg.length > 120) {
+      return null;
+    }
+  }
+  return `${root}${segments.join("/")}/`;
+}
+
+/**
+ * Վերբեռնման key՝ `relativePath`-ով (նույն կանոններով, ինչ `buildProjectPrefixFromRelativePath`)։
+ */
+export function buildProjectMediaObjectKeyFromRelativePath(
+  mediaFolderId: string,
+  relativePath: string,
+  fileName: string,
+): string | null {
+  const prefix = buildProjectPrefixFromRelativePath(mediaFolderId, relativePath);
+  const safe = safeUploadFileName(fileName);
+  if (!prefix || !safe) {
+    return null;
+  }
+  const base = prefix.endsWith("/") ? prefix.slice(0, -1) : prefix;
+  return `${base}/${safe}`;
+}
+
+/**
+ * `projects/37/Exterior/` → `Exterior`
+ */
+export function relativePathFromAbsolutePrefix(
+  mediaFolderId: string,
+  absolutePrefix: string,
+): string | null {
+  const id = sanitizeMediaFolderId(mediaFolderId);
+  if (!id) {
+    return null;
+  }
+  const root = normalizeProjectsPrefix(id);
+  if (!absolutePrefix.startsWith(root)) {
+    return null;
+  }
+  return absolutePrefix.slice(root.length).replace(/\/$/, "");
 }

@@ -5,7 +5,7 @@ import { logger } from "@/shared/lib/logger";
 import { isR2Configured, uploadToR2 } from "@/shared/lib/r2";
 import { sanitizeMediaFolderId } from "@/shared/lib/mediaFolderId";
 import {
-  buildProjectMediaObjectKey,
+  buildProjectMediaObjectKeyFromRelativePath,
   isProjectMediaSubfolder,
 } from "@/shared/lib/projectMediaR2Key";
 
@@ -38,14 +38,18 @@ export async function POST(req: Request): Promise<NextResponse> {
   }
 
   const projectId = (formData.get("projectId") as string)?.trim();
-  const subfolderRaw = (formData.get("subfolder") as string)?.trim();
+  const relativePathRaw = (formData.get("relativePath") as string)?.trim();
+  const subfolderLegacy = (formData.get("subfolder") as string)?.trim();
+  const relativePath =
+    relativePathRaw ||
+    (subfolderLegacy && isProjectMediaSubfolder(subfolderLegacy) ? subfolderLegacy : "");
   const file = formData.get("file");
 
-  if (!projectId || !subfolderRaw) {
-    return NextResponse.json({ error: "projectId and subfolder required" }, { status: 400 });
-  }
-  if (!isProjectMediaSubfolder(subfolderRaw)) {
-    return NextResponse.json({ error: "Invalid subfolder" }, { status: 400 });
+  if (!projectId || !relativePath) {
+    return NextResponse.json(
+      { error: "projectId and relativePath (or subfolder) required" },
+      { status: 400 },
+    );
   }
   if (!file || !(file instanceof File)) {
     return NextResponse.json({ error: "No file" }, { status: 400 });
@@ -71,7 +75,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "No media folder" }, { status: 400 });
   }
 
-  const key = buildProjectMediaObjectKey(mf, subfolderRaw, file.name);
+  const key = buildProjectMediaObjectKeyFromRelativePath(mf, relativePath, file.name);
   if (!key) {
     return NextResponse.json({ error: "Invalid file name" }, { status: 400 });
   }
