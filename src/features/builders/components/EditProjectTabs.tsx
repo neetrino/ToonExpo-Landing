@@ -13,9 +13,19 @@ type Props = {
   defaults: ExpoFieldsFormValues;
   projectId: string;
   deleteConfirmSlug: string;
+  mediaFolderLogoUrl: string | null;
+  mediaFolderId: string | null;
+  exampleLogoPublicUrl: string | null;
 };
 
-export function EditProjectTabs({ defaults, projectId, deleteConfirmSlug }: Props) {
+export function EditProjectTabs({
+  defaults,
+  projectId,
+  deleteConfirmSlug,
+  mediaFolderLogoUrl,
+  mediaFolderId,
+  exampleLogoPublicUrl,
+}: Props) {
   const [activeId, setActiveId] = useState<ExpoEditSectionId>(EXPO_EDIT_SECTIONS[0].id);
 
   return (
@@ -106,7 +116,13 @@ export function EditProjectTabs({ defaults, projectId, deleteConfirmSlug }: Prop
                   <p className="mt-1 text-sm text-slate-500">{section.descriptionHy}</p>
                 </header>
               ) : null}
-              <ProjectFieldsForm defaults={defaults} sectionId={section.id} />
+              <ProjectFieldsForm
+                defaults={defaults}
+                sectionId={section.id}
+                mediaFolderLogoUrl={mediaFolderLogoUrl}
+                mediaFolderId={mediaFolderId}
+                exampleLogoPublicUrl={exampleLogoPublicUrl}
+              />
             </div>
           );
         })}

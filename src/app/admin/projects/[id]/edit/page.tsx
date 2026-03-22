@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/shared/lib/db";
 import { normalizeExpoFields } from "@/shared/lib/expoFields";
+import { resolveProjectFolderMedia } from "@/features/landing/lib/resolveProjectFolderMedia";
 import { EditProjectFormClient } from "@/features/builders/components/EditProjectFormClient";
 import { IconChevronLeft, IconFolder } from "@/features/admin/components/AdminUiIcons";
 
@@ -16,6 +17,11 @@ export default async function EditProjectPage({ params }: Props) {
     notFound();
   }
   const defaults = normalizeExpoFields(project.expoFields);
+  const folderMedia = await resolveProjectFolderMedia(project.mediaFolderId);
+  const r2Base = process.env.R2_PUBLIC_URL?.replace(/\/$/, "") ?? "";
+  const mfId = project.mediaFolderId?.trim();
+  const exampleLogoPublicUrl =
+    r2Base && mfId ? `${r2Base}/projects/${mfId}/Logo/Logo.png` : null;
 
   return (
     <div className="flex flex-col gap-8">
@@ -42,6 +48,8 @@ export default async function EditProjectPage({ params }: Props) {
         defaultPublished={project.published}
         defaultMediaFolderId={project.mediaFolderId}
         defaults={defaults}
+        mediaFolderLogoUrl={folderMedia.logoUrl}
+        exampleLogoPublicUrl={exampleLogoPublicUrl}
       />
     </div>
   );

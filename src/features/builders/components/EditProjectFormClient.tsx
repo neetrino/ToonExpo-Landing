@@ -16,6 +16,8 @@ type Props = {
   defaultPublished: boolean;
   defaultMediaFolderId: string | null;
   defaults: ExpoFieldsFormValues;
+  mediaFolderLogoUrl: string | null;
+  exampleLogoPublicUrl: string | null;
 };
 
 export function EditProjectFormClient({
@@ -24,6 +26,8 @@ export function EditProjectFormClient({
   defaultPublished,
   defaultMediaFolderId,
   defaults,
+  mediaFolderLogoUrl,
+  exampleLogoPublicUrl,
 }: Props) {
   const [state, formAction, pending] = useActionState(updateProjectFormAction, {
     ok: false,
@@ -70,6 +74,9 @@ export function EditProjectFormClient({
         defaults={defaults}
         projectId={projectId}
         deleteConfirmSlug={defaultSlug}
+        mediaFolderLogoUrl={mediaFolderLogoUrl}
+        mediaFolderId={defaultMediaFolderId}
+        exampleLogoPublicUrl={exampleLogoPublicUrl}
       />
     </form>
   );
