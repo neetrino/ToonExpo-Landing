@@ -1,8 +1,10 @@
-# Նախագծի մեդիա — `public/project/{Project ID}/`
+# Նախագծի մեդիա — `public/project/{Project ID}/` կամ R2 `projects/{Project ID}/`
 
-Մեկ աղբյուր՝ ֆայլային համակարգը + `resolveProjectFolderMedia()` (`src/features/landing/lib/resolveProjectFolderMedia.ts`)։
+Մեկ աղբյուր՝ `resolveProjectFolderMedia()` (`src/features/landing/lib/resolveProjectFolderMedia.ts`) — **կամ** տեղական `public/project/`, **կամ** Cloudflare R2 bucket-ում `projects/` նախածանցով (տե՛ս ներքև)։
 
 ## 1. Կառուցվածք և URL
+
+### Տեղական ֆայլեր (`public/`)
 
 - **Ճանապարհ.** `public/project/{mediaFolderId}/` — `{mediaFolderId}`-ը CSV-ի «Project ID»-ն է (նույնը՝ DB `Project.mediaFolderId`)։
 - **Լենդինգի URL.** ` /p/{slug}` — `Project.slug`-ը հնարավորինս **նույն տողն է**, ինչ Project ID-ն (օր. `37` → `/p/37`)։ Ներմուծումից CSV-ից slug-ը ստացվում է «Project ID» սյունակից (`slugFromRow`); `mediaFolderId`-ը նույն արժեքն է (lowercase)։
@@ -10,6 +12,19 @@
 - **Ադմին** — մեկ դաշտ `Project ID` թարմացնում է **և** slug-ը, **և** `mediaFolderId`-ը։
 - **Թույլատրելի նիշեր id-ում.** `a-zA-Z0-9_-` (`sanitizeMediaFolderId`)։
 - **Պատկերի ֆորմատներ.** `jpg`, `jpeg`, `png`, `webp`, `gif` (ըստ կոդի regex-ի)։
+
+### R2 (Cloudflare bucket)
+
+Տեղական `public/project/`-ից տարբերվում է **միայն վերին նախածանցը**. Bucket-ում նախագծերի արմատը **`projects/`** է (բազմական `s` — ոչ թե `public`-ի `project/`)։
+
+| Տեղ | Նախածանց / path |
+|-----|------------------|
+| Տեղական | `public/project/{mediaFolderId}/…` |
+| R2 object key | `projects/{mediaFolderId}/…` |
+
+- **Նույն ենթածառը.** `Logo/`, `Exterior/`, `Interior/`, `3DFloorplan/`, `2Dfloorplan/` — հարաբերական ճանապարհը նույնն է, ինչ աղյուսակներում ներքև։
+- **Հանրային URL.** `{R2_PUBLIC_URL}/projects/{mediaFolderId}/Logo/Logo.png` և այլն (`R2_PUBLIC_URL`-ը առանց վերջի `/`)։
+- **Ընտրություն.** Եթե `projects/{id}/` ներքևում R2-ում օբյեկտներ կան — օգտագործվում է R2-ն։ Հակառակ դեպքում — fallback `public/project/{id}/` (`resolveProjectFolderMedia`)։
 
 ## 2. Լոգո (նախագծի բրենդ)
 
@@ -20,7 +35,7 @@
 
 **Օգտագործում.** `logoUrl` — **միայն hero** բլոկում (և fallback `expo_field_50`)։ Sticky header-ը և մոբայլ menu-ի վերևի պատկերը՝ **կայքի** լոգոն (`/figma/home/footerLogo.svg`, ինչպես գլխավոր էջը)։
 
-**Linux deploy.** Պանակի/ֆայլի անունը case-sensitive է — նախընտրել `Logo/Logo.png`։
+**Linux / տեղական deploy.** Պանակի/ֆայլի անունը case-sensitive է — նախընտրել `Logo/Logo.png`։ R2-ում նույնպես խորհուրդ է տրվում նույն հարաբերական ճանապարհները։
 
 ## 3. Hero, About, Infrastructure (նույնացված անուններ)
 
@@ -55,5 +70,5 @@
 
 ## 7. Տեխնիկական
 
-- Server-only.resolve — `fs.existsSync` / `readdirSync`։
+- Server-only.resolve — R2-ի դեպքում `ListObjectsV2` `projects/{id}/` նախածանցով (`src/shared/lib/r2.ts`), հակառակ դեպքում `fs.existsSync` / `readdirSync` `public/project/{id}/`։
 - Լենդինգ `page.tsx` — բեռնում է `folderMedia` և փոխանցում `LandingPage` / `LandingPageLower`։

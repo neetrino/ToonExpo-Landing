@@ -13,6 +13,9 @@ const IMAGE_EXT_RE = /\.(jpe?g|png|webp|gif)$/i;
 
 const GALLERY_SUBDIRS = ["Exterior", "Interior", "3DFloorplan", "2Dfloorplan"] as const;
 
+/** S3 ListObjects prefix-ը case-sensitive է — փորձում ենք տարբեր գրելաձևեր։ */
+const R2_PROJECT_ROOT_PREFIXES = ["projects", "Projects", "PROJECTS"] as const;
+
 /** Հերթականություն՝ առաջին գտնվածը օգտագործվում է (Linux-ում case-sensitive է)։ */
 const LOGO_RELATIVE_CANDIDATES = [
   "Logo/Logo.png",
@@ -21,6 +24,9 @@ const LOGO_RELATIVE_CANDIDATES = [
   "Logo/Logo.jpeg",
   "Logo/logo.png",
 ] as const;
+
+/** Լոգոյի fallback — R2-ում ֆայլի անունը հաճախ այլ է, քան ցանկը։ */
+const LOGO_FILE_EXT_RE = /\.(jpe?g|png|webp|gif|svg)$/i;
 
 function projectRootAbs(mediaFolderId: string): string {
   return join(process.cwd(), PUBLIC_PROJECT_REL, mediaFolderId);
@@ -51,19 +57,41 @@ function findNumberedFileInRelList(relativePaths: string[], subdir: string, base
   return hit ?? null;
 }
 
+function relInSubdir(rel: string, subdir: string): boolean {
+  const prefix = `${subdir}/`;
+  return (
+    rel.length > prefix.length &&
+    rel.slice(0, prefix.length).toLowerCase() === prefix.toLowerCase()
+  );
+}
+
 function findLogoRelative(relativePaths: string[]): string | null {
+  const byLower = new Map(relativePaths.map((r) => [r.toLowerCase(), r]));
   for (const rel of LOGO_RELATIVE_CANDIDATES) {
-    if (relativePaths.includes(rel)) {
-      return rel;
+    const hit = byLower.get(rel.toLowerCase());
+    if (hit) {
+      return hit;
     }
   }
-  return null;
+  const inLogoFolder = relativePaths.filter((r) => {
+    const parts = r.split("/").filter(Boolean);
+    if (parts.length < 2) {
+      return false;
+    }
+    if (parts[0].toLowerCase() !== "logo") {
+      return false;
+    }
+    return LOGO_FILE_EXT_RE.test(parts[parts.length - 1] ?? "");
+  });
+  inLogoFolder.sort((a, b) =>
+    a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }),
+  );
+  return inLogoFolder[0] ?? null;
 }
 
 function listImageRelsInSubdir(relativePaths: string[], subdir: string): string[] {
-  const prefix = `${subdir}/`;
   return relativePaths
-    .filter((r) => r.startsWith(prefix) && IMAGE_EXT_RE.test(r))
+    .filter((r) => relInSubdir(r, subdir) && IMAGE_EXT_RE.test(r))
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));
 }
 
@@ -124,12 +152,39 @@ function buildResolvedFromRelativePaths(
   };
 }
 
+/**
+ * R2 object key → հարաբերական ուղի (ինչպես `public/project/`-ում)։
+ * Key-ի `projects/{id}/` նախածանցը համեմատում ենք անզգայուն ռեգիստրի։
+ */
+function stripProjectsPrefixFromKey(key: string, mediaFolderId: string): string | null {
+  const re = new RegExp(`^projects/${escapeRegExp(mediaFolderId)}/`, "i");
+  const m = re.exec(key);
+  if (!m) {
+    return null;
+  }
+  const rest = key.slice(m[0].length);
+  return rest.length > 0 ? rest : null;
+}
+
 function r2KeysToRelativePaths(mediaFolderId: string, keys: string[]): string[] {
-  const prefix = `projects/${mediaFolderId}/`;
-  return keys
-    .filter((k) => k.startsWith(prefix))
-    .map((k) => k.slice(prefix.length))
-    .filter((r) => r.length > 0);
+  const out: string[] = [];
+  for (const k of keys) {
+    const rel = stripProjectsPrefixFromKey(k, mediaFolderId);
+    if (rel) {
+      out.push(rel);
+    }
+  }
+  return out;
+}
+
+async function listR2KeysForProject(mediaFolderId: string): Promise<string[]> {
+  for (const root of R2_PROJECT_ROOT_PREFIXES) {
+    const keys = await listR2ObjectKeysUnderPrefix(`${root}/${mediaFolderId}/`);
+    if (keys.length > 0) {
+      return keys;
+    }
+  }
+  return [];
 }
 
 function resolveFromFilesystem(mediaFolderId: string): ResolvedProjectFolderMedia {
@@ -160,7 +215,7 @@ export async function resolveProjectFolderMedia(
   }
 
   if (isR2Configured()) {
-    const keys = await listR2ObjectKeysUnderPrefix(`projects/${id}/`);
+    const keys = await listR2KeysForProject(id);
     if (keys.length > 0) {
       const rels = r2KeysToRelativePaths(id, keys);
       return buildResolvedFromRelativePaths(id, rels, "r2");
