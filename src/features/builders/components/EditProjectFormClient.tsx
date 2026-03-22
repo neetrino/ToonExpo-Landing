@@ -14,6 +14,7 @@ type Props = {
   projectId: string;
   defaultSlug: string;
   defaultPublished: boolean;
+  defaultSortOrder: number;
   defaultMediaFolderId: string | null;
   defaults: ExpoFieldsFormValues;
   mediaFolderLogoUrl: string | null;
@@ -24,6 +25,7 @@ export function EditProjectFormClient({
   projectId,
   defaultSlug,
   defaultPublished,
+  defaultSortOrder,
   defaultMediaFolderId,
   defaults,
   mediaFolderLogoUrl,
@@ -53,6 +55,7 @@ export function EditProjectFormClient({
       <EditProjectMetaCard
         defaultProjectPublicId={defaultMediaFolderId ?? defaultSlug}
         defaultPublished={defaultPublished}
+        defaultSortOrder={defaultSortOrder}
         showSaved={showSaved}
         pending={pending}
         landingButtonClass={LANDING_BTN_CLASS}

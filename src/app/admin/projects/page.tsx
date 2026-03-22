@@ -53,6 +53,7 @@ export default async function AdminProjectsPage({
     slug: p.slug,
     projectId: p.mediaFolderId ?? p.slug,
     published: p.published,
+    sortOrder: p.sortOrder,
     title: expoTitle(p.expoFields) || p.slug,
   }));
 

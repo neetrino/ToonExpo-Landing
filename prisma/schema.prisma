@@ -60,6 +60,8 @@ model Project {
   expoFields     Json     @default("{}")
   /// CSV «Project ID» → public/project/{mediaFolderId}/ (Exterior, Interior, …)
   mediaFolderId  String?
+  /// Գլխավոր էջ և ադմին ցանկ — 1, 2, 3 … (0 = ավտոմատ հերթականություն վերջում)
+  sortOrder      Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }

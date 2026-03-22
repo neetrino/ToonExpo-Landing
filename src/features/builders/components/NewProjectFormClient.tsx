@@ -30,6 +30,20 @@ export function NewProjectFormClient() {
             Դատարկ թողնելու դեպքում slug-ը կկազմվի վերնագրից։
           </span>
         </label>
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-medium text-slate-700">Տեսակավորում (գլխավոր)</span>
+          <input
+            name="sortOrder"
+            type="number"
+            min={0}
+            step={1}
+            inputMode="numeric"
+            placeholder="0"
+            defaultValue={0}
+            className="max-w-[8rem] rounded-lg border border-slate-300 px-3 py-2 font-mono tabular-nums"
+          />
+          <span className="text-xs text-slate-500">1 — առաջինը … 0 — ավտոմատ</span>
+        </label>
         <label className="flex items-center gap-2 text-sm">
           <input name="published" type="checkbox" defaultChecked className="h-4 w-4" />
           <span>Հրապարակված</span>

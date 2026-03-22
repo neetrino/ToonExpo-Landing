@@ -123,9 +123,50 @@ function PublishedToggle({ published, setPublished, pending }: PublishedTogglePr
   );
 }
 
+type SortOrderFieldProps = {
+  defaultSortOrder: number;
+  pending: boolean;
+};
+
+function SortOrderField({ defaultSortOrder, pending }: SortOrderFieldProps) {
+  const [value, setValue] = useState(String(defaultSortOrder));
+
+  useEffect(() => {
+    setValue(String(defaultSortOrder));
+  }, [defaultSortOrder]);
+
+  return (
+    <div className="flex min-w-0 max-w-full flex-col gap-1 rounded-xl border border-slate-200 bg-slate-50/95 px-2.5 py-2 sm:max-w-[10rem]">
+      <label
+        htmlFor="project-sort-order-input"
+        className="text-[11px] font-bold uppercase tracking-wider text-slate-500"
+      >
+        Տեսակավորում (գլխավոր)
+      </label>
+      <input
+        id="project-sort-order-input"
+        name="sortOrder"
+        type="number"
+        min={0}
+        step={1}
+        inputMode="numeric"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        disabled={pending}
+        autoComplete="off"
+        className="w-full min-w-0 border-0 bg-transparent font-mono text-sm tabular-nums text-slate-900 outline-none focus:ring-0 disabled:opacity-60"
+      />
+      <p className="text-[10px] leading-snug text-slate-500">
+        1 — առաջինը, 2 — երկրորդը … 0 — ավտոմատ
+      </p>
+    </div>
+  );
+}
+
 type Props = {
   defaultProjectPublicId: string;
   defaultPublished: boolean;
+  defaultSortOrder: number;
   showSaved: boolean;
   pending: boolean;
   landingButtonClass: string;
@@ -136,6 +177,7 @@ type Props = {
 export function EditProjectMetaCard({
   defaultProjectPublicId,
   defaultPublished,
+  defaultSortOrder,
   showSaved,
   pending,
   landingButtonClass,
@@ -170,6 +212,7 @@ export function EditProjectMetaCard({
             onToggleEdit={() => setIdEditing((v) => !v)}
             pending={pending}
           />
+          <SortOrderField defaultSortOrder={defaultSortOrder} pending={pending} />
           <PublishedToggle
             published={published}
             setPublished={setPublished}
