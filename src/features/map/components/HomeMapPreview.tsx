@@ -4,6 +4,12 @@ import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
+import {
+  MAP_FIT_BOUNDS_MAX_ZOOM,
+  MAP_LABELS_VISIBLE_MIN_ZOOM,
+  MAP_ZOOM_LABELS_VISIBLE_CONTAINER_CLASS,
+} from "@/features/map/mapView.constants";
+
 export type MapMarker = {
   lat: number;
   lng: number;
@@ -39,6 +45,16 @@ function setMaplibreMarkerStacking(markerRoot: HTMLElement, active: boolean): vo
   } else {
     markerRoot.style.removeProperty("z-index");
   }
+}
+
+function syncZoomLabelsVisibility(
+  map: maplibregl.Map,
+  container: HTMLElement,
+  minZoom: number,
+  labelsClass: string,
+): void {
+  const show = map.getZoom() >= minZoom;
+  container.classList.toggle(labelsClass, show);
 }
 
 function bindMarkerPointerHover(wrap: HTMLElement): void {
@@ -160,7 +176,8 @@ export function HomeMapPreview({ markers, className }: Props) {
   const mapRef = useRef<maplibregl.Map | null>(null);
 
   useEffect(() => {
-    if (!ref.current) {
+    const containerEl = ref.current;
+    if (!containerEl) {
       return;
     }
     const valid = markers.filter((m) => Number.isFinite(m.lat) && Number.isFinite(m.lng));
@@ -168,7 +185,7 @@ export function HomeMapPreview({ markers, className }: Props) {
       valid.length > 0 ? [valid[0].lng, valid[0].lat] : DEFAULT_CENTER;
 
     const map = new maplibregl.Map({
-      container: ref.current,
+      container: containerEl,
       style: "https://tiles.openfreemap.org/styles/liberty",
       center,
       zoom: valid.length ? 12 : 8,
@@ -177,7 +194,7 @@ export function HomeMapPreview({ markers, className }: Props) {
     mapRef.current = map;
 
     const clearActiveMarkers = () => {
-      ref.current?.querySelectorAll(`.map-marker-wrap.${MAP_MARKER_ACTIVE_CLASS}`).forEach((node) => {
+      containerEl.querySelectorAll(`.map-marker-wrap.${MAP_MARKER_ACTIVE_CLASS}`).forEach((node) => {
         node.classList.remove(MAP_MARKER_ACTIVE_CLASS);
         if (node instanceof HTMLElement) {
           setMaplibreMarkerStacking(node, false);
@@ -185,6 +202,19 @@ export function HomeMapPreview({ markers, className }: Props) {
       });
     };
     map.on("dragstart", clearActiveMarkers);
+
+    const syncLabels = () => {
+      syncZoomLabelsVisibility(
+        map,
+        containerEl,
+        MAP_LABELS_VISIBLE_MIN_ZOOM,
+        MAP_ZOOM_LABELS_VISIBLE_CONTAINER_CLASS,
+      );
+    };
+    map.on("zoom", syncLabels);
+    map.on("zoomend", syncLabels);
+    map.on("idle", syncLabels);
+    syncLabels();
 
     for (const m of valid) {
       const el = createMapMarkerElement(m);
@@ -198,10 +228,15 @@ export function HomeMapPreview({ markers, className }: Props) {
       for (const item of valid) {
         b.extend([item.lng, item.lat]);
       }
-      map.fitBounds(b, { padding: 48, maxZoom: 14 });
+      map.fitBounds(b, { padding: 48, maxZoom: MAP_FIT_BOUNDS_MAX_ZOOM });
     }
 
     return () => {
+      map.off("zoom", syncLabels);
+      map.off("zoomend", syncLabels);
+      map.off("idle", syncLabels);
+      map.off("dragstart", clearActiveMarkers);
+      containerEl.classList.remove(MAP_ZOOM_LABELS_VISIBLE_CONTAINER_CLASS);
       map.remove();
       mapRef.current = null;
     };
