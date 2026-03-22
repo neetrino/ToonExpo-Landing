@@ -18,6 +18,7 @@ import {
   getProjectMedia,
   splitListItems,
 } from "@/features/landing/landingPage.helpers";
+import { resolveGalleryImageUrls } from "@/features/landing/lib/resolveGalleryImageUrls";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 
 function Section({
@@ -52,18 +53,7 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
     fields.expo_field_18,
     "Price varies by view and floor. Higher floors and better views command premium.",
   );
-  const legacyGalleryPool = Array.from(
-    new Set([
-      ...media,
-      participantFigmaAssets.galleryMain,
-      participantFigmaAssets.galleryUpper,
-      participantFigmaAssets.galleryUpdates,
-    ]),
-  );
-  const galleryImages =
-    folderMedia && folderMedia.galleryUrls.length > 0
-      ? folderMedia.galleryUrls
-      : legacyGalleryPool;
+  const galleryImages = resolveGalleryImageUrls(media, folderMedia);
   const galleryItems = galleryImages.map((image) => ({
     label: "Gallery",
     image,
@@ -129,6 +119,7 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             items={galleryItems}
             leftArrowSrc={participantFigmaAssets.galleryArrowLeft}
             rightArrowSrc={participantFigmaAssets.galleryArrowRight}
+            imageAltBase={_title}
           />
         </Section>
       ) : null}

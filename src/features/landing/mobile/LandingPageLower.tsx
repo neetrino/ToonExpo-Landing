@@ -8,6 +8,8 @@ import {
   MOBILE_SECTION_INSET,
   participantFigmaAssets,
 } from "@/features/landing/mobile/landingPage.constants";
+import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
+import { resolveGalleryImageUrls } from "@/features/landing/lib/resolveGalleryImageUrls";
 import {
   firstNonEmpty,
   formatRange,
@@ -49,18 +51,8 @@ function InvestmentCard({
 export function LandingPageLower({ fields, title, folderMedia }: Props) {
   const vis = visibleBlocks(fields);
   const media = getProjectMedia(fields);
-  const galleryImages = useMemo(() => {
-    if (folderMedia && folderMedia.galleryUrls.length > 0) {
-      return folderMedia.galleryUrls.slice(0, 3);
-    }
-    return Array.from(
-      new Set([
-        media[3] || media[2] || participantFigmaAssets.galleryMain,
-        media[4] || media[1] || participantFigmaAssets.galleryUpper,
-        media[5] || media[0] || participantFigmaAssets.galleryUpdates,
-      ]),
-    );
-  }, [folderMedia, media]);
+  const galleryImages = useMemo(() => resolveGalleryImageUrls(media, folderMedia), [folderMedia, media]);
+  const [galleryLightboxIndex, setGalleryLightboxIndex] = useState<number | null>(null);
   const sizeOptions = useMemo(() => parseSizeOptions(fields.expo_field_06), [fields.expo_field_06]);
   const defaultSizeIndex = sizeOptions.length > 3 ? 3 : 0;
   const [selectedSize, setSelectedSize] = useState(defaultSizeIndex);
@@ -113,15 +105,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
       text: firstNonEmpty(fields.expo_field_10, fields.expo_field_09, "Ski season premium rates"),
     },
   ];
-  const showGallery = Boolean(
-    (folderMedia?.galleryUrls.length ?? 0) > 0 ||
-      galleryImages[0] ||
-      galleryImages[1] ||
-      galleryImages[2] ||
-      participantFigmaAssets.galleryMain ||
-      participantFigmaAssets.galleryUpper ||
-      participantFigmaAssets.galleryUpdates,
-  );
+  const showGallery = Boolean(vis.gallery || (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryImages.length > 0);
   const showPayment = vis.payment || vis.construction || vis.parking;
   const showOptions = sizeOptions.length > 0;
 
@@ -145,21 +129,72 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
         <section id="gallery" className={`${MOBILE_SECTION_INSET} pt-8`}>
           <div className="flex items-center justify-between">
             <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Gallery Preview</h2>
-            <a href="#gallery" className="text-[14px] font-semibold uppercase leading-5 text-[#2ba8b0]">
-              View All
-            </a>
+            {galleryImages.length > 1 ? (
+              <button
+                type="button"
+                onClick={() => setGalleryLightboxIndex(0)}
+                className="text-[14px] font-semibold uppercase leading-5 text-[#2ba8b0]"
+              >
+                View All
+              </button>
+            ) : null}
           </div>
-          <div className="mt-3 overflow-hidden rounded-[14px]">
-            <img src={galleryImages[0] || participantFigmaAssets.galleryMain} alt={`${title} gallery`} className="h-48 w-full object-cover" />
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            <div className="overflow-hidden rounded-[14px]">
-              <img src={galleryImages[1] || participantFigmaAssets.galleryUpper} alt="" className="h-40 w-full object-cover" />
+          {galleryImages[0] ? (
+            <div className="mt-3 overflow-hidden rounded-[14px]">
+              <button
+                type="button"
+                onClick={() => setGalleryLightboxIndex(0)}
+                className="relative block h-48 w-full cursor-zoom-in overflow-hidden p-0"
+                aria-label={`Open gallery: ${title}`}
+              >
+                <img src={galleryImages[0]} alt={`${title} gallery`} className="h-full w-full object-cover" />
+              </button>
             </div>
-            <div className="overflow-hidden rounded-[14px]">
-              <img src={galleryImages[2] || participantFigmaAssets.galleryUpdates} alt="" className="h-40 w-full object-cover" />
+          ) : null}
+          {galleryImages.length === 2 ? (
+            <div className="mt-3 overflow-hidden rounded-[14px]">
+              <button
+                type="button"
+                onClick={() => setGalleryLightboxIndex(1)}
+                className="relative block h-40 w-full cursor-zoom-in overflow-hidden p-0"
+                aria-label="Gallery image 2"
+              >
+                <img src={galleryImages[1]} alt="" className="h-full w-full object-cover" />
+              </button>
             </div>
-          </div>
+          ) : null}
+          {galleryImages.length > 2 ? (
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div className="overflow-hidden rounded-[14px]">
+                <button
+                  type="button"
+                  onClick={() => setGalleryLightboxIndex(1)}
+                  className="relative block h-40 w-full cursor-zoom-in overflow-hidden p-0"
+                  aria-label="Gallery image 2"
+                >
+                  <img src={galleryImages[1]} alt="" className="h-full w-full object-cover" />
+                </button>
+              </div>
+              <div className="overflow-hidden rounded-[14px]">
+                <button
+                  type="button"
+                  onClick={() => setGalleryLightboxIndex(2)}
+                  className="relative block h-40 w-full cursor-zoom-in overflow-hidden p-0"
+                  aria-label="Gallery image 3"
+                >
+                  <img src={galleryImages[2]} alt="" className="h-full w-full object-cover" />
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          <GalleryLightbox
+            images={galleryImages}
+            isOpen={galleryLightboxIndex !== null}
+            initialIndex={galleryLightboxIndex ?? 0}
+            onClose={() => setGalleryLightboxIndex(null)}
+            imageAltBase={title}
+          />
         </section>
       ) : null}
 

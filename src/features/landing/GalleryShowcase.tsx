@@ -1,6 +1,8 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
+import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
 
 type GalleryItem = {
   label: string;
@@ -11,6 +13,8 @@ type Props = {
   items: GalleryItem[];
   leftArrowSrc: string;
   rightArrowSrc: string;
+  /** Լայթբոքսում alt-ի հիմք (նախագծի անուն) */
+  imageAltBase: string;
 };
 
 function getVisibleItems(items: GalleryItem[], startIndex: number): GalleryItem[] {
@@ -24,8 +28,9 @@ function getVisibleItems(items: GalleryItem[], startIndex: number): GalleryItem[
 }
 
 /** Галерея проекта с рабочими стрелками и ротацией изображений. */
-export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc }: Props) {
+export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBase }: Props) {
   const [startIndex, setStartIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   if (items.length === 0) {
     return null;
@@ -43,35 +48,55 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc }: Props) {
     setStartIndex((current) => (current + 1) % items.length);
   };
 
+  const openLightboxAt = (offset: number) => {
+    setLightboxIndex((startIndex + offset) % items.length);
+  };
+
+  const galleryUrls = items.map((item) => item.image);
+
   return (
     <div className="w-full">
       <div className="relative">
         <div className="grid gap-2 lg:grid-cols-[1fr_400px_400px] lg:gap-3">
           {mainItem ? (
-            <div className="relative h-[320px] overflow-hidden lg:h-[580px]">
+            <button
+              type="button"
+              onClick={() => openLightboxAt(0)}
+              className="relative h-[320px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
+            >
               <img src={mainItem.image} alt={mainItem.label} className="h-full w-full object-cover object-center" />
-              <div className="absolute inset-0 bg-black/35" />
-              <div className="absolute bottom-6 left-5 text-white lg:left-[140px]">
+              <div className="pointer-events-none absolute inset-0 bg-black/35" />
+              <div className="pointer-events-none absolute bottom-6 left-5 text-white lg:left-[140px]">
                 <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">Gallery</h2>
                 <p className="mt-2 text-[clamp(1.05rem,1.5vw,1.7rem)]">{mainItem.label}</p>
               </div>
-            </div>
+            </button>
           ) : null}
 
           {secondItem ? (
-            <div className="relative h-[220px] overflow-hidden lg:h-[580px]">
+            <button
+              type="button"
+              onClick={() => openLightboxAt(1)}
+              className="relative h-[220px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
+            >
               <img src={secondItem.image} alt={secondItem.label} className="h-full w-full object-cover object-center" />
-              <div className="absolute inset-0 bg-black/15" />
-              <p className="absolute bottom-5 left-5 text-xl text-white lg:text-2xl">{secondItem.label}</p>
-            </div>
+              <div className="pointer-events-none absolute inset-0 bg-black/15" />
+              <p className="pointer-events-none absolute bottom-5 left-5 text-xl text-white lg:text-2xl">{secondItem.label}</p>
+            </button>
           ) : null}
 
           {thirdItem ? (
-            <div className="relative h-[220px] overflow-hidden lg:h-[580px]">
+            <button
+              type="button"
+              onClick={() => openLightboxAt(2)}
+              className="relative h-[220px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
+            >
               <img src={thirdItem.image} alt={thirdItem.label} className="h-full w-full object-cover object-center" />
-              <div className="absolute inset-0 bg-black/18" />
-              <p className="absolute bottom-5 left-5 max-w-[220px] text-xl text-white lg:text-2xl">{thirdItem.label}</p>
-            </div>
+              <div className="pointer-events-none absolute inset-0 bg-black/18" />
+              <p className="pointer-events-none absolute bottom-5 left-5 max-w-[220px] text-xl text-white lg:text-2xl">
+                {thirdItem.label}
+              </p>
+            </button>
           ) : null}
         </div>
 
@@ -96,6 +121,14 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc }: Props) {
           </>
         ) : null}
       </div>
+
+      <GalleryLightbox
+        images={galleryUrls}
+        isOpen={lightboxIndex !== null}
+        initialIndex={lightboxIndex ?? 0}
+        onClose={() => setLightboxIndex(null)}
+        imageAltBase={imageAltBase}
+      />
     </div>
   );
 }
