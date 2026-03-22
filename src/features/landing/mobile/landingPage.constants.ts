@@ -19,6 +19,11 @@ export const participantFigmaAssets = {
 } as const;
 
 export const MOBILE_SECTION_INSET = "px-4" as const;
+
+/**
+ * Սքրոլված sticky header-ի հետ նույն կիսաթափանցիկը (`bg-black/72` + `backdrop-blur`)։
+ */
+export const MOBILE_GLASS_FILL_CLASS = "bg-black/72 backdrop-blur" as const;
 export const MOBILE_CONTACT_EMAIL = "info@toonexpo2026.com";
 
 /** Hero-ում լրիվ տեքստը մոդալում բացելու կոճակ (միայն հայերեն) */

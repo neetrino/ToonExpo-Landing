@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { SITE_HEADER_LOGO_SRC } from "@/features/landing/landingPage.constants";
 import {
+  MOBILE_GLASS_FILL_CLASS,
   MOBILE_SECTION_INSET,
   participantFigmaAssets,
 } from "@/features/landing/mobile/landingPage.constants";
@@ -22,7 +23,7 @@ export function MobileLandingStickyHeader({ onMenuClick, brandLogoSrc }: Props) 
   const scrolled = useScrolledPastThreshold(20);
 
   const bar = scrolled
-    ? "border-b border-white/15 bg-black/72 backdrop-blur"
+    ? `border-b border-white/15 ${MOBILE_GLASS_FILL_CLASS}`
     : "border-b border-transparent bg-transparent";
 
   return (
