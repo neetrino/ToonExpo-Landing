@@ -14,31 +14,6 @@ function rowHasProjectIdColumn(header: string[]): boolean {
   return header.some((cell) => cell.includes("Project ID"));
 }
 
-/** Սյունակ՝ տասնորդական lat,lng (CSV-ում նոր սյուն ավելանալու դեպքում՝ ըստ վերնագրի, օր. «7.1 Կորդինատներ») */
-function findCoordinatesColumnIndex(header: string[]): number {
-  return header.findIndex((cell) => coordinatesHeaderLooksLike(String(cell ?? "")));
-}
-
-function coordinatesHeaderLooksLike(h: string): boolean {
-  const t = h.trim();
-  if (!t) {
-    return false;
-  }
-  if (/coordinate/i.test(t)) {
-    return true;
-  }
-  if (/координ/i.test(t)) {
-    return true;
-  }
-  if (t.includes("որդինատ")) {
-    return true;
-  }
-  if (/\b7\.1\b/.test(t) && (/Կորդին|coord|координ|lat/i.test(t) || t.includes("որդին"))) {
-    return true;
-  }
-  return false;
-}
-
 function mapOldLayoutRow(row: string[]): ExpoFieldsFormValues {
   const values: Record<string, string> = {};
   for (let i = 0; i < EXPO_FIELD_COUNT; i += 1) {
@@ -112,7 +87,6 @@ export function parseExpoCsvBuffer(buffer: Buffer): ParsedExpoRow[] {
   const dataRows = records.slice(1);
   const useProjectIdColumn = rowHasProjectIdColumn(header);
   const projectIdColIndex = header.findIndex((h) => h.includes("Project ID"));
-  const coordinatesColIndex = findCoordinatesColumnIndex(header);
 
   const out: ParsedExpoRow[] = [];
 
@@ -126,11 +100,6 @@ export function parseExpoCsvBuffer(buffer: Buffer): ParsedExpoRow[] {
       mediaFolderId = rawId || null;
     } else {
       expoFields = mapOldLayoutRow(row);
-    }
-
-    if (coordinatesColIndex >= 0) {
-      const cell = row[coordinatesColIndex];
-      expoFields.expo_field_16 = cell != null ? String(cell).trim() : "";
     }
 
     const titleForSlug =

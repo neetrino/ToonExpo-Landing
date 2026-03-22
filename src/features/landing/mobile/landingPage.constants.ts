@@ -20,3 +20,11 @@ export const participantFigmaAssets = {
 
 export const MOBILE_SECTION_INSET = "px-4" as const;
 export const MOBILE_CONTACT_EMAIL = "info@toonexpo2026.com";
+
+/**
+ * Hero-ի վերին padding՝ ֆիքսված `MobileLandingStickyHeader`-ից ներքև (նույն բարձրությունը՝
+ * վերին pt + 52px լոգո + pb-3), որպեսզի նախագծի լոգոն չկտրվի `overflow-hidden` + `justify-center`-ով։
+ */
+export const MOBILE_PARTICIPANT_HERO_INSET_TOP_CLASS =
+  "pt-[calc(0.75rem+52px+max(1.25rem,env(safe-area-inset-top)))]" as const;
+

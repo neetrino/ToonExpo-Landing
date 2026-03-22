@@ -22,7 +22,11 @@ import {
   MOBILE_HERO_PROJECT_LOGO_IMG_CLASS,
   SITE_HEADER_LOGO_SRC,
 } from "@/features/landing/landingPage.constants";
-import { MOBILE_SECTION_INSET, participantFigmaAssets } from "@/features/landing/mobile/landingPage.constants";
+import {
+  MOBILE_PARTICIPANT_HERO_INSET_TOP_CLASS,
+  MOBILE_SECTION_INSET,
+  participantFigmaAssets,
+} from "@/features/landing/mobile/landingPage.constants";
 import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 
@@ -176,9 +180,9 @@ export function LandingPage({ fields, folderMedia }: Props) {
           )}
 
         <div
-          className={`relative z-10 flex h-full min-h-0 flex-col gap-4 ${MOBILE_SECTION_INSET} pt-[calc(0.75rem+3.25rem+max(1.25rem,env(safe-area-inset-top)))] pb-[max(1.5rem,env(safe-area-inset-bottom))]`}
+          className={`relative z-10 flex h-full min-h-0 flex-col gap-4 ${MOBILE_SECTION_INSET} ${MOBILE_PARTICIPANT_HERO_INSET_TOP_CLASS} pb-[max(1.5rem,env(safe-area-inset-bottom))]`}
         >
-          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto overscroll-contain text-center">
+          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-start overflow-y-auto overscroll-contain pt-1 text-center">
             {heroLogoUrl ? (
               <div className={`${MOBILE_HERO_PROJECT_LOGO_BOX_CLASS} mb-6`}>
                 <img src={heroLogoUrl} alt="" className={MOBILE_HERO_PROJECT_LOGO_IMG_CLASS} />

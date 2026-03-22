@@ -47,29 +47,6 @@ describe("parseExpoCsvBuffer", () => {
     expect(rows[0].mediaFolderId).toBe("10");
     expect(rows[1].mediaFolderId).toBe("11");
   });
-
-  it("fills expo_field_16 from coordinates column by header (extra columns before coords)", () => {
-    const header =
-      "Name;Extra;Project ID;Title;Addr;EXTRA1;EXTRA2;7 map;Կորդինատներ;AfterCoord;" +
-      Array.from({ length: 48 }, (_, i) => `h${i}`).join(";");
-    const row1 =
-      "P;;1;T;A;e1;e2;mapurl;40.5,44.5;skip;" +
-      Array.from({ length: 48 }, () => "z").join(";");
-    const csv = `${header}\n${row1}\n`;
-    const rows = parseExpoCsvBuffer(Buffer.from(csv, "utf-8"));
-    expect(rows[0].expoFields.expo_field_16).toBe("40.5,44.5");
-  });
-
-  it("recognizes 7.1 coordinate header label", () => {
-    const header =
-      "Name;Extra;Project ID;Title;Addr;7.1 Կորդինատներ;" +
-      Array.from({ length: 51 }, (_, i) => `h${i}`).join(";");
-    const row1 =
-      "P;;1;T;A;41.0,44.0;" + Array.from({ length: 51 }, () => "z").join(";");
-    const csv = `${header}\n${row1}\n`;
-    const rows = parseExpoCsvBuffer(Buffer.from(csv, "utf-8"));
-    expect(rows[0].expoFields.expo_field_16).toBe("41.0,44.0");
-  });
 });
 
 describe("slugFromRow", () => {
