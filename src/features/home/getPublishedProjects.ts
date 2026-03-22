@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { prisma } from "@/shared/lib/db";
 import type { HomeProject } from "@/features/home/homeProject.types";
+import { resolveHomeCardMedia } from "@/features/home/resolveHomeCardMedia";
 
 type Row = {
   id: string;
@@ -38,9 +39,15 @@ export const getPublishedProjectsForSite = cache(async (): Promise<HomeProject[]
     select: { id: true, slug: true, expoFields: true, mediaFolderId: true },
   });
   const sorted = [...projects].sort(compareByProjectPublicId);
-  return sorted.map((p) => ({
-    id: p.id,
-    slug: p.slug,
-    expoFields: (p.expoFields as Record<string, string>) ?? {},
-  }));
+  return sorted.map((p) => {
+    const expoFields = (p.expoFields as Record<string, string>) ?? {};
+    const { cardHeroUrl, cardLogoUrl } = resolveHomeCardMedia(p.mediaFolderId, expoFields);
+    return {
+      id: p.id,
+      slug: p.slug,
+      expoFields,
+      cardHeroUrl,
+      cardLogoUrl,
+    } satisfies HomeProject;
+  });
 });
