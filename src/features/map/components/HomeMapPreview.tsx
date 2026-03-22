@@ -32,6 +32,10 @@ const MAP_MARKER_POPUP_GAP_PX = 36;
 
 const MAP_MARKER_ACTIVE_CLASS = "map-marker-active";
 
+const MAP_MARKER_HOVERCARD_BASE_CLASS = "map-marker-hovercard";
+const MAP_MARKER_HOVERCARD_FULL_CLASS = "map-marker-hovercard-full";
+const MAP_MARKER_HOVERCARD_COMPACT_CLASS = "map-marker-hovercard-compact";
+
 /** MapLibre-ի `.maplibregl-marker` — բարձր z-index, որ hover-քարտը ծածկի մյուս կետերը */
 const MAP_MARKER_Z_INDEX_ACTIVE = "10000";
 
@@ -57,28 +61,7 @@ function syncZoomLabelsVisibility(
   container.classList.toggle(labelsClass, show);
 }
 
-function bindMarkerPointerHover(wrap: HTMLElement): void {
-  const setActive = () => {
-    wrap.classList.add(MAP_MARKER_ACTIVE_CLASS);
-    setMaplibreMarkerStacking(wrap, true);
-  };
-  const setInactive = () => {
-    wrap.classList.remove(MAP_MARKER_ACTIVE_CLASS);
-    setMaplibreMarkerStacking(wrap, false);
-  };
-  wrap.addEventListener("mouseenter", setActive);
-  wrap.addEventListener("mouseleave", setInactive);
-}
-
-function createMapMarkerElement(m: MapMarker): HTMLElement {
-  const wrap = document.createElement("div");
-  wrap.className = "map-marker-wrap relative flex flex-col items-center";
-
-  const hover = document.createElement("div");
-  hover.className =
-    "map-marker-hovercard pointer-events-none absolute left-1/2 z-[100] w-max max-w-[min(240px,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 shadow-[0_8px_28px_rgba(0,0,0,0.18)]";
-  hover.style.bottom = `calc(100% + ${MAP_MARKER_POPUP_GAP_PX}px)`;
-
+function buildFullHoverCardContent(m: MapMarker): HTMLElement {
   const inner = m.href ? document.createElement("a") : document.createElement("div");
   if (m.href) {
     const a = inner as HTMLAnchorElement;
@@ -113,10 +96,23 @@ function createMapMarkerElement(m: MapMarker): HTMLElement {
   textCol.appendChild(titleEl);
   textCol.appendChild(priceEl);
   inner.appendChild(textCol);
+  return inner;
+}
 
-  hover.appendChild(inner);
-  wrap.appendChild(hover);
+function bindMarkerPointerHover(wrap: HTMLElement): void {
+  const setActive = () => {
+    wrap.classList.add(MAP_MARKER_ACTIVE_CLASS);
+    setMaplibreMarkerStacking(wrap, true);
+  };
+  const setInactive = () => {
+    wrap.classList.remove(MAP_MARKER_ACTIVE_CLASS);
+    setMaplibreMarkerStacking(wrap, false);
+  };
+  wrap.addEventListener("mouseenter", setActive);
+  wrap.addEventListener("mouseleave", setInactive);
+}
 
+function appendGapHitboxConnectorAndDot(wrap: HTMLElement): void {
   const gapHitbox = document.createElement("div");
   gapHitbox.className =
     "map-marker-gap-hitbox pointer-events-auto absolute left-1/2 z-[8] w-3 -translate-x-1/2 cursor-default";
@@ -163,6 +159,32 @@ function createMapMarkerElement(m: MapMarker): HTMLElement {
     "map-marker-dot relative z-10 h-4 w-4 shrink-0 cursor-pointer rounded-full border-2 border-white shadow-md";
   dot.setAttribute("aria-hidden", "true");
   wrap.appendChild(dot);
+}
+
+function createMapMarkerElement(m: MapMarker): HTMLElement {
+  const wrap = document.createElement("div");
+  wrap.className = "map-marker-wrap relative flex flex-col items-center";
+
+  const cardBottom = `calc(100% + ${MAP_MARKER_POPUP_GAP_PX}px)`;
+  const baseCardLayout =
+    "pointer-events-none absolute left-1/2 w-max max-w-[min(240px,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-slate-200/90 bg-white shadow-[0_8px_28px_rgba(0,0,0,0.18)]";
+
+  const hoverFull = document.createElement("div");
+  hoverFull.className = `${MAP_MARKER_HOVERCARD_BASE_CLASS} ${MAP_MARKER_HOVERCARD_FULL_CLASS} ${baseCardLayout} z-[101] px-3 py-2.5`;
+  hoverFull.style.bottom = cardBottom;
+  hoverFull.appendChild(buildFullHoverCardContent(m));
+  wrap.appendChild(hoverFull);
+
+  const hoverCompact = document.createElement("div");
+  hoverCompact.className = `${MAP_MARKER_HOVERCARD_BASE_CLASS} ${MAP_MARKER_HOVERCARD_COMPACT_CLASS} ${baseCardLayout} z-[100] px-2.5 py-1.5`;
+  hoverCompact.style.bottom = cardBottom;
+  const priceOnly = document.createElement("p");
+  priceOnly.className = "text-[11px] font-semibold leading-snug text-slate-700";
+  priceOnly.textContent = m.priceDisplay;
+  hoverCompact.appendChild(priceOnly);
+  wrap.appendChild(hoverCompact);
+
+  appendGapHitboxConnectorAndDot(wrap);
 
   wrap.setAttribute("aria-label", `${m.title}, ${m.priceDisplay}`);
 

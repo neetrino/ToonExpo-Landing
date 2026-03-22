@@ -87,21 +87,28 @@ body {
     sans-serif;
 }
 
-/* Մարկեր — կետ + նեղ gap hitbox, ակտիվ վիճակը JS mouseenter/leave */
-.toon-home-map .map-marker-wrap.map-marker-active .map-marker-hovercard {
+/* Մարկեր — լրիվ քարտ միայն hover-ի ժամանակ (կամ zoom+hover) */
+.toon-home-map .map-marker-wrap.map-marker-active .map-marker-hovercard-full {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
-/* Բոլոր մարկերների քարտեր — zoom-ի շեմից բարձր (տե՛ս HomeMapPreview + mapView.constants) */
-.toon-home-map .map-zoom-labels-visible .map-marker-wrap .map-marker-hovercard {
+/* Zoom mode, առանց hover — միայն գին (compact) */
+.toon-home-map .map-zoom-labels-visible .map-marker-wrap:not(.map-marker-active) .map-marker-hovercard-compact {
   opacity: 1;
   visibility: visible;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
-.toon-home-map .map-marker-hovercard {
+.toon-home-map .map-zoom-labels-visible .map-marker-wrap.map-marker-active .map-marker-hovercard-compact {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.toon-home-map .map-marker-hovercard-compact,
+.toon-home-map .map-marker-hovercard-full {
   opacity: 0;
   visibility: hidden;
   transition:
