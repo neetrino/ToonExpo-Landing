@@ -26,15 +26,8 @@ function MobileNavMenuHeader({ onClose }: { onClose: () => void }) {
     <div
       className={`flex shrink-0 items-center justify-between gap-4 border-b border-white/15 py-4 ${SHEET_HORIZONTAL_INSET}`}
     >
-      <Link
-        href="/"
-        aria-label={HY_UI.GO_HOME}
-        className="group inline-flex items-center rounded-2xl py-0.5 pl-0.5 transition active:scale-[0.99]"
-        onClick={onClose}
-      >
-        <span className="flex h-[52px] w-[52px] items-center justify-center rounded-2xl bg-white/5 ring-1 ring-white/15 transition group-hover:bg-white/10">
-          <img src={SITE_HEADER_LOGO_SRC} alt="" className="h-11 w-11 object-contain" />
-        </span>
+      <Link href="/" aria-label={HY_UI.GO_HOME} className="inline-flex" onClick={onClose}>
+        <img src={SITE_HEADER_LOGO_SRC} alt="" className="h-[52px] w-[52px] object-contain" />
       </Link>
       <button
         type="button"
