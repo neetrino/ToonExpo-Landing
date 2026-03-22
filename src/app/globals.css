@@ -70,6 +70,21 @@ body {
     sans-serif;
 }
 
+/* Մարկեր — կանխադրված կետ, hover-ով քարտ (գին, անվանում, լոգո) */
+.toon-home-map .map-marker-wrap:hover .map-marker-hovercard {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.toon-home-map .map-marker-hovercard {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.14s ease,
+    visibility 0.14s ease;
+}
+
 /* Մոբայլ լենդինգ — նավիգացիոն մենյու վերևից սահելով, կիսաթափանցիկ */
 @keyframes mobile-landing-nav-slide-down {
   from {
