@@ -1,6 +1,7 @@
 import { parse } from "csv-parse/sync";
 import { EXPO_FIELD_COUNT, getExpoFieldKey } from "@/shared/constants/expoFieldKeys";
 import { expoFieldsToJson, type ExpoFieldsFormValues } from "@/shared/lib/expoFields";
+import { sanitizeExpoFieldsFromCsvForMediaPolicy } from "@/shared/lib/expoFieldsMediaPolicy";
 import { sanitizeMediaFolderId } from "@/shared/lib/mediaFolderId";
 import { slugifyTitle } from "@/shared/lib/slug";
 
@@ -101,6 +102,8 @@ export function parseExpoCsvBuffer(buffer: Buffer): ParsedExpoRow[] {
     } else {
       expoFields = mapOldLayoutRow(row);
     }
+
+    expoFields = sanitizeExpoFieldsFromCsvForMediaPolicy(expoFields);
 
     const titleForSlug =
       expoFields.expo_field_02?.trim() ||

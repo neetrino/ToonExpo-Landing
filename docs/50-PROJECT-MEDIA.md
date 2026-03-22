@@ -8,6 +8,7 @@
 - **Միայն երկու արտաքին embed URL** ադմինի «Մեդիա» բաժնում՝ `expo_field_45` (տիպային ինտերակտիվ տուր), `expo_field_46` (տեսանյութ) — օր. Matterport, YouTube։ Այս դաշտերում ֆայլ չի վերբեռնվում, միայն հղում։
 - **Գալերիա**՝ `expo_field_43`, `expo_field_44` — հանրային URL-ներ (նախընտրելի R2) կամ վերբեռնում R2-ի վրա։
 - **Թաքնված դաշտեր** (`expo_field_47`–`expo_field_50`)՝ ձևում չեն ցուցադրվում, բայց արժեքները պահվում են hidden input-ով (մինչև լիարժեք միգրացիա)։ Լոգոն լենդինգում հիմնականում գալիս է `Logo/` պանակից, ոչ թե `expo_field_50`-ից։
+- **CSV ներմուծում** (`parseExpoCsvBuffer`, `pnpm db:seed`). `sanitizeExpoFieldsFromCsvForMediaPolicy` (`src/shared/lib/expoFieldsMediaPolicy.ts`) — `expo_field_43`/`44`-ից հանվում են Drive/Docs URL-ները, `expo_field_45`/`46`-ից՝ միայն Drive/Docs-ը, `expo_field_47`–`50` արժեքները CSV-ից DB չեն փոխանցվում (մնում են դատարկ)։
 
 ## 1. Կառուցվածք և URL
 

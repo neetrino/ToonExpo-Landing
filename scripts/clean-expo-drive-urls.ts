@@ -5,7 +5,10 @@
  * Dry-run. `pnpm exec tsx --tsconfig tsconfig.json scripts/clean-expo-drive-urls.ts --dry-run`
  */
 import { PrismaClient } from "@prisma/client";
-import { parseMediaUrls } from "../src/shared/lib/mediaUrls";
+import {
+  sanitizeMediaSingleUrlField,
+  sanitizeMediaUrlList,
+} from "../src/shared/lib/expoFieldsMediaPolicy";
 import { loadEnvFile } from "./loadEnvFile";
 
 loadEnvFile();
@@ -14,35 +17,16 @@ const prisma = new PrismaClient();
 
 const DRY_RUN = process.argv.includes("--dry-run");
 
-/** Մեկ տողի մեջ արգելված հոսթեր */
-function isBlockedHostUrl(url: string): boolean {
-  const lower = url.toLowerCase();
-  return lower.includes("drive.google.com") || lower.includes("docs.google.com");
-}
-
 function cleanListField(raw: string): { next: string; changed: boolean } {
-  const urls = parseMediaUrls(raw);
-  if (urls.length === 0) {
-    return { next: raw.trim(), changed: false };
-  }
-  const kept = urls.filter((u) => !isBlockedHostUrl(u));
-  const next = kept.join("\n");
-  const changed = kept.length !== urls.length || next !== raw.trim();
+  const next = sanitizeMediaUrlList(raw);
+  const changed = next !== raw.trim();
   return { next, changed };
 }
 
 function cleanSingleField(raw: string): { next: string; changed: boolean } {
-  const t = raw.trim();
-  if (!t) {
-    return { next: "", changed: false };
-  }
-  if (!/^https?:\/\//i.test(t)) {
-    return { next: t, changed: false };
-  }
-  if (isBlockedHostUrl(t)) {
-    return { next: "", changed: true };
-  }
-  return { next: t, changed: false };
+  const next = sanitizeMediaSingleUrlField(raw);
+  const changed = next !== raw.trim();
+  return { next, changed };
 }
 
 const LIST_KEYS = ["expo_field_43", "expo_field_44"] as const;

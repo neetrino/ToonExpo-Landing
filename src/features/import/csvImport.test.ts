@@ -11,6 +11,8 @@ describe("parseExpoCsvBuffer", () => {
     expect(rows[0].expoFields.expo_field_01).toBe("v1");
     expect(rows[0].expoFields.expo_field_02).toBe("v2");
     expect(rows[0].expoFields.expo_field_53).toBe("v53");
+    expect(rows[0].expoFields.expo_field_47).toBe("");
+    expect(rows[0].expoFields.expo_field_50).toBe("");
     expect(rows[0].titleForSlug).toBe("v2");
   });
 
@@ -31,6 +33,29 @@ describe("parseExpoCsvBuffer", () => {
 
   it("returns empty array when only header", () => {
     expect(parseExpoCsvBuffer(Buffer.from("a;b\n", "utf-8"))).toEqual([]);
+  });
+
+  it("strips Drive from gallery URLs and omits 47-50 from CSV", () => {
+    const header =
+      "Name;Extra;Project ID;Title;Addr;" +
+      Array.from({ length: 51 }, (_, i) => `h${i + 6}`).join(";");
+    /** Սյուն 5+j → expo_field_(4+j) — j=39 → 43, j=41 → 45 */
+    const rest = Array.from({ length: 51 }, (_, j) => {
+      if (j === 39) {
+        return "https://drive.google.com/x";
+      }
+      if (j === 41) {
+        return "https://youtu.be/abc";
+      }
+      return "x";
+    }).join(";");
+    const row1 = `Participant;;1;T;Addr;${rest}`;
+    const csv = `${header}\n${row1}\n`;
+    const rows = parseExpoCsvBuffer(Buffer.from(csv, "utf-8"));
+    expect(rows.length).toBe(1);
+    expect(rows[0].expoFields.expo_field_43).toBe("");
+    expect(rows[0].expoFields.expo_field_45).toBe("https://youtu.be/abc");
+    expect(rows[0].expoFields.expo_field_47).toBe("");
   });
 
   it("fills missing Project ID with next number after max explicit id", () => {
