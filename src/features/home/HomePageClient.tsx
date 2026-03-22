@@ -29,6 +29,13 @@ const FIGMA_ASSETS = {
   rangeIcon: "/figma/home/rangeIcon.svg",
 } as const;
 
+/** Համապատասխանում է `#participants` grid-ին՝ 1 / 2 / 3 սյուն և padding-ներին (`max-w-[1680px]` px-4 … lg:px-10)։ */
+const PROJECT_CARD_HERO_SIZES =
+  "(max-width: 767px) calc(100vw - 2rem), (max-width: 1279px) calc((100vw - 5rem) / 2), calc((min(1680px, 100vw) - 5rem) / 3)" as const;
+
+const PROJECT_CARD_LOGO_MAX_PX = 156 as const;
+const PROJECT_CARD_LOGO_MAX_SM_PX = 68 as const;
+
 function projectTitle(f: Record<string, string>): string {
   return f.expo_field_02?.trim() || f.expo_field_01?.trim() || "—";
 }
@@ -456,11 +463,12 @@ function ProjectCard({ project }: { project: HomeProject }) {
       {/* Блок изображения: на мобильном ниже, на десктопе 256px */}
       <div className="relative h-[200px] w-full shrink-0 overflow-hidden bg-[#e2e8f0] sm:h-[230px] lg:h-[256px]">
         {hasPhoto ? (
-          <img
+          <Image
             src={heroPreferred!}
             alt={title}
-            loading="lazy"
-            className="h-full w-full object-cover"
+            fill
+            sizes={PROJECT_CARD_HERO_SIZES}
+            className="object-cover"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-[#94a3b8]">
@@ -473,9 +481,11 @@ function ProjectCard({ project }: { project: HomeProject }) {
         />
         {logoSrc ? (
           <div className="absolute left-2 top-2 z-[2] max-h-[57px] max-w-[156px] rounded-lg bg-white/92 p-2 shadow-md ring-1 ring-black/5 sm:left-3 sm:top-3 sm:max-h-[68px] sm:p-2.5">
-            <img
+            <Image
               src={logoSrc}
               alt=""
+              width={PROJECT_CARD_LOGO_MAX_PX}
+              height={PROJECT_CARD_LOGO_MAX_SM_PX}
               className="h-[36px] max-h-full w-auto max-w-full object-contain sm:h-[42px]"
             />
           </div>
