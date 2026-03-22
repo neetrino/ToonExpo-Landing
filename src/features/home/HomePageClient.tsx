@@ -26,21 +26,14 @@ const FIGMA_ASSETS = {
   locationIcon: "/figma/home/loocation.svg",
   priceIcon: "/figma/home/priceIcon.svg",
   rangeIcon: "/figma/home/rangeIcon.svg",
-  cardImageA: "/figma/home/cardImageA.png",
-  cardImageB: "/figma/home/cardImageB.jpg",
-  cardImageC: "/figma/home/cardImageC.jpg",
 } as const;
 
 function projectTitle(f: Record<string, string>): string {
   return f.expo_field_02?.trim() || f.expo_field_01?.trim() || "—";
 }
 
+/** Fallback hero — միայն արտաքին/ներքին ռենդերների URL-ները (ոչ լոգո)։ */
 function projectThumb(f: Record<string, string>): string | null {
-  const logo = f.expo_field_50?.trim();
-  if (logo && /^https?:\/\//i.test(logo)) {
-    return logo;
-  }
-
   const media = [...parseMediaUrls(f.expo_field_43), ...parseMediaUrls(f.expo_field_44)];
   return media[0] ?? null;
 }
@@ -416,9 +409,9 @@ id="featured-heading"
           ) : (
             <>
               <ul id="projects" className="grid min-w-0 scroll-mt-6 grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {visibleProjects.map((project, index) => (
+                {visibleProjects.map((project) => (
                   <li key={project.id} className="min-w-0">
-                    <ProjectCard project={project} index={index} />
+                    <ProjectCard project={project} />
                   </li>
                 ))}
               </ul>
@@ -442,22 +435,17 @@ id="featured-heading"
   );
 }
 
-const CARD_FALLBACK_IMAGES = [
-  FIGMA_ASSETS.cardImageA,
-  FIGMA_ASSETS.cardImageB,
-  FIGMA_ASSETS.cardImageC,
-] as const;
-
-function ProjectCard({ project, index }: { project: HomeProject; index: number }) {
+function ProjectCard({ project }: { project: HomeProject }) {
   const fields = project.expoFields;
   const thumb = projectThumb(fields);
+  const heroPreferred = project.cardHeroUrl ?? thumb;
+  const hasPhoto = Boolean(heroPreferred);
+  const logoSrc = project.cardLogoUrl?.trim() || null;
   const title = projectTitle(fields);
   const location = projectLocation(fields);
   const taxRefund = fields.expo_field_09?.trim() || "On request";
   const pricePerMeter = formatRange(fields.expo_field_07, fields.expo_field_08);
   const priceRange = formatRange(fields.expo_field_17, fields.expo_field_18);
-  const imageSrc = thumb ?? CARD_FALLBACK_IMAGES[index % CARD_FALLBACK_IMAGES.length];
-  const hasPhoto = Boolean(thumb);
 
   return (
     <Link
@@ -468,7 +456,7 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
       <div className="relative h-[200px] w-full shrink-0 overflow-hidden bg-[#e2e8f0] sm:h-[230px] lg:h-[256px]">
         {hasPhoto ? (
           <img
-            src={imageSrc}
+            src={heroPreferred!}
             alt={title}
             loading="lazy"
             className="h-full w-full object-cover"
@@ -478,7 +466,19 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
             <CardPhotoPlaceholderIcon className="h-20 w-20" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(15,23,43,0.6)] to-transparent" aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[rgba(15,23,43,0.6)] to-transparent"
+          aria-hidden
+        />
+        {logoSrc ? (
+          <div className="absolute left-2 top-2 z-[2] max-h-[57px] max-w-[156px] rounded-lg bg-white/92 p-2 shadow-md ring-1 ring-black/5 sm:left-3 sm:top-3 sm:max-h-[68px] sm:p-2.5">
+            <img
+              src={logoSrc}
+              alt=""
+              className="h-[36px] max-h-full w-auto max-w-full object-contain sm:h-[42px]"
+            />
+          </div>
+        ) : null}
       </div>
 
       {/* Контент: адаптивные отступы, min-w-0 чтобы не вылезало на мобильных */}
