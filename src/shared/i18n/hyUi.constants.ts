@@ -28,7 +28,7 @@ export const HY_UI = {
   SECTION_ABOUT_PROJECT: "Նախագծի մասին",
   SECTION_GALLERY: "Պատկերներ",
   SECTION_PAYMENT: "Վճարման պայմաններ",
-  SECTION_INFRA: "Ինֆրակառուցվածք և հարմարություններ",
+  SECTION_INFRA: "Ինֆրակառուցվածք",
   SECTION_CONSTRUCTION: "Կառուցման մանրամասներ",
   /** Սեկցիայի վերնագիր (#192643) */
   SECTION_PARKING: "Կայանատեղի",
