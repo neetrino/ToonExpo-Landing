@@ -43,8 +43,11 @@ body {
   z-index: 1 !important;
 }
 
-/* Ակտիվ մարկերը — ամբողջությամբ վերևում (քարտ + կետ՝ մյուս կետերի վրա, համապատասխանում է JS z-index-ին) */
-.toon-home-map .maplibregl-marker:has(.map-marker-wrap.map-marker-active) {
+/*
+ * Ակտիվ մարկեր — նույն էլեմենտի վրա են `maplibregl-marker` + `map-marker-wrap` + `map-marker-active`
+ * (ոչ թե զավակ), `:has(.map-marker-wrap)` երբեք չի match անում։
+ */
+.toon-home-map .maplibregl-marker.map-marker-active {
   z-index: 10000 !important;
 }
 

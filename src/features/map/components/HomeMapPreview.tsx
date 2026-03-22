@@ -29,15 +29,15 @@ const MAP_MARKER_ACTIVE_CLASS = "map-marker-active";
 /** MapLibre-ի `.maplibregl-marker` — բարձր z-index, որ hover-քարտը ծածկի մյուս կետերը */
 const MAP_MARKER_Z_INDEX_ACTIVE = "10000";
 
-function setMaplibreMarkerStacking(wrap: HTMLElement, active: boolean): void {
-  const root = wrap.closest(".maplibregl-marker");
-  if (!(root instanceof HTMLElement)) {
-    return;
-  }
+/**
+ * MapLibre-ը `z-index: 1 !important` է տալիս — z-index առանց important-ի չի աշխատում։
+ * Պետք է `important` կամ ավելի ուժեղ CSS selector (տե՛ս globals.css)։
+ */
+function setMaplibreMarkerStacking(markerRoot: HTMLElement, active: boolean): void {
   if (active) {
-    root.style.setProperty("z-index", MAP_MARKER_Z_INDEX_ACTIVE);
+    markerRoot.style.setProperty("z-index", MAP_MARKER_Z_INDEX_ACTIVE, "important");
   } else {
-    root.style.removeProperty("z-index");
+    markerRoot.style.removeProperty("z-index");
   }
 }
 
