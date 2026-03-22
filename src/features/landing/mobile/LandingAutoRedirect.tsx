@@ -2,14 +2,15 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { MOBILE_LANDING_BREAKPOINT_QUERY } from "@/shared/constants/viewport.constants";
 
-export const MOBILE_BREAKPOINT_QUERY = "(max-width: 1024px)";
+export const MOBILE_BREAKPOINT_QUERY = MOBILE_LANDING_BREAKPOINT_QUERY;
 
 export function LandingAutoRedirect({ slug }: { slug: string }) {
   const router = useRouter();
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT_QUERY);
+    const mediaQuery = window.matchMedia(MOBILE_LANDING_BREAKPOINT_QUERY);
 
     const redirectToMobile = () => {
       if (!mediaQuery.matches) {
@@ -34,7 +35,7 @@ export function LandingDesktopRedirect({ slug }: { slug: string }) {
   const router = useRouter();
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia(MOBILE_BREAKPOINT_QUERY);
+    const mediaQuery = window.matchMedia(MOBILE_LANDING_BREAKPOINT_QUERY);
 
     const redirectToDesktop = () => {
       if (mediaQuery.matches) {
