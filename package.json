@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "sync:figma-r2": "tsx --tsconfig tsconfig.json scripts/sync-static-figma-to-r2.ts",
     "sync:project-r2": "tsx --tsconfig tsconfig.json scripts/sync-public-project-to-r2.ts",
-    "clean:expo-drive-urls": "tsx --tsconfig tsconfig.json scripts/clean-expo-drive-urls.ts"
+    "clean:expo-drive-urls": "tsx --tsconfig tsconfig.json scripts/clean-expo-drive-urls.ts",
+    "optimize:project-images": "tsx --tsconfig tsconfig.json scripts/optimize-project-images.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
@@ -45,6 +46,7 @@
     "eslint-config-next": "^15.1.7",
     "postcss": "^8.5.2",
     "prisma": "^6.3.1",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.0.6",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
