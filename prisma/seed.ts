@@ -13,8 +13,8 @@ const prisma = new PrismaClient();
 
 function resolveSeedCsvPath(): string | null {
   const candidates = [
-    join(process.cwd(), "docs/data/ToonExpoData2026.csv"),
     join(process.cwd(), "public/data/ToonExpoData2026.csv"),
+    join(process.cwd(), "docs/data/ToonExpoData2026.csv"),
   ];
   for (const p of candidates) {
     if (existsSync(p)) {
