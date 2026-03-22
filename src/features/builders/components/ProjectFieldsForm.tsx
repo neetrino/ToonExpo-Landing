@@ -8,6 +8,13 @@ import {
 import type { ExpoFieldsFormValues } from "@/shared/lib/expoFields";
 import { UploadFieldButton } from "@/features/builders/components/UploadFieldButton";
 import { MediaListField } from "@/features/builders/components/MediaListField";
+import { ProjectMediaFolderHint } from "@/features/builders/components/ProjectMediaFolderHint";
+import { ProjectR2MediaManager } from "@/features/builders/components/ProjectR2MediaManager";
+import {
+  MEDIA_EMBED_EXTERNAL_URL_FIELD_KEYS,
+  MEDIA_GALLERY_FIELD_KEYS,
+  MEDIA_HIDDEN_PRESERVE_FIELD_KEYS,
+} from "@/features/builders/constants/adminMediaFieldGroups";
 
 /** Multiple images (gallery): upload several or add URLs */
 const MEDIA_LIST_FIELD_KEYS = new Set(["expo_field_43", "expo_field_44"]);
@@ -32,12 +39,22 @@ const LONG_FIELDS = new Set([
   "expo_field_42",
 ]);
 
+const EMBED_URL_KEYS = new Set<string>(MEDIA_EMBED_EXTERNAL_URL_FIELD_KEYS);
+const GALLERY_KEYS = new Set<string>(MEDIA_GALLERY_FIELD_KEYS);
+const HIDDEN_MEDIA_KEYS = new Set<string>(MEDIA_HIDDEN_PRESERVE_FIELD_KEYS);
+
 export type ProjectFieldsFormProps = {
   defaults: ExpoFieldsFormValues;
   /** If set, only this group is rendered */
   groupId?: ExpoFieldGroupId;
   /** Merged edit section (several field groups) */
   sectionId?: ExpoEditSectionId;
+  /** Միայն «media» բաժնի համար — R2 լոգոյի նախադիտում */
+  mediaFolderLogoUrl?: string | null;
+  mediaFolderId?: string | null;
+  exampleLogoPublicUrl?: string | null;
+  /** Նախագծի id — R2 ֆայլերի մենեջեր */
+  projectId?: string;
 };
 
 const FIELD_INPUT_CLASS =
@@ -49,18 +66,24 @@ function FieldRow({
   val,
   isUrl,
   isLong,
+  hideUrlUpload = false,
+  urlHint,
 }: {
   keyId: string;
   label: string;
   val: string;
   isUrl: boolean;
   isLong: boolean;
+  /** Տուր/տեսանյութի դաշտեր — արտաքին embed, ոչ թե ֆայլի վերբեռնում */
+  hideUrlUpload?: boolean;
+  urlHint?: string;
 }) {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={keyId} className="text-sm font-medium text-slate-700">
         {label}
       </label>
+      {urlHint ? <p className="text-xs text-slate-500">{urlHint}</p> : null}
       {isLong ? (
         <>
           <textarea
@@ -70,7 +93,7 @@ function FieldRow({
             defaultValue={val}
             className={FIELD_INPUT_CLASS}
           />
-          {isUrl ? (
+          {isUrl && !hideUrlUpload ? (
             <div className="flex justify-end pt-1">
               <UploadFieldButton inputName={keyId} />
             </div>
@@ -85,9 +108,11 @@ function FieldRow({
             defaultValue={val}
             className={`${FIELD_INPUT_CLASS} sm:flex-1`}
           />
-          <div className="flex shrink-0 items-center sm:items-stretch">
-            <UploadFieldButton inputName={keyId} />
-          </div>
+          {!hideUrlUpload ? (
+            <div className="flex shrink-0 items-center sm:items-stretch">
+              <UploadFieldButton inputName={keyId} />
+            </div>
+          ) : null}
         </div>
       ) : (
         <input
@@ -120,7 +145,18 @@ function resolveGroups(
   return EXPO_FIELD_GROUPS;
 }
 
-export function ProjectFieldsForm({ defaults, groupId, sectionId }: ProjectFieldsFormProps) {
+const EMBED_URL_HINT_HY =
+  "Արտաքին embed հղում (օր. Matterport, YouTube) — ֆայլը չի վերբեռնվում այստեղ, միայն URL։";
+
+export function ProjectFieldsForm({
+  defaults,
+  groupId,
+  sectionId,
+  mediaFolderLogoUrl = null,
+  mediaFolderId = null,
+  exampleLogoPublicUrl = null,
+  projectId = "",
+}: ProjectFieldsFormProps) {
   const d = defaults as Record<string, string>;
   const groups = resolveGroups(sectionId, groupId);
 
@@ -135,32 +171,83 @@ export function ProjectFieldsForm({ defaults, groupId, sectionId }: ProjectField
             {group.titleHy}
           </legend>
           <div className="mt-4 flex flex-col gap-4">
-            {group.keys.map((key) => {
-              const label = EXPO_FIELD_LABELS_HY[key] ?? key;
-              const val = d[key] ?? "";
-              if (MEDIA_LIST_FIELD_KEYS.has(key)) {
+            {group.id === "media" ? (
+              <>
+                <ProjectMediaFolderHint
+                  mediaFolderId={mediaFolderId}
+                  folderLogoUrl={mediaFolderLogoUrl}
+                  exampleLogoPublicUrl={exampleLogoPublicUrl}
+                />
+                {projectId ? (
+                  <ProjectR2MediaManager projectId={projectId} mediaFolderId={mediaFolderId} />
+                ) : null}
+                {group.keys.map((key) => {
+                  const label = EXPO_FIELD_LABELS_HY[key] ?? key;
+                  const val = d[key] ?? "";
+                  if (GALLERY_KEYS.has(key)) {
+                    return <input key={key} type="hidden" name={key} value="" />;
+                  }
+                  if (HIDDEN_MEDIA_KEYS.has(key)) {
+                    return (
+                      <input key={key} type="hidden" name={key} value={val} />
+                    );
+                  }
+                  if (EMBED_URL_KEYS.has(key)) {
+                    return (
+                      <FieldRow
+                        key={key}
+                        keyId={key}
+                        label={label}
+                        val={val}
+                        isUrl
+                        isLong={false}
+                        hideUrlUpload
+                        urlHint={EMBED_URL_HINT_HY}
+                      />
+                    );
+                  }
+                  const isUrl = URL_FIELD_KEYS.has(key);
+                  const isLong = LONG_FIELDS.has(key) || key === "expo_field_19";
+                  return (
+                    <FieldRow
+                      key={key}
+                      keyId={key}
+                      label={label}
+                      val={val}
+                      isUrl={isUrl}
+                      isLong={isLong}
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              group.keys.map((key) => {
+                const label = EXPO_FIELD_LABELS_HY[key] ?? key;
+                const val = d[key] ?? "";
+                if (MEDIA_LIST_FIELD_KEYS.has(key)) {
+                  return (
+                    <MediaListField
+                      key={key}
+                      name={key}
+                      label={label}
+                      defaultValue={val}
+                    />
+                  );
+                }
+                const isUrl = URL_FIELD_KEYS.has(key);
+                const isLong = LONG_FIELDS.has(key) || key === "expo_field_19";
                 return (
-                  <MediaListField
+                  <FieldRow
                     key={key}
-                    name={key}
+                    keyId={key}
                     label={label}
-                    defaultValue={val}
+                    val={val}
+                    isUrl={isUrl}
+                    isLong={isLong}
                   />
                 );
-              }
-              const isUrl = URL_FIELD_KEYS.has(key);
-              const isLong = LONG_FIELDS.has(key) || key === "expo_field_19";
-              return (
-                <FieldRow
-                  key={key}
-                  keyId={key}
-                  label={label}
-                  val={val}
-                  isUrl={isUrl}
-                  isLong={isLong}
-                />
-              );
-            })}
+              })
+            )}
           </div>
         </fieldset>
       ))}

@@ -2,20 +2,23 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
+import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
+import { LazyWhenVisible } from "@/features/map/components/LazyWhenVisible";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 const FOOTER_LEGAL_TEXT_CLASS =
   "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
 const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_TEXT_CLASS} shrink-0 transition hover:text-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black`;
 
 const FIGMA_ASSETS = {
-  footerLogo: "/figma/home/footerLogo.svg",
-  footerIllustration: "/figma/home/footerIllustration.svg",
-  locationDivider: "/figma/home/locationDivider.svg",
-  visitSiteButton: "/figma/home/visitSiteButton.svg",
+  footerLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
+  footerIllustration: publicAssetUrl("/figma/home/footerIllustration.svg"),
+  locationDivider: publicAssetUrl("/figma/home/locationDivider.svg"),
+  visitSiteButton: publicAssetUrl("/figma/home/visitSiteButton.svg"),
 } as const;
 
 /** Home և /p — նույն չափեր (Visit Site, FB/IG teal գոտում) */
@@ -55,7 +58,7 @@ export function SiteReachMapFooter({
           className="relative z-20 mx-auto max-w-[1680px] scroll-mt-6 px-5 pb-10 pt-10 lg:px-10 lg:pb-14 lg:pt-12"
         >
           <div className="mb-6 flex items-center gap-4">
-            <h2 className={locationTitleClass}>Location</h2>
+            <h2 className={locationTitleClass}>{HY_UI.HOME_LOCATION}</h2>
             {isParticipant ? (
               <div className="h-px min-w-0 flex-1 bg-[#246976]/30" aria-hidden />
             ) : (
@@ -63,23 +66,25 @@ export function SiteReachMapFooter({
             )}
           </div>
           <div className={mapFrameClass}>
-            <HomeMapPreview markers={markers} className="h-[240px] w-full md:h-[320px]" />
+            <LazyWhenVisible
+              className="h-[240px] w-full md:h-[320px]"
+              fallback={
+                <div
+                  className="h-full w-full rounded-[20px] bg-[#1d5662]/30 animate-pulse"
+                  aria-hidden
+                />
+              }
+            >
+              <HomeMapPreviewDynamic markers={markers} className="h-full w-full" />
+            </LazyWhenVisible>
           </div>
         </section>
 
         {isParticipant ? (
           <section className="relative z-10 -mt-12 border-t border-white/10 bg-[#2ba8b0] pt-12 lg:-mt-40 lg:pt-40">
             <div className="relative mx-auto max-w-[1680px] px-5 py-10 lg:min-h-[6rem] lg:px-10 lg:py-12">
-              <div className="relative z-[2] flex flex-col gap-5 lg:flex-row lg:items-center">
-                <div className="flex shrink-0 flex-wrap items-center justify-center lg:justify-start">
-                  <Link
-                    href="/#projects"
-                    className="text-xl font-semibold uppercase tracking-[0.14em] text-white lg:text-[2rem]"
-                  >
-                    View Apartments
-                  </Link>
-                </div>
-                <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-2 sm:gap-3">
+              <div className="relative z-[2] flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-2 sm:gap-3 lg:justify-start">
                   {footerSite ? (
                     <a
                       href={footerSite}
@@ -88,7 +93,7 @@ export function SiteReachMapFooter({
                       className={TEAL_BAR_VISIT_SITE_CLASS}
                     >
                       <img src={FIGMA_ASSETS.visitSiteButton} alt="" className="absolute inset-0 h-full w-full" />
-                      <span className="relative z-10">Visit Site</span>
+                      <span className="relative z-10">{HY_UI.CTA_VISIT_SITE}</span>
                     </a>
                   ) : null}
                   <SocialTilesRow
@@ -131,7 +136,7 @@ export function SiteReachMapFooter({
             © 2026 TOON EXPO. All rights reserved.
           </p>
           <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
-            Privacy policy
+            {HY_UI.FOOTER_PRIVACY}
           </Link>
         </div>
         <div

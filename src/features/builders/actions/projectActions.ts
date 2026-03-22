@@ -14,13 +14,15 @@ import { sanitizeMediaFolderId } from "@/shared/lib/mediaFolderId";
 import { z } from "zod";
 
 const projectMetaSchema = z.object({
-  slug: z
-    .string()
-    .min(1)
-    .max(100)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   published: z.coerce.boolean().optional().default(true),
 });
+
+function parsePublicProjectId(raw: unknown): string | null {
+  if (typeof raw !== "string") {
+    return null;
+  }
+  return sanitizeMediaFolderId(raw.trim().toLowerCase());
+}
 
 async function requireAdmin(): Promise<void> {
   const session = await auth();
@@ -47,15 +49,20 @@ export async function createProjectAction(
   formData: FormData,
 ): Promise<{ error?: string }> {
   await requireAdmin();
-  const rawSlug = (formData.get("slug") as string)?.trim().toLowerCase();
   const title =
     (formData.get("expo_field_02") as string)?.trim() ||
     (formData.get("expo_field_01") as string)?.trim() ||
     "project";
-  const slugBase =
-    rawSlug && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(rawSlug)
-      ? rawSlug
-      : slugifyTitle(title, "project");
+  const fromProjectId = parsePublicProjectId(formData.get("projectId"));
+  let slugBase: string;
+  let mediaFolderId: string | null;
+  if (fromProjectId) {
+    slugBase = fromProjectId;
+    mediaFolderId = fromProjectId;
+  } else {
+    slugBase = slugifyTitle(title, "project");
+    mediaFolderId = null;
+  }
   const slug = await ensureUniqueSlug(slugBase);
 
   const published = formData.get("published") === "on";
@@ -72,7 +79,6 @@ export async function createProjectAction(
 
   let created: { id: string };
   try {
-    const mediaFolderId = sanitizeMediaFolderId((formData.get("mediaFolderId") as string) ?? "");
     created = await prisma.project.create({
       data: {
         slug,
@@ -88,6 +94,7 @@ export async function createProjectAction(
   revalidatePath("/");
   revalidatePath("/admin/projects");
   revalidatePath(`/p/${slug}`);
+  revalidatePath(`/p/${slug}/mobile`);
   redirect(`/admin/projects/${created.id}/edit`);
 }
 
@@ -102,16 +109,15 @@ export async function updateProjectAction(
     return { ok: false, error: "Չի գտնվել" };
   }
   try {
-    let slug = (formData.get("slug") as string)?.trim().toLowerCase();
-    if (!slug) {
-      const title = (formData.get("expo_field_02") as string)?.trim() || "project";
-      slug = slugifyTitle(title, project.slug);
+    const publicId = parsePublicProjectId(formData.get("projectId"));
+    if (!publicId) {
+      return { ok: false, error: "Project ID — անվավեր կամ դատարկ" };
     }
-    const meta = projectMetaSchema.safeParse({ slug, published: formData.get("published") === "on" });
+    const meta = projectMetaSchema.safeParse({ published: formData.get("published") === "on" });
     if (!meta.success) {
-      return { ok: false, error: "Slug-ի ձևաչափ" };
+      return { ok: false, error: "Վիճակի վալիդացիա" };
     }
-    slug = await ensureUniqueSlug(meta.data.slug, project.id);
+    const slug = await ensureUniqueSlug(publicId, project.id);
 
     const values: Record<string, string> = {};
     const { EXPO_FIELD_KEYS } = await import("@/shared/constants/expoFieldKeys");
@@ -123,7 +129,6 @@ export async function updateProjectAction(
       return { ok: false, error: "Դաշտերի վալիդացիա" };
     }
     const expoJson = expoFieldsToJson(parsedFields.data);
-    const mediaFolderId = sanitizeMediaFolderId((formData.get("mediaFolderId") as string) ?? "");
 
     await prisma.project.update({
       where: { id: projectId },
@@ -131,14 +136,16 @@ export async function updateProjectAction(
         slug,
         published: meta.data.published,
         expoFields: expoJson,
-        mediaFolderId,
+        mediaFolderId: publicId,
       },
     });
     revalidatePath("/");
     revalidatePath("/admin/projects");
     revalidatePath(`/p/${slug}`);
+    revalidatePath(`/p/${slug}/mobile`);
     if (project.slug !== slug) {
       revalidatePath(`/p/${project.slug}`);
+      revalidatePath(`/p/${project.slug}/mobile`);
     }
     return { ok: true };
   } catch (e) {
@@ -166,6 +173,7 @@ export async function deleteProjectAction(projectId: string): Promise<void> {
     revalidatePath("/");
     revalidatePath("/admin/projects");
     revalidatePath(`/p/${p.slug}`);
+    revalidatePath(`/p/${p.slug}/mobile`);
   }
   redirect("/admin/projects");
 }

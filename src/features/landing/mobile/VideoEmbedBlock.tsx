@@ -2,6 +2,7 @@ import {
   parseYouTubeId,
   parseVimeoId,
 } from "@/features/landing/mobile/lib/embedUrls";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 type Props = {
   url: string;
@@ -16,7 +17,7 @@ export function VideoEmbedBlock({ url, title }: Props) {
     return (
       <div className="relative w-full overflow-hidden rounded-xl bg-black">
         <span className="absolute left-3 top-3 z-10 rounded bg-[#ffd24d] px-2.5 py-1 text-xs font-bold uppercase text-slate-900">
-          Video
+          {HY_UI.TAB_VIDEO}
         </span>
         <div className="relative aspect-video w-full">
           <iframe
@@ -35,7 +36,7 @@ export function VideoEmbedBlock({ url, title }: Props) {
     return (
       <div className="relative w-full overflow-hidden rounded-xl bg-black">
         <span className="absolute left-3 top-3 z-10 rounded bg-[#ffd24d] px-2.5 py-1 text-xs font-bold uppercase text-slate-900">
-          Video
+          {HY_UI.TAB_VIDEO}
         </span>
         <div className="relative aspect-video w-full">
           <iframe
@@ -53,7 +54,7 @@ export function VideoEmbedBlock({ url, title }: Props) {
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
       <span className="mb-2 inline-block rounded bg-[#ffd24d] px-2.5 py-1 text-xs font-bold uppercase text-slate-900">
-        Video
+        {HY_UI.TAB_VIDEO}
       </span>
       <a
         href={url}

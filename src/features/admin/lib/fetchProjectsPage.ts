@@ -9,6 +9,7 @@ export type ProjectListRow = {
   published: boolean;
   updatedAt: Date;
   expoFields: unknown;
+  mediaFolderId: string | null;
 };
 
 /**
@@ -45,6 +46,7 @@ export async function fetchProjectsPage(params: {
           published: true,
           updatedAt: true,
           expoFields: true,
+          mediaFolderId: true,
         },
       }),
     ]);
@@ -57,7 +59,7 @@ export async function fetchProjectsPage(params: {
   }
   if (qLike) {
     parts.push(
-      Prisma.sql`(slug ILIKE ${qLike} OR COALESCE("expoFields"->>'expo_field_02','') ILIKE ${qLike} OR COALESCE("expoFields"->>'expo_field_01','') ILIKE ${qLike})`,
+      Prisma.sql`(slug ILIKE ${qLike} OR COALESCE("mediaFolderId",'') ILIKE ${qLike} OR COALESCE("expoFields"->>'expo_field_02','') ILIKE ${qLike} OR COALESCE("expoFields"->>'expo_field_01','') ILIKE ${qLike})`,
     );
   }
   const whereSql = Prisma.sql`WHERE ${Prisma.join(parts, " AND ")}`;
@@ -69,7 +71,7 @@ export async function fetchProjectsPage(params: {
 
   const rowsRaw = await prisma.$queryRaw<ProjectListRow[]>(
     Prisma.sql`
-      SELECT id, slug, published, "updatedAt", "expoFields"
+      SELECT id, slug, published, "updatedAt", "expoFields", "mediaFolderId"
       FROM "Project"
       ${whereSql}
       ORDER BY "updatedAt" DESC

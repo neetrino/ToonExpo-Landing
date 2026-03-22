@@ -29,7 +29,7 @@ export const EXPO_FIELD_LABELS_HY: Record<string, string> = {
   expo_field_13: "4․ Շինարարական ընկերություն",
   expo_field_14: "5․ Կառավարող ընկերություն",
   expo_field_15: "7․ Տեղադիրք քարտեզի վրա",
-  expo_field_16: "Կորդինատներ (lat,lng)",
+  expo_field_16: "7.1 Կորդինատներ (lat,lng)",
   expo_field_17: "13․ Միավորի նվազագույն արժեք (դրամ)",
   expo_field_18: "14․ Միավորի առավելագույն արժեք (դրամ)",
   expo_field_19: "16․ Ձեռքբերման պայմաններ",

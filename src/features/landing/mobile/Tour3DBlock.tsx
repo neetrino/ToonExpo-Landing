@@ -5,6 +5,7 @@ import {
   isMatterportUrl,
   toMatterportEmbedUrl,
 } from "@/features/landing/mobile/lib/embedUrls";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 type Props = {
   url: string;
@@ -20,7 +21,7 @@ export function Tour3DBlock({ url, title }: Props) {
     return (
       <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-slate-900">
         <span className="absolute left-3 top-3 z-10 rounded bg-[#ffd24d] px-2.5 py-1 text-xs font-bold uppercase text-slate-900">
-          3D Tour
+          {HY_UI.TOUR_3D_BADGE}
         </span>
         {!playing ? (
           <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-slate-800/90">
@@ -35,7 +36,7 @@ export function Tour3DBlock({ url, title }: Props) {
                 <path d="M8 5v14l11-7z" />
               </svg>
             </button>
-            <span className="text-sm text-white/80">Explore 3D Space</span>
+            <span className="text-sm text-white/80">{HY_UI.TOUR_3D_EXPLORE}</span>
           </div>
         ) : null}
         <iframe

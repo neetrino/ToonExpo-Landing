@@ -18,14 +18,17 @@ export function NewProjectFormClient() {
 
       <div className="flex flex-wrap gap-6 rounded-xl border border-slate-200 bg-white p-4">
         <label className="flex flex-col gap-1 text-sm">
-          <span className="font-medium text-slate-700">Slug (ըստ ցանկության)</span>
+          <span className="font-medium text-slate-700">Project ID (ըստ ցանկության)</span>
           <input
-            name="slug"
+            name="projectId"
             type="text"
-            placeholder="ինքնաշխատ՝ վերնագրից"
-            pattern="[a-z0-9]+(-[a-z0-9]+)*"
-            className="rounded-lg border border-slate-300 px-3 py-2"
+            placeholder="օր. 37 — URL և public/project/37/"
+            pattern="[a-z0-9]+([-_][a-z0-9]+)*"
+            className="rounded-lg border border-slate-300 px-3 py-2 font-mono"
           />
+          <span className="text-xs text-slate-500">
+            Դատարկ թողնելու դեպքում slug-ը կկազմվի վերնագրից։
+          </span>
         </label>
         <label className="flex items-center gap-2 text-sm">
           <input name="published" type="checkbox" defaultChecked className="h-4 w-4" />

@@ -2,13 +2,15 @@
 
 import { useMemo } from "react";
 import { buildMapMarkersFromProjects } from "@/features/home/mobile/buildMapMarkers";
-import { HomeMapPreview } from "@/features/home/mobile/HomeMapPreview";
+import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
+import { LazyWhenVisible } from "@/features/map/components/LazyWhenVisible";
 import type { HomeProject } from "@/features/home/mobile/homeProject.types";
 import {
   MOBILE_CONTACT_EMAIL,
   MOBILE_SECTION_INSET,
 } from "@/features/landing/mobile/landingPage.constants";
 import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 export type SiteReachMapFooterVariant = "home" | "participant";
 
@@ -27,9 +29,16 @@ export function SiteReachMapFooter({
   return (
     <>
       <section id="contacts" className={`${MOBILE_SECTION_INSET} pt-9`}>
-        <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Location</h2>
+        <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.HOME_LOCATION}</h2>
         <div className="toon-home-map mt-7 overflow-hidden rounded-[10px] border border-[#246976]/12 shadow-[0_8px_24px_rgba(16,24,40,0.08)]">
-          <HomeMapPreview markers={markers} className="h-64 w-full" />
+          <LazyWhenVisible
+            className="h-64 w-full"
+            fallback={
+              <div className="h-full w-full bg-[#1d5662]/30 animate-pulse" aria-hidden />
+            }
+          >
+            <HomeMapPreviewDynamic markers={markers} className="h-full w-full" />
+          </LazyWhenVisible>
         </div>
         {variant === "participant" ? (
           <a
@@ -38,14 +47,14 @@ export function SiteReachMapFooter({
             rel={footerSite ? "noreferrer" : undefined}
             className="mt-5 inline-flex h-14 w-full items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
           >
-            Visit Site
+            {HY_UI.CTA_VISIT_SITE}
           </a>
         ) : null}
       </section>
 
       <footer className="px-5 pb-8 pt-8 text-center">
         <div className="space-y-2">
-          <p className="text-[14px] font-semibold uppercase leading-5 tracking-[-0.1504px] text-black">Contact</p>
+          <p className="text-[14px] font-semibold uppercase leading-5 tracking-[-0.1504px] text-black">{HY_UI.HOME_CONTACT}</p>
           <p className="text-[14px] leading-5 tracking-[-0.1504px] text-black/80">{MOBILE_CONTACT_EMAIL}</p>
         </div>
         <div className="mt-4 border-t border-black/20 pt-4">

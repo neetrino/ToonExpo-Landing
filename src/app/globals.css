@@ -43,6 +43,14 @@ body {
   z-index: 1 !important;
 }
 
+/*
+ * Ակտիվ մարկեր — նույն էլեմենտի վրա են `maplibregl-marker` + `map-marker-wrap` + `map-marker-active`
+ * (ոչ թե զավակ), `:has(.map-marker-wrap)` երբեք չի match անում։
+ */
+.toon-home-map .maplibregl-marker.map-marker-active {
+  z-index: 10000 !important;
+}
+
 .toon-home-map .maplibregl-ctrl-top-right {
   top: 1rem;
   right: 1rem;
@@ -68,4 +76,97 @@ body {
     "Montserrat",
     "Segoe UI",
     sans-serif;
+}
+
+/* Մարկեր — կետ + նեղ gap hitbox, ակտիվ վիճակը JS mouseenter/leave */
+.toon-home-map .map-marker-wrap.map-marker-active .map-marker-hovercard {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.toon-home-map .map-marker-hovercard {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.14s ease,
+    visibility 0.14s ease;
+}
+
+.toon-home-map .map-marker-wrap.map-marker-active .map-marker-connector {
+  opacity: 1;
+  visibility: visible;
+}
+
+.toon-home-map .map-marker-connector {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.14s ease,
+    visibility 0.14s ease;
+}
+
+.toon-home-map .map-marker-connector-svg {
+  color: #2ba8b0;
+}
+
+.toon-home-map .map-marker-wrap.map-marker-active .map-marker-connector-svg {
+  color: var(--color-ink);
+}
+
+/* Կետ — սովորական բիրյուզ, ակտիվը՝ սև, որպեսզի լավ տարբերվի խտացված կետերի վրա */
+.toon-home-map .map-marker-dot {
+  background-color: #2ba8b0;
+  transition:
+    background-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.toon-home-map .map-marker-wrap.map-marker-active .map-marker-dot {
+  background-color: var(--color-ink);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.98),
+    0 2px 10px rgba(0, 0, 0, 0.45);
+}
+
+/* Մոբայլ լենդինգ — նավիգացիոն մենյու վերևից սահելով, կիսաթափանցիկ */
+@keyframes mobile-landing-nav-slide-down {
+  from {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0.92;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes mobile-landing-nav-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mobile-landing-nav-panel-motion {
+  animation: mobile-landing-nav-slide-down 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.mobile-landing-nav-backdrop-in {
+  animation: mobile-landing-nav-backdrop-in 0.28s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-landing-nav-panel-motion {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+
+  .mobile-landing-nav-backdrop-in {
+    animation: none;
+    opacity: 1;
+  }
 }

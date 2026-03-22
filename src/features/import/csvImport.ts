@@ -1,6 +1,8 @@
 import { parse } from "csv-parse/sync";
 import { EXPO_FIELD_COUNT, getExpoFieldKey } from "@/shared/constants/expoFieldKeys";
 import { expoFieldsToJson, type ExpoFieldsFormValues } from "@/shared/lib/expoFields";
+import { sanitizeExpoFieldsFromCsvForMediaPolicy } from "@/shared/lib/expoFieldsMediaPolicy";
+import { sanitizeMediaFolderId } from "@/shared/lib/mediaFolderId";
 import { slugifyTitle } from "@/shared/lib/slug";
 
 export type ParsedExpoRow = {
@@ -26,6 +28,34 @@ function mapOldLayoutRow(row: string[]): ExpoFieldsFormValues {
 /**
  * Նոր CSV՝ 3-րդ սյունակը Project ID, 4-ից՝ expo_field_02 …
  */
+/**
+ * Եթե CSV-ում Project ID-ն բացակայում է կամ անվավեր է՝ տալիս է հաջորդ թվային id-ն
+ * (նախորդ տողերի առավելագույն թվից հետո, օր. 50 → 51)։
+ */
+function assignSequentialProjectIds(rows: ParsedExpoRow[]): ParsedExpoRow[] {
+  let nextAuto = 0;
+
+  for (const row of rows) {
+    const raw = row.mediaFolderId?.trim() ?? "";
+    const sanitized = sanitizeMediaFolderId(raw || undefined);
+
+    if (sanitized) {
+      if (/^\d+$/.test(sanitized)) {
+        const n = parseInt(sanitized, 10);
+        if (!Number.isNaN(n)) {
+          nextAuto = Math.max(nextAuto, n);
+        }
+      }
+      row.mediaFolderId = sanitized.toLowerCase();
+    } else {
+      nextAuto += 1;
+      row.mediaFolderId = String(nextAuto);
+    }
+  }
+
+  return rows;
+}
+
 function mapNewLayoutRow(row: string[], projectIdColIndex: number): ExpoFieldsFormValues {
   const values: Record<string, string> = {};
   values.expo_field_01 = row[0] != null ? String(row[0]).trim() : "";
@@ -73,6 +103,8 @@ export function parseExpoCsvBuffer(buffer: Buffer): ParsedExpoRow[] {
       expoFields = mapOldLayoutRow(row);
     }
 
+    expoFields = sanitizeExpoFieldsFromCsvForMediaPolicy(expoFields);
+
     const titleForSlug =
       expoFields.expo_field_02?.trim() ||
       expoFields.expo_field_01?.trim() ||
@@ -85,13 +117,20 @@ export function parseExpoCsvBuffer(buffer: Buffer): ParsedExpoRow[] {
     });
   }
 
-  return out;
+  return assignSequentialProjectIds(out);
 }
 
 export function rowToExpoJson(row: ParsedExpoRow): Record<string, string> {
   return expoFieldsToJson(row.expoFields);
 }
 
+/**
+ * CSV-ում «Project ID» կա → slug = նույն արժեքը (մեդիա պանակի հետ), հակառակ դեպքում՝ վերնագրից։
+ */
 export function slugFromRow(row: ParsedExpoRow, index: number): string {
+  const fromCsvId = sanitizeMediaFolderId(row.mediaFolderId ?? undefined);
+  if (fromCsvId) {
+    return fromCsvId.toLowerCase();
+  }
   return slugifyTitle(row.titleForSlug, `project-${index}`);
 }

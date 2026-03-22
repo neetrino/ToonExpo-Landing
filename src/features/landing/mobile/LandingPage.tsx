@@ -1,8 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { LandingPageLower } from "@/features/landing/mobile/LandingPageLower";
@@ -17,9 +16,20 @@ import {
   getProjectMedia,
   splitParagraphs,
 } from "@/features/landing/mobile/landingPage.helpers";
-import { MOBILE_SECTION_INSET, participantFigmaAssets } from "@/features/landing/mobile/landingPage.constants";
+import {
+  MOBILE_HERO_PROJECT_LOGO_BOX_CLASS,
+  MOBILE_HERO_PROJECT_LOGO_IMG_CLASS,
+} from "@/features/landing/landingPage.constants";
+import {
+  MOBILE_HERO_READ_FULL_LABEL_HY,
+  MOBILE_PARTICIPANT_HERO_INSET_TOP_CLASS,
+  MOBILE_SECTION_INSET,
+  participantFigmaAssets,
+} from "@/features/landing/mobile/landingPage.constants";
+import { MobileLandingNavMenu } from "@/features/landing/mobile/MobileLandingNavMenu";
 import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 type Props = {
   fields: ExpoMap;
@@ -27,12 +37,12 @@ type Props = {
 };
 
 const MOBILE_NAV_ITEMS = [
-  { id: "about", label: "About", block: "about" },
-  { id: "investment", label: "Investment", block: "investment" },
-  { id: "gallery", label: "Gallery", block: "gallery" },
-  { id: "options", label: "Apartments", block: "hero" },
-  { id: "payment", label: "Payment", block: "payment" },
-  { id: "contacts", label: "Location", block: "location" },
+  { id: "about", label: HY_UI.NAV_ABOUT, block: "about" },
+  { id: "investment", label: HY_UI.NAV_INVESTMENT, block: "investment" },
+  { id: "gallery", label: HY_UI.NAV_GALLERY, block: "gallery" },
+  { id: "options", label: HY_UI.NAV_APARTMENTS, block: "hero" },
+  { id: "payment", label: HY_UI.NAV_PAYMENT, block: "payment" },
+  { id: "contacts", label: HY_UI.NAV_LOCATION, block: "location" },
 ] as const;
 
 function MobileStatCard({
@@ -62,13 +72,15 @@ function MobileStatCard({
 
 export function LandingPage({ fields, folderMedia }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHeroReadFullOpen, setIsHeroReadFullOpen] = useState(false);
+  const [heroShowReadFull, setHeroShowReadFull] = useState(false);
+  const heroTextBlockRef = useRef<HTMLParagraphElement>(null);
   const vis = visibleBlocks(fields);
   const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
-  const heroBg =
-    folderMedia?.heroUrl || getHeroMedia(fields) || participantFigmaAssets.heroBackground;
-  const heroLogoUrl = getLogoUrl(fields);
+  const heroBg = folderMedia?.heroUrl || getHeroMedia(fields) || null;
+  const heroLogoUrl = firstNonEmpty(folderMedia?.logoUrl, getLogoUrl(fields));
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const leadText = getLeadText(fields);
   const rawAboutText = aboutParagraphs[0] ?? "";
@@ -87,8 +99,8 @@ export function LandingPage({ fields, folderMedia }: Props) {
     "Modern residential project designed for comfortable living and long-term value.",
   );
   const aboutPrimaryImage =
-    folderMedia?.aboutLargeUrl || media[1] || media[0] || participantFigmaAssets.aboutPrimary;
-  const aboutSecondaryImage = folderMedia?.aboutSmallUrl || media[2] || media[1] || "";
+    folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
+  const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
   const stats = getMobileStats(fields);
   const menuItems = useMemo(
     () =>
@@ -106,7 +118,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   );
 
   useEffect(() => {
-    if (!isMenuOpen) {
+    if (!isMenuOpen && !isHeroReadFullOpen) {
       document.body.style.removeProperty("overflow");
       return;
     }
@@ -115,89 +127,164 @@ export function LandingPage({ fields, folderMedia }: Props) {
     return () => {
       document.body.style.removeProperty("overflow");
     };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, isHeroReadFullOpen]);
+
+  useLayoutEffect(() => {
+    setHeroShowReadFull(false);
+  }, [title, heroLead, heroSummary, addressText]);
+
+  useLayoutEffect(() => {
+    const el = heroTextBlockRef.current;
+    if (!el) {
+      return;
+    }
+
+    let observer: ResizeObserver | null = null;
+
+    const checkOverflow = () => {
+      if (el.scrollHeight > el.clientHeight + 1) {
+        setHeroShowReadFull(true);
+      }
+    };
+
+    const frameId = window.requestAnimationFrame(() => {
+      checkOverflow();
+      observer = new ResizeObserver(checkOverflow);
+      observer.observe(el);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      observer?.disconnect();
+    };
+  }, [title, heroLead, heroSummary, addressText]);
+
+  useEffect(() => {
+    if (!isHeroReadFullOpen) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsHeroReadFullOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isHeroReadFullOpen]);
 
   return (
     <div className="overflow-x-hidden bg-white text-[#101828]">
       <MobileLandingStickyHeader onMenuClick={() => setIsMenuOpen(true)} />
+      <MobileLandingNavMenu
+        open={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        items={menuItems}
+      />
       <section className="relative h-[500px] overflow-hidden text-white">
-        <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        {heroBg ? (
+          <img src={heroBg} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          <div className="absolute inset-0 bg-black" aria-hidden />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70" />
-        {isMenuOpen &&
-          createPortal(
-            <div className="fixed inset-0 z-[10002] flex flex-col bg-[#050b10] pt-[env(safe-area-inset-top)] pb-[max(5.5rem,env(safe-area-inset-bottom))]">
-              <div className={`flex min-h-0 flex-1 flex-col ${MOBILE_SECTION_INSET}`}>
-                <div className="flex shrink-0 items-center justify-between pt-4">
-                  <Link
-                    href="/"
-                    aria-label="Go to home page"
-                    className="inline-flex"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <img src={participantFigmaAssets.headerLogo} alt="Toon Expo" className="h-9 w-9" />
-                  </Link>
-                  <button
-                    type="button"
-                    aria-label="Close mobile menu"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/12 text-lg leading-none text-white"
-                  >
-                    ×
-                  </button>
-                </div>
-
-                <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-3">
-                  <nav className="w-full shrink-0 rounded-2xl border border-white/18 bg-white/10 px-4 py-4 shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
-                    <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">
-                      Navigation
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      {menuItems.map((item) => (
-                        <a
-                          key={item.id}
-                          href={`#${item.id}`}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="rounded-xl border border-white/10 bg-white/6 px-3 py-2.5 text-[15px] font-semibold uppercase tracking-[0.03em] text-white transition hover:bg-white/12"
-                        >
-                          {item.label}
-                        </a>
-                      ))}
-                    </div>
-                  </nav>
-                </div>
-              </div>
-            </div>,
-            document.body,
-          )}
 
         <div
-          className={`relative z-10 flex h-full min-h-0 flex-col gap-4 ${MOBILE_SECTION_INSET} pt-[calc(0.75rem+3.25rem+max(1.25rem,env(safe-area-inset-top)))] pb-[max(1.5rem,env(safe-area-inset-bottom))]`}
+          className={`relative z-10 flex h-full min-h-0 flex-col gap-4 ${MOBILE_SECTION_INSET} ${MOBILE_PARTICIPANT_HERO_INSET_TOP_CLASS} pb-[max(1.5rem,env(safe-area-inset-bottom))]`}
         >
-          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto overscroll-contain text-center">
+          <div className="relative flex min-h-0 min-w-0 flex-1 flex-col items-center justify-start overflow-hidden pt-1 text-center">
             {heroLogoUrl ? (
-              <img
-                src={heroLogoUrl}
-                alt=""
-                className="mb-8 h-[105px] w-[133px] shrink-0 object-contain"
-              />
+              <div className={`${MOBILE_HERO_PROJECT_LOGO_BOX_CLASS} mb-6 shrink-0`}>
+                <img src={heroLogoUrl} alt="" className={MOBILE_HERO_PROJECT_LOGO_IMG_CLASS} />
+              </div>
             ) : null}
-            <h1 className="max-w-[288px] text-[30px] font-bold uppercase leading-[1.25]">
+            <h1 className="w-full min-w-0 max-w-full shrink-0 break-words text-[clamp(1.125rem,5.2vw,1.875rem)] font-bold uppercase leading-[1.2]">
               {title}
             </h1>
-            <p className="mt-2 text-[18px] font-light leading-7">{heroLead}</p>
-            <p className="mt-2 max-w-[338px] text-[14px] leading-5 text-white/90">{heroSummary}</p>
-            {addressText ? (
-              <p className="mt-2 max-w-[338px] text-[14px] leading-5 text-white/90">{addressText}</p>
-            ) : null}
+            <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden">
+              <p
+                ref={heroTextBlockRef}
+                className={`mt-2 min-h-0 w-full min-w-0 flex-1 overflow-hidden break-words text-center [overflow-wrap:anywhere] ${
+                  heroShowReadFull ? "line-clamp-[6]" : ""
+                }`}
+              >
+                <span className="font-light text-[clamp(0.9375rem,4vw,1.125rem)] leading-snug">{heroLead}</span>
+                <br />
+                <span className="text-[clamp(0.75rem,3.5vw,0.875rem)] leading-5 text-white/90">{heroSummary}</span>
+                {addressText ? (
+                  <>
+                    <br />
+                    <span className="text-[clamp(0.75rem,3.5vw,0.875rem)] leading-5 text-white/90">{addressText}</span>
+                  </>
+                ) : null}
+              </p>
+              {heroShowReadFull ? (
+                <button
+                  type="button"
+                  onClick={() => setIsHeroReadFullOpen(true)}
+                  className="mt-2 inline-flex shrink-0 items-center justify-center gap-2 self-center rounded-full border border-white/35 bg-white/12 px-4 py-2.5 text-[13px] font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.2)] backdrop-blur-md transition active:scale-[0.98]"
+                >
+                  {MOBILE_HERO_READ_FULL_LABEL_HY}
+                  <img src={participantFigmaAssets.readMoreIcon} alt="" className="h-4 w-4 opacity-90" />
+                </button>
+              ) : null}
+            </div>
           </div>
 
           <a
             href="#options"
             className="inline-flex h-14 w-full shrink-0 items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
           >
-            View Apartments
+            {HY_UI.CTA_VIEW_APARTMENTS}
           </a>
         </div>
+
+        {isHeroReadFullOpen
+          ? createPortal(
+              <div
+                className="fixed inset-0 z-[10001] flex items-end justify-center p-4 pt-[env(safe-area-inset-top)] pb-[max(1rem,env(safe-area-inset-bottom))] sm:items-center"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="mobile-hero-read-full-title"
+              >
+                <button
+                  type="button"
+                  aria-label={HY_UI.ARIA_CLOSE_FULLTEXT}
+                  className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
+                  onClick={() => setIsHeroReadFullOpen(false)}
+                />
+                <div className="relative z-10 flex max-h-[min(85vh,720px)] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#0b1220]/94 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+                  <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/10 px-5 pb-3 pt-4">
+                    <p
+                      id="mobile-hero-read-full-title"
+                      className="min-w-0 flex-1 text-left text-[15px] font-bold uppercase leading-snug text-white"
+                    >
+                      {title}
+                    </p>
+                    <button
+                      type="button"
+                      aria-label={HY_UI.ARIA_CLOSE}
+                      onClick={() => setIsHeroReadFullOpen(false)}
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-lg leading-none text-white transition hover:bg-white/16"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-5 pt-3 text-left">
+                    <p className="text-[15px] font-light leading-relaxed text-white/95">{heroLead}</p>
+                    <p className="mt-3 text-[14px] leading-relaxed text-white/88">{heroSummary}</p>
+                    {addressText ? (
+                      <p className="mt-3 text-[14px] leading-relaxed text-white/88">{addressText}</p>
+                    ) : null}
+                  </div>
+                </div>
+              </div>,
+              document.body,
+            )
+          : null}
       </section>
 
       <section className={`${MOBILE_SECTION_INSET} relative z-10 -mt-[7px]`}>
@@ -211,13 +298,15 @@ export function LandingPage({ fields, folderMedia }: Props) {
       {vis.about ? (
         <section id="about" className={`${MOBILE_SECTION_INSET} pt-12`}>
           <div className="rounded-[16px] border border-[#f3f4f6] bg-white p-5 shadow-[0_2px_14px_rgba(34,33,33,0.1)]">
-            <h2 className="text-[20px] font-bold uppercase leading-7 text-[#2ba8b0]">About the Project</h2>
+            <h2 className="text-[clamp(1.55rem,2.1vw,2.25rem)] font-semibold uppercase leading-none tracking-[0.01em] text-[#2ba8b0]">
+              {HY_UI.MOBILE_ABOUT_SECTION}
+            </h2>
             <p className="mt-3 max-w-[296px] text-[14px] leading-[1.625] text-[#1e2939]">{aboutText}</p>
             <a
               href="#investment"
               className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-semibold uppercase leading-5 text-[#2ba8b0]"
             >
-              Read More
+              {HY_UI.CTA_READ_MORE}
               <img src={participantFigmaAssets.readMoreIcon} alt="" className="h-4 w-4" />
             </a>
           </div>
@@ -226,11 +315,15 @@ export function LandingPage({ fields, folderMedia }: Props) {
 
       <section className={`${MOBILE_SECTION_INSET} flex flex-col gap-4 pt-11`}>
         <div className="overflow-hidden rounded-[16px] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
-          <img src={aboutPrimaryImage} alt="" className="h-64 w-full object-cover" />
+          {aboutPrimaryImage ? (
+            <img src={aboutPrimaryImage} alt="" className="h-64 w-full object-cover" />
+          ) : (
+            <div className="h-64 w-full bg-black" aria-hidden />
+          )}
         </div>
-        {aboutSecondaryImage ? (
+        {aboutInteriorOneOverlayUrl ? (
           <div className="overflow-hidden rounded-[16px]">
-            <img src={aboutSecondaryImage} alt="" className="h-56 w-full object-cover" />
+            <img src={aboutInteriorOneOverlayUrl} alt="" className="h-56 w-full object-cover" />
           </div>
         ) : null}
       </section>

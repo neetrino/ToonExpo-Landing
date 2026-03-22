@@ -51,6 +51,7 @@ export default async function AdminProjectsPage({
   const list = rows.map((p) => ({
     id: p.id,
     slug: p.slug,
+    projectId: p.mediaFolderId ?? p.slug,
     published: p.published,
     title: expoTitle(p.expoFields) || p.slug,
   }));

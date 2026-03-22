@@ -1,4 +1,6 @@
 import {
+  DeleteObjectCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
   type PutObjectCommandInput,
@@ -59,4 +61,110 @@ export function isR2Configured(): boolean {
       process.env.R2_BUCKET_NAME &&
       process.env.R2_PUBLIC_URL,
   );
+}
+
+/**
+ * Բոլոր object key-երը `prefix`-ով (R2 / S3 ListObjectsV2)։
+ */
+export async function listR2ObjectKeysUnderPrefix(prefix: string): Promise<string[]> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET_NAME;
+  if (!client || !bucket) {
+    return [];
+  }
+  const keys: string[] = [];
+  let continuationToken: string | undefined;
+  try {
+    do {
+      const res = await client.send(
+        new ListObjectsV2Command({
+          Bucket: bucket,
+          Prefix: prefix,
+          ContinuationToken: continuationToken,
+        }),
+      );
+      for (const obj of res.Contents ?? []) {
+        if (obj.Key) {
+          keys.push(obj.Key);
+        }
+      }
+      continuationToken = res.IsTruncated ? res.NextContinuationToken : undefined;
+    } while (continuationToken);
+  } catch (e) {
+    logger.error("R2 listObjects failed", { error: String(e), prefix });
+    return [];
+  }
+  return keys;
+}
+
+export type ListR2LevelResult = {
+  /** Ամբողջական նախածանցեր `CommonPrefixes` (օր. `projects/1/Exterior/`) */
+  commonPrefixes: string[];
+  /** Այս մակարդակի օբյեկտների ամբողջական key-եր */
+  objectKeys: string[];
+};
+
+/**
+ * ListObjectsV2 `Delimiter: /` — մեկ «պանակի» մակարդակ, առանց բոլոր ներքին ֆայլերը միանգամից բեռնելու։
+ */
+export async function listR2ObjectsAtLevel(prefix: string): Promise<ListR2LevelResult> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET_NAME;
+  if (!client || !bucket) {
+    return { commonPrefixes: [], objectKeys: [] };
+  }
+  const normalized = prefix.endsWith("/") ? prefix : `${prefix}/`;
+  const commonPrefixes: string[] = [];
+  const objectKeys: string[] = [];
+  let continuationToken: string | undefined;
+  try {
+    do {
+      const res = await client.send(
+        new ListObjectsV2Command({
+          Bucket: bucket,
+          Prefix: normalized,
+          Delimiter: "/",
+          ContinuationToken: continuationToken,
+        }),
+      );
+      for (const cp of res.CommonPrefixes ?? []) {
+        if (cp.Prefix) {
+          commonPrefixes.push(cp.Prefix);
+        }
+      }
+      for (const obj of res.Contents ?? []) {
+        if (obj.Key && obj.Key !== normalized) {
+          objectKeys.push(obj.Key);
+        }
+      }
+      continuationToken = res.IsTruncated ? res.NextContinuationToken : undefined;
+    } while (continuationToken);
+  } catch (e) {
+    logger.error("R2 listObjectsAtLevel failed", { error: String(e), prefix: normalized });
+    return { commonPrefixes: [], objectKeys: [] };
+  }
+  return { commonPrefixes, objectKeys };
+}
+
+/**
+ * Ջնջում է մեկ օբյեկտ bucket-ում — սխալի դեպքում false։
+ */
+export async function deleteObjectFromR2(key: string): Promise<boolean> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET_NAME;
+  if (!client || !bucket || !key?.trim()) {
+    return false;
+  }
+  try {
+    await client.send(
+      new DeleteObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      }),
+    );
+    return true;
+  } catch (e) {
+    logger.error("R2 deleteObject failed", { error: String(e), key });
+    return false;
+  }
 }

@@ -31,5 +31,8 @@ temp/
 # .vscode/
 # *.swp
 # *.swo
-# Local dev folder at repo root only (not public/project/)
+
+# Локальные/генерируемые медиа и данные (не коммитим)
 /project/
+public/project/
+public/data/

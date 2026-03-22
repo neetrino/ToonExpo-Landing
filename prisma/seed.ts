@@ -11,6 +11,19 @@ import { sanitizeMediaFolderId } from "../src/shared/lib/mediaFolderId";
 
 const prisma = new PrismaClient();
 
+function resolveSeedCsvPath(): string | null {
+  const candidates = [
+    join(process.cwd(), "public/data/ToonExpoData2026.csv"),
+    join(process.cwd(), "docs/data/ToonExpoData2026.csv"),
+  ];
+  for (const p of candidates) {
+    if (existsSync(p)) {
+      return p;
+    }
+  }
+  return null;
+}
+
 async function ensureUniqueSlug(base: string): Promise<string> {
   let slug = base.slice(0, 100);
   let n = 0;
@@ -41,11 +54,14 @@ async function main(): Promise<void> {
 
   console.info("Seed: admin user", email);
 
-  const csvPath = join(process.cwd(), "docs/data/ToonExpoData2026.csv");
-  if (!existsSync(csvPath)) {
-    console.info("Seed: CSV not found, skip projects", csvPath);
+  const csvPath = resolveSeedCsvPath();
+  if (!csvPath) {
+    console.info(
+      "Seed: CSV not found (docs/data or public/data ToonExpoData2026.csv), skip projects",
+    );
     return;
   }
+  console.info("Seed: using CSV", csvPath);
 
   const replace = process.env.SEED_REPLACE_PROJECTS === "true";
   const count = await prisma.project.count();
@@ -74,12 +90,15 @@ async function main(): Promise<void> {
     }
     const base = slugFromRow(row, i);
     const slug = await ensureUniqueSlug(base);
+    const folderId = sanitizeMediaFolderId(row.mediaFolderId ?? undefined);
+    const mediaFolderId = folderId ? folderId.toLowerCase() : null;
+
     await prisma.project.create({
       data: {
         slug,
         published: true,
         expoFields: expoJson,
-        mediaFolderId: sanitizeMediaFolderId(row.mediaFolderId ?? undefined),
+        mediaFolderId,
       },
     });
     created += 1;

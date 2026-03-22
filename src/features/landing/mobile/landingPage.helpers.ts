@@ -1,6 +1,7 @@
 import { parseMediaUrls } from "@/shared/lib/mediaUrls";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 /** Վերադարձնում է նախագծի ցուցադրվող վերնագիրը։ */
 export function getLandingTitle(fields: ExpoMap): string {
@@ -100,17 +101,17 @@ export function getMobileStats(fields: ExpoMap): Array<{ value: string; label: s
   return [
     {
       value: firstNonEmpty(extractFirstNumber(fields.expo_field_26), "30") + "+",
-      label: "Apartments",
+      label: HY_UI.NAV_APARTMENTS,
       tone: "teal",
     },
     {
       value: firstNonEmpty(extractFirstNumber(fields.expo_field_25), "6"),
-      label: "Floors",
+      label: HY_UI.MOBILE_STAT_FLOORS,
       tone: "gold",
     },
     {
       value: firstNonEmpty(extractFirstNumber(fields.expo_field_37), extractFirstNumber(fields.expo_field_38), "45"),
-      label: "Parking",
+      label: HY_UI.MOBILE_STAT_PARKING,
       tone: "navy",
     },
   ];

@@ -20,9 +20,11 @@ type Props = {
   name: string;
   label: string;
   defaultValue: string;
+  /** Կարճ բացատրություն (օր. R2 քաղաքականություն) */
+  hint?: string;
 };
 
-export function MediaListField({ name, label, defaultValue }: Props) {
+export function MediaListField({ name, label, defaultValue, hint }: Props) {
   const [urls, setUrls] = useState<string[]>(() => parseUrls(defaultValue));
   const [newUrl, setNewUrl] = useState("");
   const [uploadBusy, setUploadBusy] = useState(false);
@@ -76,6 +78,7 @@ export function MediaListField({ name, label, defaultValue }: Props) {
       <label htmlFor={id} className="text-sm font-medium text-slate-700">
         {label}
       </label>
+      {hint ? <p className="text-xs text-slate-500">{hint}</p> : null}
       <input type="hidden" name={name} value={value} readOnly />
       <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-4">
         {urls.length > 0 ? (

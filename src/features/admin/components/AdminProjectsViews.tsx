@@ -17,6 +17,8 @@ const COPY_FEEDBACK_MS = 2000;
 export type AdminProjectItem = {
   id: string;
   slug: string;
+  /** CSV / public folder id (mediaFolderId, fallback slug) */
+  projectId: string;
   published: boolean;
   title: string;
 };
@@ -127,9 +129,14 @@ export function AdminProjectsViews({ projects, view }: Props) {
               <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#2eb0b4]/15 to-[#2eb0b4]/5 text-[#2eb0b4] transition group-hover:from-[#2eb0b4]/25 group-hover:to-[#2eb0b4]/10">
                 <IconFolder className="h-5 w-5" />
               </span>
-              <p className="line-clamp-2 flex-1 font-semibold leading-snug text-slate-900 transition group-hover:text-[#1a8a8e]">
-                {p.title}
-              </p>
+              <div className="min-w-0 flex-1">
+                <p className="line-clamp-2 font-semibold leading-snug text-slate-900 transition group-hover:text-[#1a8a8e]">
+                  {p.title}
+                </p>
+                <p className="mt-1 font-mono text-xs tabular-nums text-slate-500">
+                  Project ID: {p.projectId}
+                </p>
+              </div>
             </div>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4">
               <StatusBadge published={p.published} />
@@ -159,6 +166,7 @@ export function AdminProjectsViews({ projects, view }: Props) {
                   Նախագիծ
                 </span>
               </th>
+              <th className="px-5 py-4 font-semibold text-slate-700">Project ID</th>
               <th className="px-5 py-4 font-semibold text-slate-700">Վիճակ</th>
               <th className="px-5 py-4 pr-6 font-semibold text-slate-700">
                 <span className="inline-flex items-center gap-2">
@@ -182,6 +190,9 @@ export function AdminProjectsViews({ projects, view }: Props) {
                     </span>
                     {p.title}
                   </span>
+                </td>
+                <td className="px-5 py-4">
+                  <span className="font-mono text-sm tabular-nums text-slate-700">{p.projectId}</span>
                 </td>
                 <td className="px-5 py-4">
                   <StatusBadge published={p.published} />

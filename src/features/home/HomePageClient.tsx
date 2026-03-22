@@ -6,11 +6,13 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { parseMediaUrls } from "@/shared/lib/mediaUrls";
-import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
+import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
 import { MapSearch } from "@/features/home/components/MapSearch";
 import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 export type { HomeProject } from "@/features/home/homeProject.types";
 
@@ -20,27 +22,27 @@ const PROJECTS_PAGE_SIZE_DESKTOP = 15;
 const PROJECTS_PAGE_SIZE_MOBILE = 10;
 
 const FIGMA_ASSETS = {
-  heroBg: "/figma/home/heroBg.jpg",
-  siteHeaderLogo: "/figma/home/footerLogo.svg",
-  refundIcon: "/figma/home/refundIcon.svg",
-  locationIcon: "/figma/home/loocation.svg",
-  priceIcon: "/figma/home/priceIcon.svg",
-  rangeIcon: "/figma/home/rangeIcon.svg",
-  cardImageA: "/figma/home/cardImageA.png",
-  cardImageB: "/figma/home/cardImageB.jpg",
-  cardImageC: "/figma/home/cardImageC.jpg",
+  heroBg: publicAssetUrl("/figma/home/heroBg.jpg"),
+  siteHeaderLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
+  refundIcon: publicAssetUrl("/figma/home/refundIcon.svg"),
+  locationIcon: publicAssetUrl("/figma/home/loocation.svg"),
+  priceIcon: publicAssetUrl("/figma/home/priceIcon.svg"),
+  rangeIcon: publicAssetUrl("/figma/home/rangeIcon.svg"),
 } as const;
+
+/** Համապատասխանում է `#participants` grid-ին՝ 1 / 2 / 3 սյուն և padding-ներին (`max-w-[1680px]` px-4 … lg:px-10)։ */
+const PROJECT_CARD_HERO_SIZES =
+  "(max-width: 767px) calc(100vw - 2rem), (max-width: 1279px) calc((100vw - 5rem) / 2), calc((min(1680px, 100vw) - 5rem) / 3)" as const;
+
+const PROJECT_CARD_LOGO_MAX_PX = 156 as const;
+const PROJECT_CARD_LOGO_MAX_SM_PX = 68 as const;
 
 function projectTitle(f: Record<string, string>): string {
   return f.expo_field_02?.trim() || f.expo_field_01?.trim() || "—";
 }
 
+/** Fallback hero — միայն արտաքին/ներքին ռենդերների URL-ները (ոչ լոգո)։ */
 function projectThumb(f: Record<string, string>): string | null {
-  const logo = f.expo_field_50?.trim();
-  if (logo && /^https?:\/\//i.test(logo)) {
-    return logo;
-  }
-
   const media = [...parseMediaUrls(f.expo_field_43), ...parseMediaUrls(f.expo_field_44)];
   return media[0] ?? null;
 }
@@ -198,7 +200,6 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           alt=""
           fill
           priority
-          unoptimized
           className="object-cover object-center"
           sizes="100vw"
         />
@@ -252,7 +253,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                   else setIsSearchExpanded(false);
                 }}
                 className="absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 transition hover:bg-slate-50"
-                aria-label={isMapFullscreen ? "Выйти из полноэкранного режима" : "Полноэкранный режим"}
+                aria-label={isMapFullscreen ? HY_UI.MAP_FULLSCREEN_EXIT : HY_UI.MAP_FULLSCREEN_ENTER}
               >
                 {isMapFullscreen ? (
                   <svg
@@ -288,14 +289,13 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 className="pointer-events-none absolute inset-0 z-10 bg-black/15"
                 aria-hidden
               />
-              {!isMapFullscreen ? (
-                <HomeMapPreview
-                  markers={markers}
-                  className="h-[280px] w-full sm:h-[360px] md:h-[440px] lg:h-[531px]"
-                />
-              ) : (
-                <div className="h-[280px] w-full bg-[#1d5662]/50 sm:h-[360px] md:h-[440px] lg:h-[531px]" />
-              )}
+              <div className="h-[280px] w-full sm:h-[360px] md:h-[440px] lg:h-[531px]">
+                {!isMapFullscreen ? (
+                  <HomeMapPreviewDynamic markers={markers} className="h-full w-full" />
+                ) : (
+                  <div className="h-full w-full bg-[#1d5662]/50" />
+                )}
+              </div>
             </div>
 
             {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. */}
@@ -304,7 +304,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 TOON EXPO <span className="text-[#008999]">2026.</span> INVEST
               </p>
               <p className="text-center text-lg font-semibold leading-normal text-white sm:text-[24px] lg:text-right">
-                interactive map
+                {HY_UI.MAP_INTERACTIVE}
               </p>
             </div>
           </div>
@@ -318,7 +318,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80"
             role="dialog"
             aria-modal="true"
-            aria-label="Карта на весь экран"
+            aria-label={HY_UI.MAP_DIALOG_FULLSCREEN}
             onClick={() => {
               setIsMapFullscreen(false);
               setIsSearchExpanded(false);
@@ -340,7 +340,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
               </div>
 
               <div className="absolute inset-0 z-0">
-                <HomeMapPreview
+                <HomeMapPreviewDynamic
                   key="fullscreen-map"
                   markers={markers}
                   className="h-full w-full"
@@ -353,7 +353,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 setIsSearchExpanded(false);
               }}
                 className="absolute right-4 top-4 z-[100] flex h-12 w-12 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 shadow-lg transition hover:bg-slate-50"
-                aria-label="Закрыть полноэкранный режим"
+                aria-label={HY_UI.MAP_FULLSCREEN_EXIT}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -416,9 +416,9 @@ id="featured-heading"
           ) : (
             <>
               <ul id="projects" className="grid min-w-0 scroll-mt-6 grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {visibleProjects.map((project, index) => (
+                {visibleProjects.map((project) => (
                   <li key={project.id} className="min-w-0">
-                    <ProjectCard project={project} index={index} />
+                    <ProjectCard project={project} />
                   </li>
                 ))}
               </ul>
@@ -429,7 +429,7 @@ id="featured-heading"
                     onClick={handleShowMore}
                     className="cursor-pointer min-w-[200px] rounded-[10px] bg-white px-10 py-3 text-center text-[16px] font-bold leading-6 text-[#0f172b] transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#246976]"
                   >
-                    View more
+                    {HY_UI.CTA_VIEW_MORE}
                   </button>
                 </div>
               ) : null}
@@ -442,22 +442,17 @@ id="featured-heading"
   );
 }
 
-const CARD_FALLBACK_IMAGES = [
-  FIGMA_ASSETS.cardImageA,
-  FIGMA_ASSETS.cardImageB,
-  FIGMA_ASSETS.cardImageC,
-] as const;
-
-function ProjectCard({ project, index }: { project: HomeProject; index: number }) {
+function ProjectCard({ project }: { project: HomeProject }) {
   const fields = project.expoFields;
   const thumb = projectThumb(fields);
+  const heroPreferred = project.cardHeroUrl ?? thumb;
+  const hasPhoto = Boolean(heroPreferred);
+  const logoSrc = project.cardLogoUrl?.trim() || null;
   const title = projectTitle(fields);
   const location = projectLocation(fields);
   const taxRefund = fields.expo_field_09?.trim() || "On request";
   const pricePerMeter = formatRange(fields.expo_field_07, fields.expo_field_08);
   const priceRange = formatRange(fields.expo_field_17, fields.expo_field_18);
-  const imageSrc = thumb ?? CARD_FALLBACK_IMAGES[index % CARD_FALLBACK_IMAGES.length];
-  const hasPhoto = Boolean(thumb);
 
   return (
     <Link
@@ -467,18 +462,33 @@ function ProjectCard({ project, index }: { project: HomeProject; index: number }
       {/* Блок изображения: на мобильном ниже, на десктопе 256px */}
       <div className="relative h-[200px] w-full shrink-0 overflow-hidden bg-[#e2e8f0] sm:h-[230px] lg:h-[256px]">
         {hasPhoto ? (
-          <img
-            src={imageSrc}
+          <Image
+            src={heroPreferred!}
             alt={title}
-            loading="lazy"
-            className="h-full w-full object-cover"
+            fill
+            sizes={PROJECT_CARD_HERO_SIZES}
+            className="object-cover"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-[#94a3b8]">
             <CardPhotoPlaceholderIcon className="h-20 w-20" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[rgba(15,23,43,0.6)] to-transparent" aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-[rgba(15,23,43,0.6)] to-transparent"
+          aria-hidden
+        />
+        {logoSrc ? (
+          <div className="absolute left-2 top-2 z-[2] max-h-[57px] max-w-[156px] rounded-lg bg-white/92 p-2 shadow-md ring-1 ring-black/5 sm:left-3 sm:top-3 sm:max-h-[68px] sm:p-2.5">
+            <Image
+              src={logoSrc}
+              alt=""
+              width={PROJECT_CARD_LOGO_MAX_PX}
+              height={PROJECT_CARD_LOGO_MAX_SM_PX}
+              className="h-[36px] max-h-full w-auto max-w-full object-contain sm:h-[42px]"
+            />
+          </div>
+        ) : null}
       </div>
 
       {/* Контент: адаптивные отступы, min-w-0 чтобы не вылезало на мобильных */}
