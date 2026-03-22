@@ -15,6 +15,7 @@ import {
 import {
   participantFigmaAssets,
   participantNav,
+  SITE_HEADER_LOGO_SRC,
 } from "@/features/landing/landingPage.constants";
 import { LandingStickyHeader } from "@/features/landing/components/LandingStickyHeader";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
@@ -107,7 +108,6 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const heroBg =
     folderMedia?.heroUrl || media[0] || participantFigmaAssets.heroBackground;
   const heroLogoUrl = firstNonEmpty(folderMedia?.logoUrl, getLogoUrl(fields));
-  const headerBrandSrc = firstNonEmpty(folderMedia?.logoUrl, "/figma/home/footerLogo.svg");
   const leadText = getLeadText(fields);
   const aboutParagraphs = splitParagraphs(fields.expo_field_34);
   const aboutPrimaryImage =
@@ -143,7 +143,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
             className="inline-flex shrink-0 items-center transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0] focus-visible:ring-offset-2 focus-visible:ring-offset-black/70"
           >
             <img
-              src={headerBrandSrc}
+              src={SITE_HEADER_LOGO_SRC}
               alt=""
               className="h-10 w-10 object-contain lg:h-12 lg:w-12"
             />

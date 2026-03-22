@@ -21,6 +21,9 @@ export const participantNav: Array<{
 export const PARTICIPANT_SECTION_INSET =
   "px-5 sm:px-8 lg:pl-12 lg:pr-10 xl:pl-14" as const;
 
+/** Toon Expo — գլխավոր էջի հեդերի հետ նույն ակտիվը (լենդինգի sticky header) */
+export const SITE_HEADER_LOGO_SRC = "/figma/home/footerLogo.svg" as const;
+
 export const participantFigmaAssets = {
   heroBackground: "/figma/participant/heroBackground.jpg",
   aboutPrimary: "/figma/participant/aboutPrimary.jpg",

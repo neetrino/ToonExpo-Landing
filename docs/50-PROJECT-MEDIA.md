@@ -18,7 +18,7 @@
 | `Logo/Logo.png` | Գերակշռող |
 | `Logo/Logo.webp`, `Logo/Logo.jpg`, `Logo/Logo.jpeg`, `Logo/logo.png` | Եթե նախորդը չկա — հերթական փորձ |
 
-**Օգտագործում.** `logoUrl` — sticky header (desktop/mobile), hero-ի լոգո, բաց full-screen menu-ի վերևի պատկեր։ Եթե պանակում լոգո չկա — hero-ում մնում է `expo_field_50` (URL), header-ում՝ Toon Expo-ի SVG։
+**Օգտագործում.** `logoUrl` — **միայն hero** բլոկում (և fallback `expo_field_50`)։ Sticky header-ը և մոբայլ menu-ի վերևի պատկերը՝ **կայքի** լոգոն (`/figma/home/footerLogo.svg`, ինչպես գլխավոր էջը)։
 
 **Linux deploy.** Պանակի/ֆայլի անունը case-sensitive է — նախընտրել `Logo/Logo.png`։
 

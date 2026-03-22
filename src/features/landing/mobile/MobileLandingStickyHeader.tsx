@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { MOBILE_SECTION_INSET, participantFigmaAssets } from "@/features/landing/mobile/landingPage.constants";
+import { SITE_HEADER_LOGO_SRC } from "@/features/landing/landingPage.constants";
+import {
+  MOBILE_SECTION_INSET,
+  participantFigmaAssets,
+} from "@/features/landing/mobile/landingPage.constants";
 import { useScrolledPastThreshold } from "@/shared/hooks/useScrolledPastThreshold";
 
 type Props = {
   onMenuClick: () => void;
-  /** Եթե տրված է — նախագծի լոգո `public/project/.../Logo/`-ից։ */
+  /** Եթե տրված է — այլընտրանքային լոգո (լռելյայն՝ կայքի `SITE_HEADER_LOGO_SRC`)։ */
   brandLogoSrc?: string;
 };
 
@@ -26,7 +30,7 @@ export function MobileLandingStickyHeader({ onMenuClick, brandLogoSrc }: Props) 
     >
       <Link href="/" aria-label="Go to home page" className="inline-flex">
         <img
-          src={brandLogoSrc ?? participantFigmaAssets.headerLogo}
+          src={brandLogoSrc ?? SITE_HEADER_LOGO_SRC}
           alt=""
           className="h-[52px] w-[52px] object-contain"
         />
