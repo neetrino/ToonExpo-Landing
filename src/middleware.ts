@@ -9,6 +9,11 @@ function isMobileProjectPath(pathname: string): boolean {
   return /^\/p\/[^/]+$/.test(pathname);
 }
 
+/** `/p/{slug}/mobile` — միայն իսկական մոբայլ/տաբլետ UA-ի համար; դեսքտոպ UA → անմիջապես `/p/{slug}`։ */
+function isProjectMobileLandingPath(pathname: string): boolean {
+  return /^\/p\/[^/]+\/mobile$/.test(pathname);
+}
+
 /**
  * Միայն User-Agent — `Sec-CH-UA-Mobile`-ը մենակ կարող է սխալ լինել (էմուլյացիա, հազվագյուտ կլիենտներ),
  * իսկ viewport-ը սերվերում չենք տեսնում։
@@ -20,6 +25,13 @@ function isMobileRequest(req: Parameters<Parameters<typeof auth>[0]>[0]): boolea
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
+
+  if (isProjectMobileLandingPath(pathname) && !isMobileRequest(req)) {
+    const url = req.nextUrl.clone();
+    url.pathname = pathname.replace(/\/mobile$/, "");
+    return NextResponse.redirect(url);
+  }
+
   if (isMobileProjectPath(pathname) && isMobileRequest(req)) {
     const url = req.nextUrl.clone();
     url.pathname = `${pathname}/mobile`;

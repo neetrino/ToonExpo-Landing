@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MOBILE_LANDING_BREAKPOINT_QUERY } from "@/shared/constants/viewport.constants";
 
 export const MOBILE_BREAKPOINT_QUERY = MOBILE_LANDING_BREAKPOINT_QUERY;
 
+const REPLACE_OPTS = { scroll: false } as const;
+
 export function LandingAutoRedirect({ slug }: { slug: string }) {
   const router = useRouter();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mediaQuery = window.matchMedia(MOBILE_LANDING_BREAKPOINT_QUERY);
 
     const redirectToMobile = () => {
@@ -17,7 +19,7 @@ export function LandingAutoRedirect({ slug }: { slug: string }) {
         return;
       }
 
-      router.replace(`/p/${slug}/mobile`);
+      router.replace(`/p/${slug}/mobile`, REPLACE_OPTS);
     };
 
     redirectToMobile();
@@ -34,7 +36,7 @@ export function LandingAutoRedirect({ slug }: { slug: string }) {
 export function LandingDesktopRedirect({ slug }: { slug: string }) {
   const router = useRouter();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mediaQuery = window.matchMedia(MOBILE_LANDING_BREAKPOINT_QUERY);
 
     const redirectToDesktop = () => {
@@ -42,7 +44,7 @@ export function LandingDesktopRedirect({ slug }: { slug: string }) {
         return;
       }
 
-      router.replace(`/p/${slug}`);
+      router.replace(`/p/${slug}`, REPLACE_OPTS);
     };
 
     redirectToDesktop();

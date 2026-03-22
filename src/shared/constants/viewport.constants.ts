@@ -1,8 +1,9 @@
 /**
- * Tailwind `lg` — դեսքտոպային լեյաութը սկսվում է այս լայնությունից (min-width).
- * `/p/.../mobile` — միայն նեղ էկրանների համար՝ ստորև այս արժեքից։
+ * Հեռախոս և թաբլետ — մինչև այս լայնությունը ներառյալ → `/p/.../mobile`։
+ * (1024px՝ iPad և նման preset-ների լայնություն։)
+ *
+ * Դեսքտոպ միայն `1025px`-ից վեր — `/p/...` (առանց `/mobile`)։
  */
-export const TAILWIND_LG_MIN_WIDTH_PX = 1024;
+export const LANDING_MOBILE_TABLET_MAX_WIDTH_PX = 1024;
 
-/** Լրիվ համընկնում Tailwind `lg`-ի հետ՝ առանց «1024px = և մոբայլ, և դեսքտոպ» շրջանցման։ */
-export const MOBILE_LANDING_BREAKPOINT_QUERY = `(max-width: ${TAILWIND_LG_MIN_WIDTH_PX - 1}px)`;
+export const MOBILE_LANDING_BREAKPOINT_QUERY = `(max-width: ${LANDING_MOBILE_TABLET_MAX_WIDTH_PX}px)`;
