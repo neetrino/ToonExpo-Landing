@@ -33,6 +33,7 @@
 | Պլատֆորմ | Ֆայլ | Երբ օգտագործել |
 |----------|------|-----------------|
 | **Cloudflare** | [03-CLOUDFLARE.md](./03-CLOUDFLARE.md) | CDN, R2 storage, WAF, DNS |
+| **R2 պատկերասրահ** | [13-R2-GALLERY-MEDIA.md](./13-R2-GALLERY-MEDIA.md) | WebP/AVIF, չափեր, cache, `galleryThumbUrls` |
 
 ### Cache և Հերթեր
 

@@ -46,6 +46,8 @@ export const HY_UI = {
 
   MENU_TITLE: "Մենյու",
   GALLERY_PREVIEW: "Պատկերներ",
+  /** Լայթբոքսում՝ նոր պատկերի բեռնման ընթացքում */
+  GALLERY_IMAGE_LOADING: "Բեռնվում է…",
 
   PAYMENT_INSTALLMENT: "Մասնավճար",
   PAYMENT_MORTGAGE: "Վարկ",
@@ -76,6 +78,8 @@ export const HY_UI = {
   ARIA_OPEN_MENU: "Բացել մենյու",
   ARIA_CLOSE_MENU: "Փակել մենյու",
   ARIA_GALLERY_FULLSCREEN: "Պատկերասրահ",
+  /** Լայթբոքսի ներքևի մանրապատկերների գոտի */
+  ARIA_GALLERY_THUMBS: "Պատկերների մանրապատկերներ",
   ARIA_PREV_IMAGE: "Նախորդ",
   ARIA_NEXT_IMAGE: "Հաջորդ",
   ARIA_PREV_GALLERY: "Նախորդ",

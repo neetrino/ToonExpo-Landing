@@ -5,6 +5,10 @@ export type ResolvedProjectFolderMedia = {
   /** Լոգո՝ `/project/...` (FS) կամ ամբողջական R2 URL (`projects/{id}/Logo/...`) */
   logoUrl: string | null;
   galleryUrls: string[];
+  /**
+   * Նույն հերթականությամբ նախադիտման URL-ներ (թեթև) — բացակայության դեպքում ցանցում օգտագործվում է galleryUrls։
+   */
+  galleryThumbUrls?: string[];
   infrastructureLeftUrl: string | null;
   infrastructureRightUrl: string | null;
 };

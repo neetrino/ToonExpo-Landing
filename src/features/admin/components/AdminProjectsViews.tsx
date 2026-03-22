@@ -20,6 +20,8 @@ export type AdminProjectItem = {
   /** CSV / public folder id (mediaFolderId, fallback slug) */
   projectId: string;
   published: boolean;
+  /** 0 = ավտոմատ, 1+ = գլխավոր էջի հերթ */
+  sortOrder: number;
   title: string;
 };
 
@@ -73,6 +75,15 @@ function LandingActions({ slug }: { slug: string }) {
         {copied ? <IconCheck className="h-4 w-4" /> : <IconCopy className="h-4 w-4" />}
       </button>
     </div>
+  );
+}
+
+function SortingDisplay({ sortOrder }: { sortOrder: number }) {
+  if (sortOrder <= 0) {
+    return <span className="text-slate-400">—</span>;
+  }
+  return (
+    <span className="font-mono text-sm tabular-nums font-semibold text-slate-800">{sortOrder}</span>
   );
 }
 
@@ -136,6 +147,14 @@ export function AdminProjectsViews({ projects, view }: Props) {
                 <p className="mt-1 font-mono text-xs tabular-nums text-slate-500">
                   Project ID: {p.projectId}
                 </p>
+                <p className="mt-0.5 text-xs text-slate-500">
+                  Sorting:{" "}
+                  {p.sortOrder > 0 ? (
+                    <span className="font-mono font-semibold tabular-nums text-slate-700">{p.sortOrder}</span>
+                  ) : (
+                    <span className="text-slate-400">—</span>
+                  )}
+                </p>
               </div>
             </div>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4">
@@ -167,6 +186,7 @@ export function AdminProjectsViews({ projects, view }: Props) {
                 </span>
               </th>
               <th className="px-5 py-4 font-semibold text-slate-700">Project ID</th>
+              <th className="px-5 py-4 font-semibold text-slate-700">Sorting</th>
               <th className="px-5 py-4 font-semibold text-slate-700">Վիճակ</th>
               <th className="px-5 py-4 pr-6 font-semibold text-slate-700">
                 <span className="inline-flex items-center gap-2">
@@ -193,6 +213,9 @@ export function AdminProjectsViews({ projects, view }: Props) {
                 </td>
                 <td className="px-5 py-4">
                   <span className="font-mono text-sm tabular-nums text-slate-700">{p.projectId}</span>
+                </td>
+                <td className="px-5 py-4">
+                  <SortingDisplay sortOrder={p.sortOrder} />
                 </td>
                 <td className="px-5 py-4">
                   <StatusBadge published={p.published} />

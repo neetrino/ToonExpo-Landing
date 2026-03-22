@@ -1,6 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/mobile/lib/blockVisibility";
@@ -9,7 +10,7 @@ import {
   participantFigmaAssets,
 } from "@/features/landing/mobile/landingPage.constants";
 import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
-import { resolveGalleryImageUrls } from "@/features/landing/lib/resolveGalleryImageUrls";
+import { resolveGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import {
   firstNonEmpty,
@@ -52,7 +53,11 @@ function InvestmentCard({
 export function LandingPageLower({ fields, title, folderMedia }: Props) {
   const vis = visibleBlocks(fields);
   const media = getProjectMedia(fields);
-  const galleryImages = useMemo(() => resolveGalleryImageUrls(media, folderMedia), [folderMedia, media]);
+  const galleryResolved = useMemo(() => resolveGalleryItems(media, folderMedia), [folderMedia, media]);
+  const galleryImages = useMemo(
+    () => galleryResolved.map((item) => item.fullUrl),
+    [galleryResolved],
+  );
   const [galleryLightboxIndex, setGalleryLightboxIndex] = useState<number | null>(null);
   const sizeOptions = useMemo(() => parseSizeOptions(fields.expo_field_06), [fields.expo_field_06]);
   const defaultSizeIndex = sizeOptions.length > 3 ? 3 : 0;
@@ -107,7 +112,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
     },
   ];
   const showGallery =
-    (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryImages.length > 0;
+    (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryResolved.length > 0;
   const showPayment = vis.payment || vis.construction || vis.parking;
   const showOptions = sizeOptions.length > 0;
 
@@ -141,7 +146,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
               </button>
             ) : null}
           </div>
-          {galleryImages[0] ? (
+          {galleryResolved[0] ? (
             <div className="mt-3 overflow-hidden rounded-[14px]">
               <button
                 type="button"
@@ -149,11 +154,17 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
                 className="relative block h-48 w-full cursor-zoom-in overflow-hidden p-0"
                 aria-label={`Open gallery: ${title}`}
               >
-                <img src={galleryImages[0]} alt={`${title} gallery`} className="h-full w-full object-cover" />
+                <Image
+                  src={galleryResolved[0].thumbUrl}
+                  alt={`${title} gallery`}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                />
               </button>
             </div>
           ) : null}
-          {galleryImages.length === 2 ? (
+          {galleryResolved.length === 2 ? (
             <div className="mt-3 overflow-hidden rounded-[14px]">
               <button
                 type="button"
@@ -161,11 +172,17 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
                 className="relative block h-40 w-full cursor-zoom-in overflow-hidden p-0"
                 aria-label="Gallery image 2"
               >
-                <img src={galleryImages[1]} alt="" className="h-full w-full object-cover" />
+                <Image
+                  src={galleryResolved[1].thumbUrl}
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                />
               </button>
             </div>
           ) : null}
-          {galleryImages.length > 2 ? (
+          {galleryResolved.length > 2 ? (
             <div className="mt-3 grid grid-cols-2 gap-3">
               <div className="overflow-hidden rounded-[14px]">
                 <button
@@ -174,7 +191,13 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
                   className="relative block h-40 w-full cursor-zoom-in overflow-hidden p-0"
                   aria-label="Gallery image 2"
                 >
-                  <img src={galleryImages[1]} alt="" className="h-full w-full object-cover" />
+                  <Image
+                    src={galleryResolved[1].thumbUrl}
+                    alt=""
+                    fill
+                    sizes="50vw"
+                    className="object-cover"
+                  />
                 </button>
               </div>
               <div className="overflow-hidden rounded-[14px]">
@@ -184,7 +207,13 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
                   className="relative block h-40 w-full cursor-zoom-in overflow-hidden p-0"
                   aria-label="Gallery image 3"
                 >
-                  <img src={galleryImages[2]} alt="" className="h-full w-full object-cover" />
+                  <Image
+                    src={galleryResolved[2].thumbUrl}
+                    alt=""
+                    fill
+                    sizes="50vw"
+                    className="object-cover"
+                  />
                 </button>
               </div>
             </div>

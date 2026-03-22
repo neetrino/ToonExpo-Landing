@@ -26,6 +26,15 @@ body {
   isolation: isolate;
 }
 
+/* Երբ բոլոր պիտակները բաց են — hovercard-ները կետից վերև են; overflow:hidden կտրում է */
+.toon-home-map:has(.map-zoom-labels-visible) {
+  overflow: visible;
+}
+
+.toon-home-map .map-zoom-labels-visible .maplibregl-map {
+  overflow: visible !important;
+}
+
 .toon-home-map .maplibregl-map,
 .toon-home-map .maplibregl-canvas,
 .toon-home-map .maplibregl-canvas-container {
@@ -85,6 +94,13 @@ body {
   pointer-events: auto;
 }
 
+/* Բոլոր մարկերների քարտեր — zoom-ի շեմից բարձր (տե՛ս HomeMapPreview + mapView.constants) */
+.toon-home-map .map-zoom-labels-visible .map-marker-wrap .map-marker-hovercard {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
 .toon-home-map .map-marker-hovercard {
   opacity: 0;
   visibility: hidden;
@@ -94,6 +110,11 @@ body {
 }
 
 .toon-home-map .map-marker-wrap.map-marker-active .map-marker-connector {
+  opacity: 1;
+  visibility: visible;
+}
+
+.toon-home-map .map-zoom-labels-visible .map-marker-wrap .map-marker-connector {
   opacity: 1;
   visibility: visible;
 }
@@ -111,6 +132,14 @@ body {
 }
 
 .toon-home-map .map-marker-wrap.map-marker-active .map-marker-connector-svg {
+  color: var(--color-ink);
+}
+
+.toon-home-map .map-zoom-labels-visible .map-marker-wrap .map-marker-connector-svg {
+  color: #2ba8b0;
+}
+
+.toon-home-map .map-zoom-labels-visible .map-marker-wrap.map-marker-active .map-marker-connector-svg {
   color: var(--color-ink);
 }
 
@@ -169,4 +198,24 @@ body {
     animation: none;
     opacity: 1;
   }
+
+  .gallery-lightbox-indeterminate-bar {
+    animation: none;
+    transform: translateX(0);
+    left: 35%;
+  }
+}
+
+/* Լայթբոքսի անորոշք (indeterminate) բեռնման գիծ */
+@keyframes gallery-lightbox-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+.gallery-lightbox-indeterminate-bar {
+  animation: gallery-lightbox-indeterminate 1.15s ease-in-out infinite;
 }

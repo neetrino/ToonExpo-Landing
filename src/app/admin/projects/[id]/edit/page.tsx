@@ -46,6 +46,7 @@ export default async function EditProjectPage({ params }: Props) {
         projectId={project.id}
         defaultSlug={project.slug}
         defaultPublished={project.published}
+        defaultSortOrder={project.sortOrder}
         defaultMediaFolderId={project.mediaFolderId}
         defaults={defaults}
         mediaFolderLogoUrl={folderMedia.logoUrl}

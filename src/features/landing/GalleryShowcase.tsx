@@ -1,24 +1,31 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import { useState } from "react";
 import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
-type GalleryItem = {
+const GALLERY_SHOWCASE_MAIN_SIZES = "(max-width: 1024px) 100vw, min(896px, 52vw)";
+const GALLERY_SHOWCASE_SIDE_SIZES = "(max-width: 1024px) 100vw, 400px";
+
+export type GalleryShowcaseItem = {
   label: string;
+  /** Լայթբոքսի լիարժեք պատկեր */
   image: string;
+  /** Ցանցի թեթև նախադիտում — բացակայության դեպքում `image` */
+  thumb?: string;
 };
 
 type Props = {
-  items: GalleryItem[];
+  items: GalleryShowcaseItem[];
   leftArrowSrc: string;
   rightArrowSrc: string;
   /** Լայթբոքսում alt-ի հիմք (նախագծի անուն) */
   imageAltBase: string;
 };
 
-function getVisibleItems(items: GalleryItem[], startIndex: number): GalleryItem[] {
+function getVisibleItems(items: GalleryShowcaseItem[], startIndex: number): GalleryShowcaseItem[] {
   if (items.length === 0) {
     return [];
   }
@@ -26,6 +33,10 @@ function getVisibleItems(items: GalleryItem[], startIndex: number): GalleryItem[
   return Array.from({ length: Math.min(3, items.length) }, (_, offset) => {
     return items[(startIndex + offset) % items.length];
   });
+}
+
+function gridImageSrc(item: GalleryShowcaseItem): string {
+  return item.thumb ?? item.image;
 }
 
 /** Галерея проекта с рабочими стрелками и ротацией изображений. */
@@ -65,10 +76,12 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               onClick={() => openLightboxAt(0)}
               className="relative h-[320px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
             >
-              <img
-                src={mainItem.image}
+              <Image
+                src={gridImageSrc(mainItem)}
                 alt={mainItem.label.trim() ? mainItem.label : `${imageAltBase}`}
-                className="h-full w-full object-cover object-center"
+                fill
+                sizes={GALLERY_SHOWCASE_MAIN_SIZES}
+                className="object-cover object-center"
               />
               <div className="pointer-events-none absolute inset-0 bg-black/35" />
               <div className="pointer-events-none absolute bottom-6 left-5 text-white lg:left-[140px]">
@@ -86,10 +99,12 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               onClick={() => openLightboxAt(1)}
               className="relative h-[220px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
             >
-              <img
-                src={secondItem.image}
+              <Image
+                src={gridImageSrc(secondItem)}
                 alt={secondItem.label.trim() ? secondItem.label : `${imageAltBase}`}
-                className="h-full w-full object-cover object-center"
+                fill
+                sizes={GALLERY_SHOWCASE_SIDE_SIZES}
+                className="object-cover object-center"
               />
               <div className="pointer-events-none absolute inset-0 bg-black/15" />
               {secondItem.label.trim() ? (
@@ -104,10 +119,12 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               onClick={() => openLightboxAt(2)}
               className="relative h-[220px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
             >
-              <img
-                src={thirdItem.image}
+              <Image
+                src={gridImageSrc(thirdItem)}
                 alt={thirdItem.label.trim() ? thirdItem.label : `${imageAltBase}`}
-                className="h-full w-full object-cover object-center"
+                fill
+                sizes={GALLERY_SHOWCASE_SIDE_SIZES}
+                className="object-cover object-center"
               />
               <div className="pointer-events-none absolute inset-0 bg-black/18" />
               {thirdItem.label.trim() ? (

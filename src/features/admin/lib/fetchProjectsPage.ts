@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/shared/lib/db";
+import { adminProjectsOrderBySql } from "@/features/admin/lib/adminProjectsOrderBySql";
 
 export const ADMIN_PROJECTS_PAGE_SIZE = 20;
 
@@ -10,6 +11,7 @@ export type ProjectListRow = {
   updatedAt: Date;
   expoFields: unknown;
   mediaFolderId: string | null;
+  sortOrder: number;
 };
 
 /**
@@ -33,24 +35,22 @@ export async function fetchProjectsPage(params: {
   const pub =
     params.published === "yes" ? true : params.published === "no" ? false : null;
 
+  const orderSql = adminProjectsOrderBySql();
+
   if (!qLike && pub === null) {
     const [total, rows] = await Promise.all([
       prisma.project.count(),
-      prisma.project.findMany({
-        orderBy: { updatedAt: "desc" },
-        skip: offset,
-        take: pageSize,
-        select: {
-          id: true,
-          slug: true,
-          published: true,
-          updatedAt: true,
-          expoFields: true,
-          mediaFolderId: true,
-        },
-      }),
+      prisma.$queryRaw<ProjectListRow[]>(
+        Prisma.sql`
+          SELECT id, slug, published, "updatedAt", "expoFields", "mediaFolderId", "sortOrder"
+          FROM "Project"
+          ${orderSql}
+          LIMIT ${pageSize}
+          OFFSET ${offset}
+        `,
+      ),
     ]);
-    return { rows: rows as ProjectListRow[], total, page, pageSize };
+    return { rows, total, page, pageSize };
   }
 
   const parts: Prisma.Sql[] = [];
@@ -71,10 +71,10 @@ export async function fetchProjectsPage(params: {
 
   const rowsRaw = await prisma.$queryRaw<ProjectListRow[]>(
     Prisma.sql`
-      SELECT id, slug, published, "updatedAt", "expoFields", "mediaFolderId"
+      SELECT id, slug, published, "updatedAt", "expoFields", "mediaFolderId", "sortOrder"
       FROM "Project"
       ${whereSql}
-      ORDER BY "updatedAt" DESC
+      ${orderSql}
       LIMIT ${pageSize}
       OFFSET ${offset}
     `,

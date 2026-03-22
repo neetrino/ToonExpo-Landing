@@ -11,6 +11,7 @@ import {
 } from "@/shared/lib/expoFields";
 import { slugifyTitle } from "@/shared/lib/slug";
 import { sanitizeMediaFolderId } from "@/shared/lib/mediaFolderId";
+import { parseProjectSortOrder } from "@/shared/lib/parseProjectSortOrder";
 import { z } from "zod";
 
 const projectMetaSchema = z.object({
@@ -66,6 +67,7 @@ export async function createProjectAction(
   const slug = await ensureUniqueSlug(slugBase);
 
   const published = formData.get("published") === "on";
+  const sortOrder = parseProjectSortOrder(formData.get("sortOrder"));
   const values: Record<string, string> = {};
   const { EXPO_FIELD_KEYS } = await import("@/shared/constants/expoFieldKeys");
   for (const k of EXPO_FIELD_KEYS) {
@@ -85,6 +87,7 @@ export async function createProjectAction(
         published,
         expoFields: expoJson,
         mediaFolderId,
+        sortOrder,
       },
     });
   } catch (e) {
@@ -129,6 +132,7 @@ export async function updateProjectAction(
       return { ok: false, error: "Դաշտերի վալիդացիա" };
     }
     const expoJson = expoFieldsToJson(parsedFields.data);
+    const sortOrder = parseProjectSortOrder(formData.get("sortOrder"));
 
     await prisma.project.update({
       where: { id: projectId },
@@ -137,6 +141,7 @@ export async function updateProjectAction(
         published: meta.data.published,
         expoFields: expoJson,
         mediaFolderId: publicId,
+        sortOrder,
       },
     });
     revalidatePath("/");

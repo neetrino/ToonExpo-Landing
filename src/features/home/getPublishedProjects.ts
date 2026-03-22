@@ -8,10 +8,11 @@ type Row = {
   slug: string;
   expoFields: unknown;
   mediaFolderId: string | null;
+  sortOrder: number;
 };
 
 /**
- * Գլխավոր էջ — հերթականություն՝ Project ID (թվային) աճով՝ 1, 2, 3 …
+ * Գլխավոր էջ — Project ID (թվային) աճով՝ 1, 2, 3 … (երբ `sortOrder` = 0)
  */
 function compareByProjectPublicId(a: Row, b: Row): number {
   const sa = (a.mediaFolderId ?? a.slug).trim();
@@ -31,14 +32,32 @@ function compareByProjectPublicId(a: Row, b: Row): number {
 }
 
 /**
+ * `sortOrder` > 0 → ձեռքով հերթ (1, 2, 3 …)։ 0 → հին տրամաբանություն՝ Project ID-ով։
+ */
+function compareForHome(a: Row, b: Row): number {
+  const aExplicit = a.sortOrder > 0;
+  const bExplicit = b.sortOrder > 0;
+  if (aExplicit && bExplicit && a.sortOrder !== b.sortOrder) {
+    return a.sortOrder - b.sortOrder;
+  }
+  if (aExplicit && !bExplicit) {
+    return -1;
+  }
+  if (!aExplicit && bExplicit) {
+    return 1;
+  }
+  return compareByProjectPublicId(a, b);
+}
+
+/**
  * Հրապարակված նախագծերի ցանկ — կիսվում է հանրային layout-ի և գլխավոր էջի միջև (մեկ հարցում)։
  */
 export const getPublishedProjectsForSite = cache(async (): Promise<HomeProject[]> => {
   const projects = await prisma.project.findMany({
     where: { published: true },
-    select: { id: true, slug: true, expoFields: true, mediaFolderId: true },
+    select: { id: true, slug: true, expoFields: true, mediaFolderId: true, sortOrder: true },
   });
-  const sorted = [...projects].sort(compareByProjectPublicId);
+  const sorted = [...projects].sort(compareForHome);
   return Promise.all(
     sorted.map(async (p) => {
       const expoFields = (p.expoFields as Record<string, string>) ?? {};
