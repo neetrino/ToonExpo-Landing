@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { parseMediaUrls } from "@/shared/lib/mediaUrls";
-import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
+import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
 import { MapSearch } from "@/features/home/components/MapSearch";
 import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
@@ -200,7 +200,6 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           alt=""
           fill
           priority
-          unoptimized
           className="object-cover object-center"
           sizes="100vw"
         />
@@ -290,14 +289,13 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 className="pointer-events-none absolute inset-0 z-10 bg-black/15"
                 aria-hidden
               />
-              {!isMapFullscreen ? (
-                <HomeMapPreview
-                  markers={markers}
-                  className="h-[280px] w-full sm:h-[360px] md:h-[440px] lg:h-[531px]"
-                />
-              ) : (
-                <div className="h-[280px] w-full bg-[#1d5662]/50 sm:h-[360px] md:h-[440px] lg:h-[531px]" />
-              )}
+              <div className="h-[280px] w-full sm:h-[360px] md:h-[440px] lg:h-[531px]">
+                {!isMapFullscreen ? (
+                  <HomeMapPreviewDynamic markers={markers} className="h-full w-full" />
+                ) : (
+                  <div className="h-full w-full bg-[#1d5662]/50" />
+                )}
+              </div>
             </div>
 
             {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. */}
@@ -342,7 +340,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
               </div>
 
               <div className="absolute inset-0 z-0">
-                <HomeMapPreview
+                <HomeMapPreviewDynamic
                   key="fullscreen-map"
                   markers={markers}
                   className="h-full w-full"

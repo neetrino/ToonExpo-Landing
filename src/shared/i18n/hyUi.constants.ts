@@ -2,7 +2,7 @@
  * Կարճ հայերեն UI տեքստեր — լենդինգ `/p`, գլխավոր էջ, կոճակներ և նավիգացիա։
  */
 export const HY_UI = {
-  NAV_ABOUT: "Մասին",
+  NAV_ABOUT: "Նախագծի մասին",
   NAV_INVESTMENT: "Ներդրում",
   NAV_GALLERY: "Պատկերներ",
   NAV_PAYMENT: "Վճարում",
@@ -13,22 +13,22 @@ export const HY_UI = {
   NAV_PARKING: "Կայանատեղի",
   NAV_TOURS: "Տուրեր",
   NAV_LOCATION: "Տեղադրություն",
-  NAV_CONTACTS: "Կապ",
+  NAV_CONTACTS: "Կապ մեզ հետ",
   NAV_APARTMENTS: "Բնակարաններ",
 
   CTA_EXPLORE: "Դիտել",
-  CTA_EXPLORE_MORE: "Ավելին",
+  CTA_EXPLORE_MORE: "Իմանալ ավելին",
   CTA_VIEW_APARTMENTS: "Բնակարաններ",
-  CTA_VIEW_MORE: "Ավելին",
+  CTA_VIEW_MORE: "Դիտել ավելին",
   CTA_VIEW_ALL: "Բոլորը",
-  CTA_READ_MORE: "Ավելին",
+  CTA_READ_MORE: "Կարդալ ավելին",
   CTA_VISIT_SITE: "Կայք",
   CTA_REACH_OUT: "Կապվել",
 
-  SECTION_ABOUT_PROJECT: "Մասին",
+  SECTION_ABOUT_PROJECT: "Նախագծի մասին",
   SECTION_GALLERY: "Պատկերներ",
   SECTION_PAYMENT: "Վճարման պայմաններ",
-  SECTION_INFRA: "Ենթակառուցվածքներ",
+  SECTION_INFRA: "Ինֆրակառուցվածք և հարմարություններ",
   SECTION_CONSTRUCTION: "Կառուցման մանրամասներ",
   /** Սեկցիայի վերնագիր (#192643) */
   SECTION_PARKING: "Կայանատեղի",
@@ -37,11 +37,11 @@ export const HY_UI = {
   /** Ֆուտերի առաջին հղում — «մեր մասին» */
   FOOTER_NAV_ABOUT: "Մեր մասին",
   FOOTER_NAV_PROJECTS: "Նախագծեր",
-  FOOTER_NAV_CONTACTS: "Կապ",
+  FOOTER_NAV_CONTACTS: "Կապ մեզ հետ",
 
   /** Քարտեզի բաժնի վերնագիր */
   HOME_LOCATION: "Տեղադրություն",
-  HOME_CONTACT: "Կապ",
+  HOME_CONTACT: "Կապ մեզ հետ",
   FOOTER_PRIVACY: "Գաղտնիություն",
 
   MENU_TITLE: "Մենյու",
@@ -81,9 +81,9 @@ export const HY_UI = {
   ARIA_PREV_GALLERY: "Նախորդ",
   ARIA_NEXT_GALLERY: "Հաջորդ",
 
-  MOBILE_INVESTMENT_HIGHLIGHTS: "Ներդրում",
-  MOBILE_INVEST_HIGH_1: "Վարձով եկամուտ",
-  MOBILE_INVEST_HIGH_2: "Գին, տեսարան",
+  MOBILE_INVESTMENT_HIGHLIGHTS: "Ներդրումային ցուցանիշներ",
+  MOBILE_INVEST_HIGH_1: "Վարձավճարային եկամուտ",
+  MOBILE_INVEST_HIGH_2: "Գին և տեսարան",
   MOBILE_INVEST_HIGH_3: "Սեզոնային վարձ",
   MOBILE_PAYMENT_CARD_1: "Վճարման պայմաններ",
   MOBILE_PAYMENT_CARD_2: "Կառուցման մանրամասներ",
@@ -92,7 +92,7 @@ export const HY_UI = {
   MOBILE_LABEL_SIZES: "Չափեր․",
   MOBILE_LABEL_FLOOR: "Հարկեր․",
   MOBILE_SELECT_SIZE_HINT: "Ընտրեք չափը",
-  MOBILE_ABOUT_SECTION: "Մասին",
+  MOBILE_ABOUT_SECTION: "Նախագծի մասին",
 
   /** Հերոյի վիճակագրական քարտեր (բնակարան / հարկ / կայանատեղի) */
   MOBILE_STAT_FLOORS: "Հարկեր",

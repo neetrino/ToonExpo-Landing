@@ -65,11 +65,17 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               onClick={() => openLightboxAt(0)}
               className="relative h-[320px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
             >
-              <img src={mainItem.image} alt={mainItem.label} className="h-full w-full object-cover object-center" />
+              <img
+                src={mainItem.image}
+                alt={mainItem.label.trim() ? mainItem.label : `${imageAltBase}`}
+                className="h-full w-full object-cover object-center"
+              />
               <div className="pointer-events-none absolute inset-0 bg-black/35" />
               <div className="pointer-events-none absolute bottom-6 left-5 text-white lg:left-[140px]">
                 <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">{HY_UI.SECTION_GALLERY}</h2>
-                <p className="mt-2 text-[clamp(1.05rem,1.5vw,1.7rem)]">{mainItem.label}</p>
+                {mainItem.label.trim() ? (
+                  <p className="mt-2 text-[clamp(1.05rem,1.5vw,1.7rem)]">{mainItem.label}</p>
+                ) : null}
               </div>
             </button>
           ) : null}
@@ -80,9 +86,15 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               onClick={() => openLightboxAt(1)}
               className="relative h-[220px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
             >
-              <img src={secondItem.image} alt={secondItem.label} className="h-full w-full object-cover object-center" />
+              <img
+                src={secondItem.image}
+                alt={secondItem.label.trim() ? secondItem.label : `${imageAltBase}`}
+                className="h-full w-full object-cover object-center"
+              />
               <div className="pointer-events-none absolute inset-0 bg-black/15" />
-              <p className="pointer-events-none absolute bottom-5 left-5 text-xl text-white lg:text-2xl">{secondItem.label}</p>
+              {secondItem.label.trim() ? (
+                <p className="pointer-events-none absolute bottom-5 left-5 text-xl text-white lg:text-2xl">{secondItem.label}</p>
+              ) : null}
             </button>
           ) : null}
 
@@ -92,11 +104,17 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               onClick={() => openLightboxAt(2)}
               className="relative h-[220px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
             >
-              <img src={thirdItem.image} alt={thirdItem.label} className="h-full w-full object-cover object-center" />
+              <img
+                src={thirdItem.image}
+                alt={thirdItem.label.trim() ? thirdItem.label : `${imageAltBase}`}
+                className="h-full w-full object-cover object-center"
+              />
               <div className="pointer-events-none absolute inset-0 bg-black/18" />
-              <p className="pointer-events-none absolute bottom-5 left-5 max-w-[220px] text-xl text-white lg:text-2xl">
-                {thirdItem.label}
-              </p>
+              {thirdItem.label.trim() ? (
+                <p className="pointer-events-none absolute bottom-5 left-5 max-w-[220px] text-xl text-white lg:text-2xl">
+                  {thirdItem.label}
+                </p>
+              ) : null}
             </button>
           ) : null}
         </div>

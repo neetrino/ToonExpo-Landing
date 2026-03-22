@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 import { buildMapMarkersFromProjects } from "@/features/home/mobile/buildMapMarkers";
-import { HomeMapPreview } from "@/features/home/mobile/HomeMapPreview";
+import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
+import { LazyWhenVisible } from "@/features/map/components/LazyWhenVisible";
 import type { HomeProject } from "@/features/home/mobile/homeProject.types";
 import {
   MOBILE_CONTACT_EMAIL,
@@ -30,7 +31,14 @@ export function SiteReachMapFooter({
       <section id="contacts" className={`${MOBILE_SECTION_INSET} pt-9`}>
         <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.HOME_LOCATION}</h2>
         <div className="toon-home-map mt-7 overflow-hidden rounded-[10px] border border-[#246976]/12 shadow-[0_8px_24px_rgba(16,24,40,0.08)]">
-          <HomeMapPreview markers={markers} className="h-64 w-full" />
+          <LazyWhenVisible
+            className="h-64 w-full"
+            fallback={
+              <div className="h-full w-full bg-[#1d5662]/30 animate-pulse" aria-hidden />
+            }
+          >
+            <HomeMapPreviewDynamic markers={markers} className="h-full w-full" />
+          </LazyWhenVisible>
         </div>
         {variant === "participant" ? (
           <a

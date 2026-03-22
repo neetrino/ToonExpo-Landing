@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
@@ -195,8 +196,9 @@ function resolveFromFilesystem(mediaFolderId: string): ResolvedProjectFolderMedi
 
 /**
  * Server-only. R2 `projects/{id}/` կամ `public/project/{id}/` fallback։
+ * `cache` — նույն `mediaFolderId`-ի կրկնակի հարցումները մեկ ռենդերի մեջ միացվում են։
  */
-export async function resolveProjectFolderMedia(
+async function resolveProjectFolderMediaImpl(
   mediaFolderId: string | null | undefined,
 ): Promise<ResolvedProjectFolderMedia> {
   const empty: ResolvedProjectFolderMedia = {
@@ -224,3 +226,5 @@ export async function resolveProjectFolderMedia(
 
   return resolveFromFilesystem(id);
 }
+
+export const resolveProjectFolderMedia = cache(resolveProjectFolderMediaImpl);

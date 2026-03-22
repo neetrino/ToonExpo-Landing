@@ -298,7 +298,9 @@ export function LandingPage({ fields, folderMedia }: Props) {
       {vis.about ? (
         <section id="about" className={`${MOBILE_SECTION_INSET} pt-12`}>
           <div className="rounded-[16px] border border-[#f3f4f6] bg-white p-5 shadow-[0_2px_14px_rgba(34,33,33,0.1)]">
-            <h2 className="text-[20px] font-bold uppercase leading-7 text-[#2ba8b0]">{HY_UI.MOBILE_ABOUT_SECTION}</h2>
+            <h2 className="text-[clamp(1.55rem,2.1vw,2.25rem)] font-semibold uppercase leading-none tracking-[0.01em] text-[#2ba8b0]">
+              {HY_UI.MOBILE_ABOUT_SECTION}
+            </h2>
             <p className="mt-3 max-w-[296px] text-[14px] leading-[1.625] text-[#1e2939]">{aboutText}</p>
             <a
               href="#investment"

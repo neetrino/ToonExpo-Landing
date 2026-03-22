@@ -55,8 +55,9 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
     "Price varies by view and floor. Higher floors and better views command premium.",
   );
   const galleryImages = resolveGalleryImageUrls(media, folderMedia);
+  /** Подписи на плитках — только при отдельных подписях из данных; иначе дублируется SECTION_GALLERY с h2. */
   const galleryItems = galleryImages.map((image) => ({
-    label: HY_UI.SECTION_GALLERY,
+    label: "",
     image,
   }));
   const infrastructureImages: [string | null, string | null] = [

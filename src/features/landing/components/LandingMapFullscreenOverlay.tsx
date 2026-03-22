@@ -1,7 +1,7 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
+import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
 import type { MapMarker } from "@/features/map/components/HomeMapPreview";
 
 type Props = {
@@ -55,7 +55,7 @@ export function LandingMapFullscreenOverlay({ open, onClose, markers, title }: P
           </button>
         </div>
         <div className="relative min-h-0 flex-1">
-          <HomeMapPreview key="landing-fullscreen-map" markers={markers} className="h-full w-full" />
+          <HomeMapPreviewDynamic key="landing-fullscreen-map" markers={markers} className="h-full w-full" />
         </div>
       </div>
     </div>,

@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { HomeMapPreview } from "@/features/map/components/HomeMapPreview";
+import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
+import { LazyWhenVisible } from "@/features/map/components/LazyWhenVisible";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
@@ -65,7 +66,17 @@ export function SiteReachMapFooter({
             )}
           </div>
           <div className={mapFrameClass}>
-            <HomeMapPreview markers={markers} className="h-[240px] w-full md:h-[320px]" />
+            <LazyWhenVisible
+              className="h-[240px] w-full md:h-[320px]"
+              fallback={
+                <div
+                  className="h-full w-full rounded-[20px] bg-[#1d5662]/30 animate-pulse"
+                  aria-hidden
+                />
+              }
+            >
+              <HomeMapPreviewDynamic markers={markers} className="h-full w-full" />
+            </LazyWhenVisible>
           </div>
         </section>
 
