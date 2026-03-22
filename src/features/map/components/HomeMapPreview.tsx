@@ -21,19 +21,30 @@ type Props = {
 
 const DEFAULT_CENTER: [number, number] = [44.5152, 40.1792];
 
+/** Հեռավորություն կետից մինչև hover-քարտ (px) — նախկին 18px-ի կրկնապատիկ */
+const MAP_MARKER_POPUP_GAP_PX = 36;
+
+const MAP_MARKER_ACTIVE_CLASS = "map-marker-active";
+
+function bindMarkerPointerHover(wrap: HTMLElement): void {
+  const setActive = () => {
+    wrap.classList.add(MAP_MARKER_ACTIVE_CLASS);
+  };
+  const setInactive = () => {
+    wrap.classList.remove(MAP_MARKER_ACTIVE_CLASS);
+  };
+  wrap.addEventListener("mouseenter", setActive);
+  wrap.addEventListener("mouseleave", setInactive);
+}
+
 function createMapMarkerElement(m: MapMarker): HTMLElement {
   const wrap = document.createElement("div");
   wrap.className = "map-marker-wrap relative flex flex-col items-center";
 
-  const bridge = document.createElement("div");
-  bridge.className =
-    "pointer-events-auto absolute bottom-0 left-1/2 z-[5] h-24 w-14 -translate-x-1/2";
-  bridge.setAttribute("aria-hidden", "true");
-  wrap.appendChild(bridge);
-
   const hover = document.createElement("div");
   hover.className =
-    "map-marker-hovercard pointer-events-none absolute bottom-[calc(100%+6px)] left-1/2 z-20 w-max max-w-[min(240px,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 shadow-[0_8px_28px_rgba(0,0,0,0.18)]";
+    "map-marker-hovercard pointer-events-none absolute left-1/2 z-30 w-max max-w-[min(240px,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 shadow-[0_8px_28px_rgba(0,0,0,0.18)]";
+  hover.style.bottom = `calc(100% + ${MAP_MARKER_POPUP_GAP_PX}px)`;
 
   const inner = m.href ? document.createElement("a") : document.createElement("div");
   if (m.href) {
@@ -73,13 +84,56 @@ function createMapMarkerElement(m: MapMarker): HTMLElement {
   hover.appendChild(inner);
   wrap.appendChild(hover);
 
+  const gapHitbox = document.createElement("div");
+  gapHitbox.className =
+    "map-marker-gap-hitbox pointer-events-auto absolute left-1/2 z-[8] w-3 -translate-x-1/2 cursor-default";
+  gapHitbox.style.bottom = "16px";
+  gapHitbox.style.height = `${MAP_MARKER_POPUP_GAP_PX}px`;
+  gapHitbox.setAttribute("aria-hidden", "true");
+  wrap.appendChild(gapHitbox);
+
+  const connector = document.createElement("div");
+  connector.className =
+    "map-marker-connector pointer-events-none absolute left-1/2 z-[15] w-3 -translate-x-1/2";
+  connector.setAttribute("aria-hidden", "true");
+  connector.style.bottom = "16px";
+  connector.style.height = `${MAP_MARKER_POPUP_GAP_PX}px`;
+
+  const svgNs = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNs, "svg");
+  svg.setAttribute("viewBox", "0 0 12 36");
+  svg.setAttribute("class", "map-marker-connector-svg h-full w-full overflow-visible");
+  svg.setAttribute("aria-hidden", "true");
+
+  const path = document.createElementNS(svgNs, "path");
+  path.setAttribute("d", "M6 0.5V33");
+  path.setAttribute("stroke", "currentColor");
+  path.setAttribute("stroke-width", "2");
+  path.setAttribute("stroke-linecap", "round");
+  path.setAttribute("fill", "none");
+
+  const joint = document.createElementNS(svgNs, "circle");
+  joint.setAttribute("cx", "6");
+  joint.setAttribute("cy", "33");
+  joint.setAttribute("r", "3");
+  joint.setAttribute("fill", "currentColor");
+  joint.setAttribute("stroke", "white");
+  joint.setAttribute("stroke-width", "1.5");
+
+  svg.appendChild(path);
+  svg.appendChild(joint);
+  connector.appendChild(svg);
+  wrap.appendChild(connector);
+
   const dot = document.createElement("div");
   dot.className =
-    "relative z-10 h-4 w-4 shrink-0 cursor-pointer rounded-full border-2 border-white bg-[#2ba8b0] shadow-md";
+    "map-marker-dot relative z-10 h-4 w-4 shrink-0 cursor-pointer rounded-full border-2 border-white shadow-md";
   dot.setAttribute("aria-hidden", "true");
   wrap.appendChild(dot);
 
   wrap.setAttribute("aria-label", `${m.title}, ${m.priceDisplay}`);
+
+  bindMarkerPointerHover(wrap);
 
   return wrap;
 }
@@ -104,6 +158,13 @@ export function HomeMapPreview({ markers, className }: Props) {
     });
     map.addControl(new maplibregl.NavigationControl(), "top-right");
     mapRef.current = map;
+
+    const clearActiveMarkers = () => {
+      ref.current?.querySelectorAll(`.${MAP_MARKER_ACTIVE_CLASS}`).forEach((node) => {
+        node.classList.remove(MAP_MARKER_ACTIVE_CLASS);
+      });
+    };
+    map.on("dragstart", clearActiveMarkers);
 
     for (const m of valid) {
       const el = createMapMarkerElement(m);
