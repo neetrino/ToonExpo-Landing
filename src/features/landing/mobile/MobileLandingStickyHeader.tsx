@@ -7,6 +7,7 @@ import {
   participantFigmaAssets,
 } from "@/features/landing/mobile/landingPage.constants";
 import { useScrolledPastThreshold } from "@/shared/hooks/useScrolledPastThreshold";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 type Props = {
   onMenuClick: () => void;
@@ -28,7 +29,7 @@ export function MobileLandingStickyHeader({ onMenuClick, brandLogoSrc }: Props) 
     <header
       className={`fixed inset-x-0 top-0 z-[60] flex items-center justify-between ${MOBILE_SECTION_INSET} pb-3 pt-[max(1.25rem,env(safe-area-inset-top))] text-white transition-[background-color,backdrop-filter,border-color] duration-200 ${bar}`}
     >
-      <Link href="/" aria-label="Go to home page" className="inline-flex">
+      <Link href="/" aria-label={HY_UI.GO_HOME} className="inline-flex">
         <img
           src={brandLogoSrc ?? SITE_HEADER_LOGO_SRC}
           alt=""
@@ -37,7 +38,7 @@ export function MobileLandingStickyHeader({ onMenuClick, brandLogoSrc }: Props) 
       </Link>
       <button
         type="button"
-        aria-label="Open mobile menu"
+        aria-label={HY_UI.ARIA_OPEN_MENU}
         onClick={onMenuClick}
         className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5"
       >

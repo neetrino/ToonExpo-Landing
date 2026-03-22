@@ -10,6 +10,7 @@ import {
 } from "@/features/landing/mobile/landingPage.constants";
 import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
 import { resolveGalleryImageUrls } from "@/features/landing/lib/resolveGalleryImageUrls";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import {
   firstNonEmpty,
   formatRange,
@@ -73,19 +74,19 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
   );
   const paymentCards = [
     {
-      title: "Payment Conditions",
+      title: HY_UI.MOBILE_PAYMENT_CARD_1,
       text: firstNonEmpty(fields.expo_field_19, "Strong rental demand year-round"),
       tone: "teal" as const,
       icon: participantFigmaAssets.paymentInstallmentIcon,
     },
     {
-      title: "Construction Details",
+      title: HY_UI.MOBILE_PAYMENT_CARD_2,
       text: firstNonEmpty(fields.expo_field_20, fields.expo_field_21, "Ski-in/ski-out access"),
       tone: "gold" as const,
       icon: participantFigmaAssets.paymentMortgageIcon,
     },
     {
-      title: "Parking & Commercial",
+      title: HY_UI.MOBILE_PAYMENT_CARD_3,
       text: firstNonEmpty(fields.expo_field_41, fields.expo_field_40, "30% down, installments until 2027"),
       tone: "navy" as const,
       icon: participantFigmaAssets.paymentTaxIcon,
@@ -93,15 +94,15 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
   ];
   const investmentCards = [
     {
-      title: "High ROI rental potential",
+      title: HY_UI.MOBILE_INVEST_HIGH_1,
       text: firstNonEmpty(formatRange(fields.expo_field_17, fields.expo_field_18), "Strong year-round rental demand"),
     },
     {
-      title: "Price logic: view + higher floors",
+      title: HY_UI.MOBILE_INVEST_HIGH_2,
       text: firstNonEmpty(formatRange(fields.expo_field_07, fields.expo_field_08), "Premium pricing for better views"),
     },
     {
-      title: "Ideal for seasonal rental",
+      title: HY_UI.MOBILE_INVEST_HIGH_3,
       text: firstNonEmpty(fields.expo_field_10, fields.expo_field_09, "Ski season premium rates"),
     },
   ];
@@ -113,7 +114,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
     <>
       {vis.investment ? (
         <section id="investment" className={`${MOBILE_SECTION_INSET} pt-6`}>
-          <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Investment Highlights</h2>
+          <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.MOBILE_INVESTMENT_HIGHLIGHTS}</h2>
           <div className="mt-3 space-y-3">
             {investmentCards.map((item) => (
               <InvestmentCard key={item.title} title={item.title} text={item.text} />
@@ -128,14 +129,14 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
       {showGallery ? (
         <section id="gallery" className={`${MOBILE_SECTION_INSET} pt-8`}>
           <div className="flex items-center justify-between">
-            <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Gallery Preview</h2>
+            <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.GALLERY_PREVIEW}</h2>
             {galleryImages.length > 1 ? (
               <button
                 type="button"
                 onClick={() => setGalleryLightboxIndex(0)}
                 className="text-[14px] font-semibold uppercase leading-5 text-[#2ba8b0]"
               >
-                View All
+                {HY_UI.CTA_VIEW_ALL}
               </button>
             ) : null}
           </div>
@@ -201,13 +202,14 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
       {showOptions ? (
         <section id="options" className="pt-4">
           <div className={`${MOBILE_SECTION_INSET}`}>
-            <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Apartment Options</h2>
+            <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.MOBILE_APARTMENT_OPTIONS}</h2>
             <div className="mt-5 space-y-2 text-[16px] leading-7 text-black">
               <p>
-                <span className="font-bold">Sizes:</span> {sizeRange}
+                <span className="font-bold">{HY_UI.MOBILE_LABEL_SIZES}</span> {sizeRange}
               </p>
               <p className="max-w-[281px]">
-                <span className="font-bold">Floor logic:</span> {firstNonEmpty(fields.expo_field_28, "12-13 units per floor depending on level.")}
+                <span className="font-bold">{HY_UI.MOBILE_LABEL_FLOOR}</span>{" "}
+                {firstNonEmpty(fields.expo_field_28, "12-13 units per floor depending on level.")}
               </p>
             </div>
             <div className="mt-5 grid grid-cols-4 gap-2.5">
@@ -231,7 +233,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
             </div>
             <div className="mt-6 flex items-center gap-3">
               <img src={participantFigmaAssets.sizeNoteIcon} alt="" className="h-8 w-8 shrink-0" />
-              <p className="text-[14px] leading-5 text-black">Select apartment size to view details</p>
+              <p className="text-[14px] leading-5 text-black">{HY_UI.MOBILE_SELECT_SIZE_HINT}</p>
             </div>
           </div>
         </section>
@@ -239,7 +241,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
 
       {showPayment ? (
         <section id="payment" className={`${MOBILE_SECTION_INSET} pt-8`}>
-          <h2 className="text-[20px] font-bold leading-7 text-[#101828]">Payment Conditions</h2>
+          <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.SECTION_PAYMENT}</h2>
           <div className="mt-4 space-y-3">
             {paymentCards.map((card) => (
               <PaymentCard key={card.title} title={card.title} text={card.text} tone={card.tone} icon={card.icon} />

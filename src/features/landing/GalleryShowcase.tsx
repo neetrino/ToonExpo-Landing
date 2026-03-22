@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from "react";
 import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 type GalleryItem = {
   label: string;
@@ -67,7 +68,7 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               <img src={mainItem.image} alt={mainItem.label} className="h-full w-full object-cover object-center" />
               <div className="pointer-events-none absolute inset-0 bg-black/35" />
               <div className="pointer-events-none absolute bottom-6 left-5 text-white lg:left-[140px]">
-                <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">Gallery</h2>
+                <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">{HY_UI.SECTION_GALLERY}</h2>
                 <p className="mt-2 text-[clamp(1.05rem,1.5vw,1.7rem)]">{mainItem.label}</p>
               </div>
             </button>
@@ -105,7 +106,7 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
             <button
               type="button"
               onClick={showPrev}
-              aria-label="Previous gallery image"
+              aria-label={HY_UI.ARIA_PREV_GALLERY}
               className="absolute left-4 top-1/2 z-10 hidden -translate-y-1/2 transition hover:scale-110 lg:block"
             >
               <img src={leftArrowSrc} alt="" className="h-[56px] w-[22px] rotate-180" />
@@ -113,7 +114,7 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
             <button
               type="button"
               onClick={showNext}
-              aria-label="Next gallery image"
+              aria-label={HY_UI.ARIA_NEXT_GALLERY}
               className="absolute left-[calc(100%-400px-400px-1.5rem-2.5rem)] top-1/2 z-10 hidden -translate-y-1/2 transition hover:scale-110 lg:block"
             >
               <img src={rightArrowSrc} alt="" className="h-[56px] w-[22px]" />

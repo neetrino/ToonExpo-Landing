@@ -6,6 +6,7 @@ import {
   FOOTER_PUBLIC_FACEBOOK_HREF,
   FOOTER_PUBLIC_INSTAGRAM_HREF,
 } from "@/features/home/footerPublicLinks.constants";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 const FOOTER_SOCIAL_FB_IMG_CLASS = "h-[40px] w-[18px] shrink-0 object-contain object-left";
 const FOOTER_SOCIAL_IG_IMG_CLASS = "h-[40px] w-[40px] shrink-0 object-contain";
@@ -24,9 +25,9 @@ const BLOCK_FIGMA = {
 } as const;
 
 const FOOTER_NAV_ITEMS = [
-  { href: "/#top", label: "About" },
-  { href: "/#projects", label: "Projects" },
-  { href: "/#contacts", label: "Contacts" },
+  { href: "/#top", label: HY_UI.FOOTER_NAV_ABOUT },
+  { href: "/#projects", label: HY_UI.FOOTER_NAV_PROJECTS },
+  { href: "/#contacts", label: HY_UI.FOOTER_NAV_CONTACTS },
 ] as const;
 
 export function FooterBottomNav({ alignWithIllustration = false }: { alignWithIllustration?: boolean }) {
@@ -104,7 +105,7 @@ export function ReachOutCta({ className = "" }: { className?: string }) {
       href="/#contacts"
       className={`inline-flex items-center justify-center gap-1.5 rounded-full bg-[#fbcd06] px-3 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.14em] text-black transition hover:brightness-105 ${className}`.trim()}
     >
-      Reach Out
+      {HY_UI.CTA_REACH_OUT}
       <span className="relative inline-flex h-7 w-7 shrink-0 items-center justify-center">
         <img src={BLOCK_FIGMA.reachOutCircle} alt="" className="absolute inset-0 h-full w-full" />
         <span className="relative flex h-full w-full items-center justify-center" aria-hidden>

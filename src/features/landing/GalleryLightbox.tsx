@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 const GALLERY_LIGHTBOX_SWIPE_MIN_PX = 48;
 const GALLERY_LIGHTBOX_Z_INDEX_CLASS = "z-[10003]";
@@ -117,7 +118,7 @@ export function GalleryLightbox({ images, isOpen, initialIndex, onClose, imageAl
       className={`fixed inset-0 ${GALLERY_LIGHTBOX_Z_INDEX_CLASS} flex flex-col bg-black/92 backdrop-blur-[2px]`}
       role="dialog"
       aria-modal="true"
-      aria-label="Gallery fullscreen"
+      aria-label={HY_UI.ARIA_GALLERY_FULLSCREEN}
       onClick={onClose}
     >
       <div
@@ -129,7 +130,7 @@ export function GalleryLightbox({ images, isOpen, initialIndex, onClose, imageAl
         </p>
         <button
           type="button"
-          aria-label="Close"
+          aria-label={HY_UI.ARIA_CLOSE}
           onClick={onClose}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-xl leading-none text-white transition hover:bg-white/18"
         >
@@ -154,7 +155,7 @@ export function GalleryLightbox({ images, isOpen, initialIndex, onClose, imageAl
             <>
               <button
                 type="button"
-                aria-label="Previous image"
+                aria-label={HY_UI.ARIA_PREV_IMAGE}
                 onClick={(event) => {
                   event.stopPropagation();
                   goPrev();
@@ -165,7 +166,7 @@ export function GalleryLightbox({ images, isOpen, initialIndex, onClose, imageAl
               </button>
               <button
                 type="button"
-                aria-label="Next image"
+                aria-label={HY_UI.ARIA_NEXT_IMAGE}
                 onClick={(event) => {
                   event.stopPropagation();
                   goNext();

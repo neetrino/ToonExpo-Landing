@@ -21,6 +21,7 @@ import {
 } from "@/features/landing/landingPage.constants";
 import { LandingStickyHeader } from "@/features/landing/components/LandingStickyHeader";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 type Props = {
   fields: ExpoMap;
@@ -196,7 +197,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
                 href={primaryCtaHref}
                 className="inline-flex items-center justify-center rounded-[4px] bg-[#2ba8b0] px-6 py-3.5 text-base font-semibold uppercase tracking-[0.08em] text-white transition hover:brightness-110 lg:px-7 lg:py-4"
               >
-                Explore
+                {HY_UI.CTA_EXPLORE}
               </a>
             </div>
           </div>
@@ -209,7 +210,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
             <div className="flex w-full items-center lg:w-1/2 lg:pr-[140px] xl:pr-[190px]">
               <div className="max-w-[620px]">
                 <h2 className="text-[clamp(1.55rem,2.1vw,2.25rem)] font-semibold uppercase leading-none tracking-[0.01em]">
-                  About the project
+                  {HY_UI.SECTION_ABOUT_PROJECT}
                 </h2>
                 <div className="mt-10 lg:mt-[126px]">
                   <div className="flex items-start gap-4 lg:gap-5">
@@ -233,7 +234,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
                     href={vis.investment ? "#investment" : primaryCtaHref}
                     className="mt-10 inline-flex w-fit items-center gap-3 rounded-[6px] border border-white px-5 py-3 text-sm font-semibold uppercase tracking-[0.03em] text-white transition hover:bg-white hover:text-black lg:mt-[84px] lg:min-h-[71px] lg:px-7 lg:text-[1.5rem]"
                   >
-                    <span>Explore More</span>
+                    <span>{HY_UI.CTA_EXPLORE_MORE}</span>
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 14 24"

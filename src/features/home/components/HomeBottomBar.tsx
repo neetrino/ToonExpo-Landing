@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 const CLIP_PATH_ID = "home-bottom-bar-menu-clip";
 const DURATION = "0.56s";
@@ -12,10 +13,10 @@ const BG_MENU_BLUR = "blur(10px)";
 const FOOTER_LOGO_SRC = "/figma/home/footerLogo.svg";
 
 const ITEMS = [
-  { id: 0, title: "На главную", bgColorItem: "rgba(0, 0, 0, 0.72)", logoSrc: FOOTER_LOGO_SRC },
-  { id: 1, title: "Вверх", bgColorItem: "rgba(0, 0, 0, 0.72)", Icon: ArrowUpIconSvg },
-  { id: 2, title: "Поиск", bgColorItem: "rgba(0, 0, 0, 0.72)", Icon: SearchIconSvg },
-  { id: 3, title: "Карта", bgColorItem: "rgba(0, 0, 0, 0.72)", Icon: MapIconSvg },
+  { id: 0, title: HY_UI.GO_HOME, bgColorItem: "rgba(0, 0, 0, 0.72)", logoSrc: FOOTER_LOGO_SRC },
+  { id: 1, title: HY_UI.BOTTOM_SCROLL_TOP, bgColorItem: "rgba(0, 0, 0, 0.72)", Icon: ArrowUpIconSvg },
+  { id: 2, title: HY_UI.BOTTOM_SEARCH, bgColorItem: "rgba(0, 0, 0, 0.72)", Icon: SearchIconSvg },
+  { id: 3, title: HY_UI.BOTTOM_MAP, bgColorItem: "rgba(0, 0, 0, 0.72)", Icon: MapIconSvg },
 ] as const;
 
 const MENU_CSS = `

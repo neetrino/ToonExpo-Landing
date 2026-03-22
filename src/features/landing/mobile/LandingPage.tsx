@@ -30,6 +30,7 @@ import {
 } from "@/features/landing/mobile/landingPage.constants";
 import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 type Props = {
   fields: ExpoMap;
@@ -37,12 +38,12 @@ type Props = {
 };
 
 const MOBILE_NAV_ITEMS = [
-  { id: "about", label: "About", block: "about" },
-  { id: "investment", label: "Investment", block: "investment" },
-  { id: "gallery", label: "Gallery", block: "gallery" },
-  { id: "options", label: "Apartments", block: "hero" },
-  { id: "payment", label: "Payment", block: "payment" },
-  { id: "contacts", label: "Location", block: "location" },
+  { id: "about", label: HY_UI.NAV_ABOUT, block: "about" },
+  { id: "investment", label: HY_UI.NAV_INVESTMENT, block: "investment" },
+  { id: "gallery", label: HY_UI.NAV_GALLERY, block: "gallery" },
+  { id: "options", label: HY_UI.NAV_APARTMENTS, block: "hero" },
+  { id: "payment", label: HY_UI.NAV_PAYMENT, block: "payment" },
+  { id: "contacts", label: HY_UI.NAV_LOCATION, block: "location" },
 ] as const;
 
 function MobileStatCard({
@@ -190,7 +191,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
                 <div className="flex shrink-0 items-center justify-between pt-4">
                   <Link
                     href="/"
-                    aria-label="Go to home page"
+                    aria-label={HY_UI.GO_HOME}
                     className="inline-flex"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -198,7 +199,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
                   </Link>
                   <button
                     type="button"
-                    aria-label="Close mobile menu"
+                    aria-label={HY_UI.ARIA_CLOSE_MENU}
                     onClick={() => setIsMenuOpen(false)}
                     className="flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/12 text-lg leading-none text-white"
                   >
@@ -209,7 +210,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
                 <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-3">
                   <nav className="w-full shrink-0 rounded-2xl border border-white/18 bg-white/10 px-4 py-4 shadow-[0_12px_40px_rgba(0,0,0,0.25)]">
                     <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">
-                      Navigation
+                      {HY_UI.MENU_TITLE}
                     </div>
                     <div className="flex flex-col gap-2">
                       {menuItems.map((item) => (
@@ -276,7 +277,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
             href="#options"
             className="inline-flex h-14 w-full shrink-0 items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
           >
-            View Apartments
+            {HY_UI.CTA_VIEW_APARTMENTS}
           </a>
         </div>
 
@@ -290,7 +291,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
               >
                 <button
                   type="button"
-                  aria-label="Close full text"
+                  aria-label={HY_UI.ARIA_CLOSE_FULLTEXT}
                   className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
                   onClick={() => setIsHeroReadFullOpen(false)}
                 />
@@ -304,7 +305,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
                     </p>
                     <button
                       type="button"
-                      aria-label="Close"
+                      aria-label={HY_UI.ARIA_CLOSE}
                       onClick={() => setIsHeroReadFullOpen(false)}
                       className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-lg leading-none text-white transition hover:bg-white/16"
                     >
@@ -336,13 +337,13 @@ export function LandingPage({ fields, folderMedia }: Props) {
       {vis.about ? (
         <section id="about" className={`${MOBILE_SECTION_INSET} pt-12`}>
           <div className="rounded-[16px] border border-[#f3f4f6] bg-white p-5 shadow-[0_2px_14px_rgba(34,33,33,0.1)]">
-            <h2 className="text-[20px] font-bold uppercase leading-7 text-[#2ba8b0]">About the Project</h2>
+            <h2 className="text-[20px] font-bold uppercase leading-7 text-[#2ba8b0]">{HY_UI.MOBILE_ABOUT_SECTION}</h2>
             <p className="mt-3 max-w-[296px] text-[14px] leading-[1.625] text-[#1e2939]">{aboutText}</p>
             <a
               href="#investment"
               className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-semibold uppercase leading-5 text-[#2ba8b0]"
             >
-              Read More
+              {HY_UI.CTA_READ_MORE}
               <img src={participantFigmaAssets.readMoreIcon} alt="" className="h-4 w-4" />
             </a>
           </div>

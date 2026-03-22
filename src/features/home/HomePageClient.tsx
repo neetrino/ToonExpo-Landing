@@ -11,6 +11,7 @@ import { MapSearch } from "@/features/home/components/MapSearch";
 import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
+import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 export type { HomeProject } from "@/features/home/homeProject.types";
 
@@ -245,7 +246,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                   else setIsSearchExpanded(false);
                 }}
                 className="absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 transition hover:bg-slate-50"
-                aria-label={isMapFullscreen ? "Выйти из полноэкранного режима" : "Полноэкранный режим"}
+                aria-label={isMapFullscreen ? HY_UI.MAP_FULLSCREEN_EXIT : HY_UI.MAP_FULLSCREEN_ENTER}
               >
                 {isMapFullscreen ? (
                   <svg
@@ -297,7 +298,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 TOON EXPO <span className="text-[#008999]">2026.</span> INVEST
               </p>
               <p className="text-center text-lg font-semibold leading-normal text-white sm:text-[24px] lg:text-right">
-                interactive map
+                {HY_UI.MAP_INTERACTIVE}
               </p>
             </div>
           </div>
@@ -311,7 +312,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80"
             role="dialog"
             aria-modal="true"
-            aria-label="Карта на весь экран"
+            aria-label={HY_UI.MAP_DIALOG_FULLSCREEN}
             onClick={() => {
               setIsMapFullscreen(false);
               setIsSearchExpanded(false);
@@ -346,7 +347,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 setIsSearchExpanded(false);
               }}
                 className="absolute right-4 top-4 z-[100] flex h-12 w-12 items-center justify-center rounded-xl border border-white/40 bg-white text-slate-600 shadow-lg transition hover:bg-slate-50"
-                aria-label="Закрыть полноэкранный режим"
+                aria-label={HY_UI.MAP_FULLSCREEN_EXIT}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -422,7 +423,7 @@ id="featured-heading"
                     onClick={handleShowMore}
                     className="cursor-pointer min-w-[200px] rounded-[10px] bg-white px-10 py-3 text-center text-[16px] font-bold leading-6 text-[#0f172b] transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#246976]"
                   >
-                    View more
+                    {HY_UI.CTA_VIEW_MORE}
                   </button>
                 </div>
               ) : null}
