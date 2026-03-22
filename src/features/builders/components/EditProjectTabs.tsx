@@ -119,6 +119,7 @@ export function EditProjectTabs({
               <ProjectFieldsForm
                 defaults={defaults}
                 sectionId={section.id}
+                projectId={projectId}
                 mediaFolderLogoUrl={mediaFolderLogoUrl}
                 mediaFolderId={mediaFolderId}
                 exampleLogoPublicUrl={exampleLogoPublicUrl}

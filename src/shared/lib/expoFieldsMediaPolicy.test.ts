@@ -37,14 +37,15 @@ describe("sanitizeMediaSingleUrlField", () => {
 });
 
 describe("sanitizeExpoFieldsFromCsvForMediaPolicy", () => {
-  it("clears 47-50 and filters lists", () => {
+  it("clears 43-44 and 47-50, sanitizes 45-46", () => {
     const base = emptyExpoFields();
-    base.expo_field_43 = "https://drive.google.com/a\nhttps://ok.com/b";
+    base.expo_field_43 = "https://ok.com/a.webp";
     base.expo_field_45 = "https://youtu.be/x";
     base.expo_field_47 = "https://example.com/tour";
     base.expo_field_50 = "https://x.com/logo.png";
     const out = sanitizeExpoFieldsFromCsvForMediaPolicy(base);
-    expect(out.expo_field_43).toBe("https://ok.com/b");
+    expect(out.expo_field_43).toBe("");
+    expect(out.expo_field_44).toBe("");
     expect(out.expo_field_45).toBe("https://youtu.be/x");
     expect(out.expo_field_47).toBe("");
     expect(out.expo_field_50).toBe("");

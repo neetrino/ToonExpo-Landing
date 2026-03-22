@@ -1,4 +1,5 @@
 import {
+  DeleteObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
@@ -94,4 +95,27 @@ export async function listR2ObjectKeysUnderPrefix(prefix: string): Promise<strin
     return [];
   }
   return keys;
+}
+
+/**
+ * Ջնջում է մեկ օբյեկտ bucket-ում — սխալի դեպքում false։
+ */
+export async function deleteObjectFromR2(key: string): Promise<boolean> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET_NAME;
+  if (!client || !bucket || !key?.trim()) {
+    return false;
+  }
+  try {
+    await client.send(
+      new DeleteObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      }),
+    );
+    return true;
+  } catch (e) {
+    logger.error("R2 deleteObject failed", { error: String(e), key });
+    return false;
+  }
 }

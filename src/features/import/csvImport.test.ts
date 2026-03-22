@@ -11,6 +11,8 @@ describe("parseExpoCsvBuffer", () => {
     expect(rows[0].expoFields.expo_field_01).toBe("v1");
     expect(rows[0].expoFields.expo_field_02).toBe("v2");
     expect(rows[0].expoFields.expo_field_53).toBe("v53");
+    expect(rows[0].expoFields.expo_field_43).toBe("");
+    expect(rows[0].expoFields.expo_field_44).toBe("");
     expect(rows[0].expoFields.expo_field_47).toBe("");
     expect(rows[0].expoFields.expo_field_50).toBe("");
     expect(rows[0].titleForSlug).toBe("v2");
@@ -35,7 +37,7 @@ describe("parseExpoCsvBuffer", () => {
     expect(parseExpoCsvBuffer(Buffer.from("a;b\n", "utf-8"))).toEqual([]);
   });
 
-  it("strips Drive from gallery URLs and omits 47-50 from CSV", () => {
+  it("omits 43-44 from CSV import and sanitizes 45", () => {
     const header =
       "Name;Extra;Project ID;Title;Addr;" +
       Array.from({ length: 51 }, (_, i) => `h${i + 6}`).join(";");
@@ -54,6 +56,7 @@ describe("parseExpoCsvBuffer", () => {
     const rows = parseExpoCsvBuffer(Buffer.from(csv, "utf-8"));
     expect(rows.length).toBe(1);
     expect(rows[0].expoFields.expo_field_43).toBe("");
+    expect(rows[0].expoFields.expo_field_44).toBe("");
     expect(rows[0].expoFields.expo_field_45).toBe("https://youtu.be/abc");
     expect(rows[0].expoFields.expo_field_47).toBe("");
   });

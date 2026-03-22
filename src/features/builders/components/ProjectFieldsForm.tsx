@@ -9,6 +9,7 @@ import type { ExpoFieldsFormValues } from "@/shared/lib/expoFields";
 import { UploadFieldButton } from "@/features/builders/components/UploadFieldButton";
 import { MediaListField } from "@/features/builders/components/MediaListField";
 import { ProjectMediaFolderHint } from "@/features/builders/components/ProjectMediaFolderHint";
+import { ProjectR2MediaManager } from "@/features/builders/components/ProjectR2MediaManager";
 import {
   MEDIA_EMBED_EXTERNAL_URL_FIELD_KEYS,
   MEDIA_GALLERY_FIELD_KEYS,
@@ -42,9 +43,6 @@ const EMBED_URL_KEYS = new Set<string>(MEDIA_EMBED_EXTERNAL_URL_FIELD_KEYS);
 const GALLERY_KEYS = new Set<string>(MEDIA_GALLERY_FIELD_KEYS);
 const HIDDEN_MEDIA_KEYS = new Set<string>(MEDIA_HIDDEN_PRESERVE_FIELD_KEYS);
 
-const GALLERY_URL_HINT_HY =
-  "Հանրային URL-ներ՝ նախընտրելի է Cloudflare R2 (կամ ավելացրեք վերբեռնված ֆայլերից ստացված հղումները)։";
-
 export type ProjectFieldsFormProps = {
   defaults: ExpoFieldsFormValues;
   /** If set, only this group is rendered */
@@ -55,6 +53,8 @@ export type ProjectFieldsFormProps = {
   mediaFolderLogoUrl?: string | null;
   mediaFolderId?: string | null;
   exampleLogoPublicUrl?: string | null;
+  /** Նախագծի id — R2 ֆայլերի մենեջեր */
+  projectId?: string;
 };
 
 const FIELD_INPUT_CLASS =
@@ -155,6 +155,7 @@ export function ProjectFieldsForm({
   mediaFolderLogoUrl = null,
   mediaFolderId = null,
   exampleLogoPublicUrl = null,
+  projectId = "",
 }: ProjectFieldsFormProps) {
   const d = defaults as Record<string, string>;
   const groups = resolveGroups(sectionId, groupId);
@@ -177,23 +178,18 @@ export function ProjectFieldsForm({
                   folderLogoUrl={mediaFolderLogoUrl}
                   exampleLogoPublicUrl={exampleLogoPublicUrl}
                 />
+                {projectId ? (
+                  <ProjectR2MediaManager projectId={projectId} mediaFolderId={mediaFolderId} />
+                ) : null}
                 {group.keys.map((key) => {
                   const label = EXPO_FIELD_LABELS_HY[key] ?? key;
                   const val = d[key] ?? "";
+                  if (GALLERY_KEYS.has(key)) {
+                    return <input key={key} type="hidden" name={key} value="" />;
+                  }
                   if (HIDDEN_MEDIA_KEYS.has(key)) {
                     return (
                       <input key={key} type="hidden" name={key} value={val} />
-                    );
-                  }
-                  if (GALLERY_KEYS.has(key)) {
-                    return (
-                      <MediaListField
-                        key={key}
-                        name={key}
-                        label={label}
-                        defaultValue={val}
-                        hint={GALLERY_URL_HINT_HY}
-                      />
                     );
                   }
                   if (EMBED_URL_KEYS.has(key)) {

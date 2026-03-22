@@ -35,6 +35,8 @@ export function sanitizeMediaSingleUrlField(raw: string): string {
 }
 
 const CSV_OMIT_FROM_IMPORT_KEYS = [
+  "expo_field_43",
+  "expo_field_44",
   "expo_field_47",
   "expo_field_48",
   "expo_field_49",
@@ -43,16 +45,13 @@ const CSV_OMIT_FROM_IMPORT_KEYS = [
 
 /**
  * CSV ներմուծումից հետո — մեդիա դաշտերը համաձայն քաղաքականության.
- * - 43–44. միայն ոչ-Drive URL-ներ (R2 կամ այլ հանրային հղումներ)
+ * - 43–44, 47–50. CSV-ից չեն ներմուծվում (դատարկ — գալերիան R2 պանակում է)
  * - 45–46. embed (YouTube, Matterport, …) — Drive հղումները հանվում են
- * - 47–50. CSV-ից չեն ներմուծվում (դատարկ — աղբյուրը R2 պանակն է / ադմինը)
  */
 export function sanitizeExpoFieldsFromCsvForMediaPolicy(
   fields: ExpoFieldsFormValues,
 ): ExpoFieldsFormValues {
   const o = { ...fields } as Record<string, string>;
-  o.expo_field_43 = sanitizeMediaUrlList(o.expo_field_43 ?? "");
-  o.expo_field_44 = sanitizeMediaUrlList(o.expo_field_44 ?? "");
   o.expo_field_45 = sanitizeMediaSingleUrlField(o.expo_field_45 ?? "");
   o.expo_field_46 = sanitizeMediaSingleUrlField(o.expo_field_46 ?? "");
   for (const key of CSV_OMIT_FROM_IMPORT_KEYS) {
