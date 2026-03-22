@@ -49,11 +49,6 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
   const media = getProjectMedia(fields);
   const exteriorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_43)));
   const infrastructureItems = splitListItems(fields.expo_field_33);
-  const investmentIntro = firstNonEmpty(
-    fields.expo_field_17,
-    fields.expo_field_18,
-    "Price varies by view and floor. Higher floors and better views command premium.",
-  );
   const galleryImages = resolveGalleryImageUrls(media, folderMedia);
   /** Պլիտկայի ենթագրեր՝ միայն եթե տվյալներում կա առանձին տեքստ (հակառակ դեպքում կկրկնվի h2-ի SECTION_GALLERY)։ */
   const galleryItems = galleryImages.map((image) => ({
@@ -84,9 +79,6 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
         <Section id="investment" className="bg-[#2ba8b0] py-16 text-white lg:py-24">
           <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
             <h2 className="text-[clamp(1.55rem,2.1vw,1.95rem)] font-semibold uppercase">{HY_UI.NAV_INVESTMENT}</h2>
-            <p className="mt-4 max-w-[700px] text-sm leading-6 text-white/90 lg:text-[1.05rem] lg:leading-[1.4]">
-              {investmentIntro}
-            </p>
             <div className="mt-7 grid gap-5 lg:grid-cols-3 lg:gap-6">
               {[
                 {
