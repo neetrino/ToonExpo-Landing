@@ -82,18 +82,18 @@ export function GalleryLightbox({ images, isOpen, initialIndex, onClose, imageAl
         {isBusy ? <GalleryIndeterminateProgress /> : null}
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <div
-          className="relative flex min-h-0 flex-1 touch-pan-y items-center justify-center px-2"
+          className="relative flex min-h-0 min-w-0 w-full flex-1 touch-pan-y items-center justify-center px-2"
           onClick={onClose}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
           <div
-            className="relative flex max-h-full max-w-full items-center justify-center"
+            className="relative z-10 flex h-full min-h-0 w-full min-w-0 max-w-full flex-col items-center justify-center"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="relative h-[min(85vh,calc(100vh-7rem))] w-full max-w-full">
+            <div className="relative h-[min(85vh,calc(100vh-7rem))] w-full min-w-0 max-w-full">
               <NextImage
                 src={displaySrc}
                 alt={`${imageAltBase} — ${safeVisible + 1}`}
@@ -125,7 +125,7 @@ export function GalleryLightbox({ images, isOpen, initialIndex, onClose, imageAl
                     event.stopPropagation();
                     goPrev();
                   }}
-                  className="absolute -left-1 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/60 md:-left-2 md:h-12 md:w-12"
+                  className="absolute left-1 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/60 md:left-2 md:h-12 md:w-12"
                 >
                   <GalleryChevron direction="left" />
                 </button>
@@ -136,7 +136,7 @@ export function GalleryLightbox({ images, isOpen, initialIndex, onClose, imageAl
                     event.stopPropagation();
                     goNext();
                   }}
-                  className="absolute -right-1 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/60 md:-right-2 md:h-12 md:w-12"
+                  className="absolute right-1 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/60 md:right-2 md:h-12 md:w-12"
                 >
                   <GalleryChevron direction="right" />
                 </button>
