@@ -26,12 +26,29 @@ const MAP_MARKER_POPUP_GAP_PX = 36;
 
 const MAP_MARKER_ACTIVE_CLASS = "map-marker-active";
 
+/** MapLibre-ի `.maplibregl-marker` — բարձր z-index, որ hover-քարտը ծածկի մյուս կետերը */
+const MAP_MARKER_Z_INDEX_ACTIVE = "10000";
+
+function setMaplibreMarkerStacking(wrap: HTMLElement, active: boolean): void {
+  const root = wrap.closest(".maplibregl-marker");
+  if (!(root instanceof HTMLElement)) {
+    return;
+  }
+  if (active) {
+    root.style.setProperty("z-index", MAP_MARKER_Z_INDEX_ACTIVE);
+  } else {
+    root.style.removeProperty("z-index");
+  }
+}
+
 function bindMarkerPointerHover(wrap: HTMLElement): void {
   const setActive = () => {
     wrap.classList.add(MAP_MARKER_ACTIVE_CLASS);
+    setMaplibreMarkerStacking(wrap, true);
   };
   const setInactive = () => {
     wrap.classList.remove(MAP_MARKER_ACTIVE_CLASS);
+    setMaplibreMarkerStacking(wrap, false);
   };
   wrap.addEventListener("mouseenter", setActive);
   wrap.addEventListener("mouseleave", setInactive);
@@ -43,7 +60,7 @@ function createMapMarkerElement(m: MapMarker): HTMLElement {
 
   const hover = document.createElement("div");
   hover.className =
-    "map-marker-hovercard pointer-events-none absolute left-1/2 z-30 w-max max-w-[min(240px,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 shadow-[0_8px_28px_rgba(0,0,0,0.18)]";
+    "map-marker-hovercard pointer-events-none absolute left-1/2 z-[100] w-max max-w-[min(240px,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 shadow-[0_8px_28px_rgba(0,0,0,0.18)]";
   hover.style.bottom = `calc(100% + ${MAP_MARKER_POPUP_GAP_PX}px)`;
 
   const inner = m.href ? document.createElement("a") : document.createElement("div");
@@ -160,8 +177,11 @@ export function HomeMapPreview({ markers, className }: Props) {
     mapRef.current = map;
 
     const clearActiveMarkers = () => {
-      ref.current?.querySelectorAll(`.${MAP_MARKER_ACTIVE_CLASS}`).forEach((node) => {
+      ref.current?.querySelectorAll(`.map-marker-wrap.${MAP_MARKER_ACTIVE_CLASS}`).forEach((node) => {
         node.classList.remove(MAP_MARKER_ACTIVE_CLASS);
+        if (node instanceof HTMLElement) {
+          setMaplibreMarkerStacking(node, false);
+        }
       });
     };
     map.on("dragstart", clearActiveMarkers);

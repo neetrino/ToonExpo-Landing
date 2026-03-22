@@ -43,9 +43,9 @@ body {
   z-index: 1 !important;
 }
 
-/* Ակտիվ մարկերը — ամբողջությամբ վերևում (JS-ով .map-marker-active, ոչ թե լայն թափանցիկ «կամուրջ») */
+/* Ակտիվ մարկերը — ամբողջությամբ վերևում (քարտ + կետ՝ մյուս կետերի վրա, համապատասխանում է JS z-index-ին) */
 .toon-home-map .maplibregl-marker:has(.map-marker-wrap.map-marker-active) {
-  z-index: 500 !important;
+  z-index: 10000 !important;
 }
 
 .toon-home-map .maplibregl-ctrl-top-right {
@@ -108,10 +108,10 @@ body {
 }
 
 .toon-home-map .map-marker-wrap.map-marker-active .map-marker-connector-svg {
-  color: #4fd4dc;
+  color: var(--color-ink);
 }
 
-/* Կետը hover-ում — ավելի պայծառ */
+/* Կետ — սովորական բիրյուզ, ակտիվը՝ սև, որպեսզի լավ տարբերվի խտացված կետերի վրա */
 .toon-home-map .map-marker-dot {
   background-color: #2ba8b0;
   transition:
@@ -120,10 +120,10 @@ body {
 }
 
 .toon-home-map .map-marker-wrap.map-marker-active .map-marker-dot {
-  background-color: #4fd4dc;
+  background-color: var(--color-ink);
   box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.95),
-    0 4px 16px rgba(79, 212, 220, 0.55);
+    0 0 0 2px rgba(255, 255, 255, 0.98),
+    0 2px 10px rgba(0, 0, 0, 0.45);
 }
 
 /* Մոբայլ լենդինգ — նավիգացիոն մենյու վերևից սահելով, կիսաթափանցիկ */
