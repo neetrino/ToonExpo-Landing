@@ -1,4 +1,4 @@
-import { parseLatLng } from "@/shared/lib/mediaUrls";
+import { resolveLatLngForMap } from "@/shared/lib/latLng";
 import type { MapMarker } from "@/features/map/components/HomeMapPreview";
 import type { HomeProject } from "@/features/home/homeProject.types";
 
@@ -10,7 +10,7 @@ export function buildMapMarkersFromProjects(list: HomeProject[]): MapMarker[] {
   const markers: MapMarker[] = [];
   for (const p of list) {
     const f = p.expoFields;
-    const ll = parseLatLng(f.expo_field_16);
+    const ll = resolveLatLngForMap(f);
     if (ll) {
       markers.push({
         lat: ll.lat,
