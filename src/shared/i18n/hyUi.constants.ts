@@ -94,6 +94,10 @@ export const HY_UI = {
   MOBILE_SELECT_SIZE_HINT: "Ընտրեք չափը",
   MOBILE_ABOUT_SECTION: "Մասին",
 
+  /** Հերոյի վիճակագրական քարտեր (բնակարան / հարկ / կայանատեղի) */
+  MOBILE_STAT_FLOORS: "Հարկեր",
+  MOBILE_STAT_PARKING: "Կայանատեղիներ",
+
   MAP_FULLSCREEN_ENTER: "Լիաէկրան",
   MAP_FULLSCREEN_EXIT: "Փակել",
   MAP_DIALOG_FULLSCREEN: "Քարտեզ",
