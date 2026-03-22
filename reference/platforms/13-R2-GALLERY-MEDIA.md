@@ -26,6 +26,11 @@
 - [`ResolvedProjectFolderMedia`](../../src/features/landing/lib/projectFolderMedia.types.ts)-ում `galleryThumbUrls` դաշտը **ըստ ցուցակի ինդեքսի** համընկնում է `galleryUrls`-ի հետ (նույն հերթականություն, նույն քանակ)։
 - Եթե բացակայում է, UI-ում նախադիտման և լիաէկրանի համար օգտագործվում է նույն `fullUrl`-ը։
 
+## Next.js `/_next/image` և timeout
+
+- Next.js-ը հեռավոր պատկերը նախ բեռնում է սերվերով (`/_next/image`)՝ **մոտ 7 վրկ** սահմանաչափով։ Եթե R2-ից պատասխանը դանդաղ է, ստանում եք `TimeoutError` և `500`։
+- Նախագծում պատկերասրահի համար `RemoteAwareImage` (`src/shared/components/RemoteAwareImage.tsx`) օգտագործում է `unoptimized` հեռավոր `https` URL-ների համար՝ ուղղակի բրաուզերի բեռնում։
+
 ## Կապ
 
 - R2 ընդհանուր կարգավորում՝ [03-CLOUDFLARE.md](./03-CLOUDFLARE.md)։

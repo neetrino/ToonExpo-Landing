@@ -1,8 +1,8 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import Image from "next/image";
 import { useState } from "react";
+import { RemoteAwareImage } from "@/shared/components/RemoteAwareImage";
 import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
@@ -76,7 +76,7 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               onClick={() => openLightboxAt(0)}
               className="relative h-[320px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
             >
-              <Image
+              <RemoteAwareImage
                 src={gridImageSrc(mainItem)}
                 alt={mainItem.label.trim() ? mainItem.label : `${imageAltBase}`}
                 fill
@@ -99,7 +99,7 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               onClick={() => openLightboxAt(1)}
               className="relative h-[220px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
             >
-              <Image
+              <RemoteAwareImage
                 src={gridImageSrc(secondItem)}
                 alt={secondItem.label.trim() ? secondItem.label : `${imageAltBase}`}
                 fill
@@ -119,7 +119,7 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               onClick={() => openLightboxAt(2)}
               className="relative h-[220px] w-full cursor-zoom-in overflow-hidden p-0 text-left lg:h-[580px]"
             >
-              <Image
+              <RemoteAwareImage
                 src={gridImageSrc(thirdItem)}
                 alt={thirdItem.label.trim() ? thirdItem.label : `${imageAltBase}`}
                 fill

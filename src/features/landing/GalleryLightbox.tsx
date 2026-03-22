@@ -1,6 +1,5 @@
 "use client";
 
-import NextImage from "next/image";
 import { createPortal } from "react-dom";
 import { GalleryLightboxFilmstrip } from "@/features/landing/GalleryLightboxFilmstrip";
 import { GALLERY_LIGHTBOX_Z_INDEX_CLASS } from "@/features/landing/galleryLightbox.constants";
@@ -10,6 +9,7 @@ import {
   GallerySpinner,
 } from "@/features/landing/galleryLightbox.parts";
 import { useGalleryLightbox } from "@/features/landing/useGalleryLightbox";
+import { RemoteAwareImage } from "@/shared/components/RemoteAwareImage";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 const GALLERY_LIGHTBOX_MAIN_SIZES = "100vw";
@@ -94,7 +94,7 @@ export function GalleryLightbox({ images, isOpen, initialIndex, onClose, imageAl
             onClick={(event) => event.stopPropagation()}
           >
             <div className="relative h-[min(85vh,calc(100vh-7rem))] w-full min-w-0 max-w-full">
-              <NextImage
+              <RemoteAwareImage
                 src={displaySrc}
                 alt={`${imageAltBase} — ${safeVisible + 1}`}
                 fill
