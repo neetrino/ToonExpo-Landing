@@ -24,10 +24,10 @@
 
 ## Սինք սկրիպտներ (տեղական մեքենա)
 
-- `pnpm sync:figma-r2` — `public/figma/**` → `static/figma/**`
+- `pnpm sync:figma-r2` — `public/figma/**` → `static/figma/**` (եթե պանակը կա)
 - `pnpm sync:project-r2` — `public/project/**` → `projects/**`
 
-Պահանջում են լրացված R2 env (տե՛ս `.env.example`)։ Լենդինգի ստատիկ URL-ների համար prod-ում `NEXT_PUBLIC_ASSET_BASE_URL`-ը սովորաբար հավասար է `R2_PUBLIC_URL`-ին (`publicAssetUrl`)։
+Պահանջում են լրացված R2 env (տե՛ս `.env.example`)։ Figma ասետներն ամբողջությամբ սպասարկվում են R2-ից — `NEXT_PUBLIC_ASSET_BASE_URL`-ը պետք է հավասար լինի `R2_PUBLIC_URL`-ին **և** local, **և** prod-ում։
 
 ## Նախագծի մեդիա (լենդինգ)
 
