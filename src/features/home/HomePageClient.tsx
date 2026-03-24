@@ -22,7 +22,7 @@ const PROJECTS_PAGE_SIZE_DESKTOP = 15;
 const PROJECTS_PAGE_SIZE_MOBILE = 10;
 
 const FIGMA_ASSETS = {
-  heroBg: publicAssetUrl("/figma/home/heroBg.jpg"),
+  heroBg: publicAssetUrl("/figma/home/heroBg.webp"),
   siteHeaderLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
   refundIcon: publicAssetUrl("/figma/home/refundIcon.svg"),
   locationIcon: publicAssetUrl("/figma/home/loocation.svg"),

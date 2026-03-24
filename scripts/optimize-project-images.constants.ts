@@ -11,4 +11,4 @@ export const OPTIMIZE_PROJECT_IMAGES_DEFAULT_ROOT = "public/project";
  * Նվազագույն չափ բայթերով՝ մուտքային JPEG/PNG-ը մշակելու համար։
  * Ավելի փոքր ֆայլերը չեն հպվում (կրկին կոդավորում չի արվում)։
  */
-export const OPTIMIZE_PROJECT_IMAGES_MIN_INPUT_BYTES = 700 * 1024;
+export const OPTIMIZE_PROJECT_IMAGES_MIN_INPUT_BYTES = 500 * 1024;

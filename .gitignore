@@ -34,5 +34,6 @@ temp/
 
 # Локальные/генерируемые медиа и данные (не коммитим)
 /project/
+public/projects/
 public/project/
 public/data/
