@@ -21,6 +21,10 @@ function r2ImageRemotePattern():
 const r2Pattern = r2ImageRemotePattern();
 
 const nextConfig: NextConfig = {
+  env: {
+    // Чтобы publicAssetUrl в client мог брать ассеты из R2 — тот же R2_PUBLIC_URL
+    NEXT_PUBLIC_ASSET_BASE_URL: process.env.R2_PUBLIC_URL ?? "",
+  },
   images: {
     remotePatterns: [
       ...(r2Pattern ? [r2Pattern] : []),
