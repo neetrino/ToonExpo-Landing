@@ -108,7 +108,7 @@ export function ReachOutCta({ className = "" }: { className?: string }) {
     >
       {HY_UI.CTA_REACH_OUT}
       <span className="relative inline-flex h-7 w-7 shrink-0 items-center justify-center">
-        <img src={BLOCK_FIGMA.reachOutCircle} alt="" className="absolute inset-0 h-full w-full" />
+        <img src={BLOCK_FIGMA.reachOutCircle} alt="" className="pointer-events-none select-none absolute inset-0 h-full w-full" draggable={false} />
         <span className="relative flex h-full w-full items-center justify-center" aria-hidden>
           <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <span className="inline-block translate-x-2.5 -translate-y-2">

@@ -22,7 +22,7 @@ const PROJECTS_PAGE_SIZE_DESKTOP = 15;
 const PROJECTS_PAGE_SIZE_MOBILE = 10;
 
 const FIGMA_ASSETS = {
-  heroBg: publicAssetUrl("/figma/home/heroBg.jpg"),
+  heroBg: publicAssetUrl("/figma/home/heroBg.webp"),
   siteHeaderLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
   refundIcon: publicAssetUrl("/figma/home/refundIcon.svg"),
   locationIcon: publicAssetUrl("/figma/home/loocation.svg"),
@@ -171,7 +171,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#246976] text-white">
+    <div className="min-h-screen bg-[#00303D] text-white">
       <header
         id="top"
         className={`fixed inset-x-0 top-0 z-[90] text-white transition-[background-color,backdrop-filter,border-color] duration-200 lg:hidden ${
@@ -194,7 +194,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
         </div>
       </header>
 
-      <div className="relative isolate overflow-hidden rounded-b-[26px] bg-[#246976] sm:rounded-bl-[125px] sm:rounded-br-[132px] sm:rounded-b-none">
+      <div className="relative isolate overflow-hidden rounded-b-[26px] bg-[#00303D] sm:rounded-bl-[111px] sm:rounded-br-[111px] sm:rounded-b-none">
         <Image
           src={FIGMA_ASSETS.heroBg}
           alt=""
@@ -203,10 +203,14 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           className="object-cover object-center"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,19,26,0.58),rgba(7,27,36,0.88))]" />
-        {/* Figma: Rectangle 1177 — overlay со скруглением снизу */}
+        {/* Лёгкий тёмный градиент снизу для читаемости текста — фото без синеватого оверлея */}
         <div
-          className="absolute inset-0 rounded-b-[26px] bg-[#277691] mix-blend-overlay sm:rounded-bl-[125px] sm:rounded-br-[132px] sm:rounded-b-none"
+          className="pointer-events-none absolute inset-0 rounded-b-[26px] bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.15)_70%,rgba(0,0,0,0.35)_100%)] sm:rounded-bl-[111px] sm:rounded-br-[111px] sm:rounded-b-none"
+          aria-hidden
+        />
+        {/* Стеклянный эффект как у мобил bar — backdrop-blur + полупрозрачность + border */}
+        <div
+          className="pointer-events-none absolute inset-0 rounded-b-[26px] border border-white/15 bg-black/40 backdrop-blur-[10px] sm:rounded-bl-[111px] sm:rounded-br-[111px] sm:rounded-b-none"
           aria-hidden
         />
 
@@ -232,7 +236,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           className="relative z-10 scroll-mt-6 px-4 pb-12 pt-[72px] sm:px-5 sm:pb-16 sm:pt-[72px] lg:px-[92px] lg:pb-28 lg:pr-[107px] lg:pt-8"
         >
           <div className="mx-auto grid max-w-[1920px] grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,1063px)_24px_634px] lg:gap-0">
-            <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-hidden rounded-[26px] border border-[#246976] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
+            <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-hidden rounded-[26px] border border-[#00303D] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
               <div className="absolute left-4 top-4 z-20 sm:right-auto">
                 <MapSearch
                   value={q}
@@ -298,14 +302,22 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
               </div>
             </div>
 
-            {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. */}
-            <div className="order-1 relative z-10 mb-6 flex w-full max-w-[634px] flex-col items-center gap-[11px] lg:order-2 lg:mb-0 lg:mt-[110px] lg:w-[634px] lg:max-w-none lg:items-end">
-              <p className="text-center font-semibold uppercase leading-[0.98] text-white [font-size:clamp(1.75rem,5vw,5.5rem)] lg:text-right lg:text-[88px]">
-                TOON EXPO <span className="text-[#008999]">2026.</span> INVEST
-              </p>
-              <p className="text-center text-lg font-semibold leading-normal text-white sm:text-[24px] lg:text-right">
-                {HY_UI.MAP_INTERACTIVE}
-              </p>
+            {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. Figma: toon/expo 198px со сдвигом expo вправо, 2026 ~119px, INVEST italic #FFD700 */}
+            <div className="order-1 relative z-10 mb-6 flex w-full max-w-[634px] flex-col items-center gap-[11px] lg:order-2 lg:mb-0 lg:mt-0 lg:w-[634px] lg:max-w-none lg:items-end lg:self-start">
+              <div className="flex flex-col items-center gap-0 lg:items-end lg:w-full">
+                <p className="text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,198px)] lg:text-right lg:text-[198px]">
+                  toon
+                </p>
+                <p className="-mt-2 text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,198px)] lg:-mt-4 lg:translate-x-20 lg:text-right lg:text-[198px]">
+                  expo
+                </p>
+                <p className="-mt-2 text-center font-bold text-white [font-size:clamp(1.75rem,6vw,119px)] lg:-mt-2 lg:text-right lg:text-[119px]">
+                  2026
+                </p>
+                <p className="-mt-1 text-center font-bold italic text-[#FFD700] [font-size:clamp(1.25rem,4vw,80px)] lg:text-right lg:text-[80px]">
+                  INVEST
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -325,7 +337,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             }}
           >
             <div
-              className="toon-home-map relative h-[74vh] w-[88vw] overflow-hidden rounded-[26px] border border-[#246976] bg-black shadow-2xl"
+              className="toon-home-map relative h-[74vh] w-[88vw] overflow-hidden rounded-[26px] border border-[#00303D] bg-black shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* В попапе поиск всегда раскрыт (не зависим от isSearchExpanded) */}
@@ -374,7 +386,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           document.body,
         )}
 
-      <main className="overflow-x-hidden bg-[#246976] pb-20 lg:pb-0">
+      <main className="overflow-x-hidden bg-[#00303D] pb-20 lg:pb-0">
         {/* Секция под hero: поиск + Featured Properties (по макету Figma) */}
         <section
           aria-labelledby="featured-heading"
@@ -427,7 +439,7 @@ id="featured-heading"
                   <button
                     type="button"
                     onClick={handleShowMore}
-                    className="cursor-pointer min-w-[200px] rounded-[10px] bg-white px-10 py-3 text-center text-[16px] font-bold leading-6 text-[#0f172b] transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#246976]"
+                    className="cursor-pointer min-w-[200px] rounded-[10px] bg-white px-10 py-3 text-center text-[16px] font-bold leading-6 text-[#0f172b] transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#00303D]"
                   >
                     {HY_UI.CTA_VIEW_MORE}
                   </button>

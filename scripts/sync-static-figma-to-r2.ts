@@ -4,6 +4,7 @@
  */
 import { readdir } from "node:fs/promises";
 import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { uploadToR2 } from "../src/shared/lib/r2";
 import { loadEnvFile } from "./loadEnvFile";
@@ -42,7 +43,15 @@ async function main(): Promise<void> {
   const cwd = process.cwd();
   const publicRoot = join(cwd, "public");
   const figmaDir = join(publicRoot, "figma");
+  if (!existsSync(figmaDir)) {
+    console.log("public/figma/ not found — nothing to sync. Assets served from R2.");
+    return;
+  }
   const files = await walkFiles(figmaDir);
+  if (files.length === 0) {
+    console.log("public/figma/ is empty — nothing to sync. Assets served from R2.");
+    return;
+  }
   let ok = 0;
   for (const abs of files) {
     const relFromPublic = relative(publicRoot, abs).replace(/\\/g, "/");
