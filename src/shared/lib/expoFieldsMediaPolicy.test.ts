@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import {
   isDriveOrDocsUrl,
   sanitizeExpoFieldsFromCsvForMediaPolicy,
@@ -6,6 +7,8 @@ import {
   sanitizeMediaUrlList,
 } from "@/shared/lib/expoFieldsMediaPolicy";
 import { emptyExpoFields } from "@/shared/lib/expoFields";
+
+const F = PROJECT_FIELD;
 
 describe("isDriveOrDocsUrl", () => {
   it("detects drive and docs hosts", () => {
@@ -37,17 +40,13 @@ describe("sanitizeMediaSingleUrlField", () => {
 });
 
 describe("sanitizeExpoFieldsFromCsvForMediaPolicy", () => {
-  it("clears 43-44 and 47-50, sanitizes 45-46", () => {
+  it("sanitizes video and virtual tour", () => {
     const base = emptyExpoFields();
-    base.expo_field_43 = "https://ok.com/a.webp";
-    base.expo_field_45 = "https://youtu.be/x";
-    base.expo_field_47 = "https://example.com/tour";
-    base.expo_field_50 = "https://x.com/logo.png";
+    base[F.video] = "https://youtu.be/x";
+    base[F.virtualTour] =
+      '<iframe src="https://my.matterport.com/show/?m=abc" width="1" height="1"></iframe>';
     const out = sanitizeExpoFieldsFromCsvForMediaPolicy(base);
-    expect(out.expo_field_43).toBe("");
-    expect(out.expo_field_44).toBe("");
-    expect(out.expo_field_45).toBe("https://youtu.be/x");
-    expect(out.expo_field_47).toBe("");
-    expect(out.expo_field_50).toBe("");
+    expect(out[F.video]).toBe("https://youtu.be/x");
+    expect(out[F.virtualTour]).toBe("https://my.matterport.com/show/?m=abc");
   });
 });

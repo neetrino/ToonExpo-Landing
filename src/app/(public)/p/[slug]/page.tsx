@@ -9,6 +9,7 @@ import { LandingAutoRedirect } from "@/features/landing/mobile/LandingAutoRedire
 import { SiteReachMapFooter } from "@/features/home/SiteReachMapFooter";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { resolveProjectFolderMedia } from "@/features/landing/lib/resolveProjectFolderMedia";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     where: { slug, published: true },
   });
   const f = (p?.expoFields as ExpoMap) ?? {};
-  const title = f.expo_field_02 || f.expo_field_01 || slug;
+  const title = f[PROJECT_FIELD.titleExhibition] || f[PROJECT_FIELD.participantName] || slug;
   return { title: `${title} | Toon Expo` };
 }
 

@@ -1,9 +1,10 @@
 import { z } from "zod";
-import { EXPO_FIELD_KEYS, EXPO_FIELD_COUNT, getExpoFieldKey } from "@/shared/constants/expoFieldKeys";
+import { EXPO_FIELD_KEYS } from "@/shared/constants/expoFieldKeys";
+import { migrateLegacyExpoFieldsJson } from "@/shared/lib/expoFieldsLegacyMigration";
 
 const shape: Record<string, z.ZodOptional<z.ZodString>> = {};
-for (let i = 1; i <= EXPO_FIELD_COUNT; i += 1) {
-  shape[getExpoFieldKey(i)] = z.string().optional();
+for (const k of EXPO_FIELD_KEYS) {
+  shape[k] = z.string().optional();
 }
 
 export const expoFieldsFormSchema = z.object(shape);
@@ -24,6 +25,17 @@ export function normalizeExpoFields(raw: unknown): ExpoFieldsFormValues {
     return base;
   }
   const obj = raw as Record<string, unknown>;
+  const hasLegacy = Object.keys(obj).some((k) => k.startsWith("expo_field_"));
+  if (hasLegacy) {
+    const migrated = migrateLegacyExpoFieldsJson(obj);
+    for (const k of EXPO_FIELD_KEYS) {
+      if (Object.prototype.hasOwnProperty.call(migrated, k)) {
+        const v = migrated[k];
+        (base as Record<string, string>)[k] = typeof v === "string" ? v : "";
+      }
+    }
+    return base;
+  }
   for (const k of EXPO_FIELD_KEYS) {
     const v = obj[k];
     if (typeof v === "string") {

@@ -1,6 +1,10 @@
+import type { ConstructionDetailIconVariant } from "@/features/landing/components/ConstructionDetailIcon";
 import type { LandingBlockId } from "@/features/landing/lib/blockVisibility";
+import { PROJECT_FIELD, type ProjectFieldKey } from "@/shared/constants/expoFieldKeys";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
+
+const F = PROJECT_FIELD;
 
 export const participantNav: Array<{
   id: string;
@@ -13,7 +17,6 @@ export const participantNav: Array<{
   { id: "payment", label: HY_UI.NAV_PAYMENT, block: "payment" },
   { id: "infrastructure", label: HY_UI.NAV_INFRASTRUCTURE, block: "infrastructure" },
   { id: "construction", label: HY_UI.NAV_CONSTRUCTION, block: "construction" },
-  { id: "parking", label: HY_UI.NAV_PARKING, block: "parking" },
   { id: "tours", label: HY_UI.NAV_TOURS, block: "tours" },
   { id: "location", label: HY_UI.NAV_LOCATION, block: "location" },
   { id: "contacts", label: HY_UI.NAV_CONTACTS, block: "footer" },
@@ -44,38 +47,22 @@ export const MOBILE_HERO_PROJECT_LOGO_IMG_CLASS =
 
 /** Միայն SVG/քիչ ակտիվներ — լուսանկար-զանգվածներ հանված են (դատարկ slot → սև ֆոն UI-ում)։ */
 export const participantFigmaAssets = {
-  investmentIcon: publicAssetUrl("/figma/participant/investmentIcon.svg"),
-  paymentInstallmentIcon: publicAssetUrl("/figma/participant/paymentInstallmentIcon.svg"),
-  paymentMortgageIcon: publicAssetUrl("/figma/participant/paymentMortgageIcon.svg"),
-  paymentTaxIcon: publicAssetUrl("/figma/participant/paymentTaxIcon.svg"),
-  constructionStructureIcon: publicAssetUrl("/figma/participant/constructionStructureIcon.svg"),
-  constructionMaterialsIcon: publicAssetUrl("/figma/participant/constructionMaterialsIcon.svg"),
-  constructionInsulationIcon: publicAssetUrl("/figma/participant/constructionInsulationIcon.svg"),
-  constructionCompletionIcon: publicAssetUrl("/figma/participant/constructionCompletionIcon.svg"),
-  constructionCeilingIcon: publicAssetUrl("/figma/participant/constructionCeilingIcon.svg"),
-  constructionFloorsIcon: publicAssetUrl("/figma/participant/constructionFloorsIcon.svg"),
-  parkingOpenIcon: publicAssetUrl("/figma/participant/parkingOpenIcon.svg"),
-  parkingClosedIcon: publicAssetUrl("/figma/participant/parkingClosedIcon.svg"),
-  parkingPriceIcon: publicAssetUrl("/figma/participant/parkingPriceIcon.svg"),
-  parkingStandardIcon: publicAssetUrl("/figma/participant/parkingStandardIcon.svg"),
-  parkingCommercialIcon: publicAssetUrl("/figma/participant/parkingCommercialIcon.svg"),
   galleryArrowLeft: publicAssetUrl("/figma/participant/galleryArrowLeft.svg"),
   galleryArrowRight: publicAssetUrl("/figma/participant/galleryArrowRight.svg"),
 } as const;
 
-export const constructionCards = [
-  { key: "expo_field_20", label: HY_UI.CONSTRUCTION_STRUCTURE, icon: participantFigmaAssets.constructionStructureIcon },
-  { key: "expo_field_21", label: HY_UI.CONSTRUCTION_MATERIALS, icon: participantFigmaAssets.constructionMaterialsIcon },
-  { key: "expo_field_22", label: HY_UI.CONSTRUCTION_INSULATION, icon: participantFigmaAssets.constructionInsulationIcon },
-  { key: "expo_field_31", label: HY_UI.CONSTRUCTION_COMPLETION, icon: participantFigmaAssets.constructionCompletionIcon },
-  { key: "expo_field_29", label: HY_UI.CONSTRUCTION_CEILING, icon: participantFigmaAssets.constructionCeilingIcon },
-  { key: "expo_field_25", label: HY_UI.CONSTRUCTION_FLOORS, icon: participantFigmaAssets.constructionFloorsIcon },
-] as const;
-
-export const parkingCards = [
-  { key: "expo_field_37", label: HY_UI.PARKING_OPEN, icon: participantFigmaAssets.parkingOpenIcon },
-  { key: "expo_field_38", label: HY_UI.PARKING_CLOSED, icon: participantFigmaAssets.parkingClosedIcon },
-  { key: "expo_field_40", label: HY_UI.PARKING_PRICE, icon: participantFigmaAssets.parkingPriceIcon },
-  { key: "expo_field_39", label: HY_UI.PARKING_STANDARD, icon: participantFigmaAssets.parkingStandardIcon },
-  { key: "expo_field_41", label: HY_UI.PARKING_COMMERCIAL, icon: participantFigmaAssets.parkingCommercialIcon },
+/**
+ * Excel սյուներ N → T → Q → R → P → O (`docs/data/CorrectedToonExpoData2026.xlsx` / նույն CSV)։
+ * Վերնագիր = `PROJECT_FIELD` բանալու տեքստը (սյունակի անվանումը), արժեքը՝ `fields[card.key]`։
+ */
+export const constructionCards: readonly {
+  key: ProjectFieldKey;
+  iconVariant: ConstructionDetailIconVariant;
+}[] = [
+  { key: F.structure, iconVariant: "structure" },
+  { key: F.parkingClosed, iconVariant: "parkingClosed" },
+  { key: F.elevators, iconVariant: "elevators" },
+  { key: F.handover, iconVariant: "handover" },
+  { key: F.ceiling, iconVariant: "ceiling" },
+  { key: F.floors, iconVariant: "floors" },
 ] as const;

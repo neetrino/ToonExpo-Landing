@@ -1,11 +1,12 @@
-import { parseMediaUrls } from "@/shared/lib/mediaUrls";
-import { isFieldNonEmpty } from "@/shared/lib/expoFields";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
+const F = PROJECT_FIELD;
+
 /** Վերադարձնում է նախագծի ցուցադրվող վերնագիրը։ */
 export function getLandingTitle(fields: ExpoMap): string {
-  return fields.expo_field_02?.trim() || fields.expo_field_01?.trim() || "Project";
+  return fields[F.titleExhibition]?.trim() || fields[F.participantName]?.trim() || "Project";
 }
 
 /** Վերադարձնում է առաջին ոչ դատարկ արժեքը։ */
@@ -15,7 +16,7 @@ export function firstNonEmpty(...values: Array<string | null | undefined>): stri
 
 /** Կտրում է երկար տեքստը առաջին նախադասության սահմանում։ */
 export function getLeadText(fields: ExpoMap): string {
-  const raw = fields.expo_field_34?.trim();
+  const raw = fields[F.description]?.trim();
   if (!raw) {
     return "Discover the joy again!";
   }
@@ -24,17 +25,17 @@ export function getLeadText(fields: ExpoMap): string {
   return sentence?.trim() || raw;
 }
 
-/** Վերադարձնում է նկարների ցուցակը հերոյի/պատկերասրահի համար։ */
-export function getProjectMedia(fields: ExpoMap): string[] {
-  return [...parseMediaUrls(fields.expo_field_43), ...parseMediaUrls(fields.expo_field_44)];
+/** CSV-ում պատկերների URL չկա — դատարկ։ */
+export function getProjectMedia(_fields: ExpoMap): string[] {
+  return [];
 }
 
-/** Վերադարձնում է hero-ի հիմնական նկարը՝ նախընտրելով արտաքին հիմնական render-ը բազայից։ */
-export function getHeroMedia(fields: ExpoMap): string {
-  return parseMediaUrls(fields.expo_field_43)[0] ?? parseMediaUrls(fields.expo_field_44)[0] ?? "";
+/** Hero նկար՝ միայն R2/պանակից `getHeroMedia` fallback-ով։ */
+export function getHeroMedia(_fields: ExpoMap): string {
+  return "";
 }
 
-/** Վերադարձնում է տեքստը պարբերությունների տեսքով։ */
+/** Տեքստը պարբերությունների տեսքով։ */
 export function splitParagraphs(raw: string | undefined): string[] {
   if (!raw?.trim()) {
     return [];
@@ -79,9 +80,9 @@ export function formatRange(minValue?: string, maxValue?: string): string {
   return min || max || "On request";
 }
 
-/** Վերադարձնում է նախագծի լոգոն, եթե այն հղում է։ */
-export function getLogoUrl(fields: ExpoMap): string {
-  return isFieldNonEmpty(fields.expo_field_50) ? fields.expo_field_50.trim() : "";
+/** Լոգո՝ միայն պանակից։ */
+export function getLogoUrl(_fields: ExpoMap): string {
+  return "";
 }
 
 function extractFirstNumber(raw: string | undefined): string {
@@ -100,17 +101,21 @@ export function parseSizeOptions(raw: string | undefined): string[] {
 export function getMobileStats(fields: ExpoMap): Array<{ value: string; label: string; tone: "teal" | "gold" | "navy" }> {
   return [
     {
-      value: firstNonEmpty(extractFirstNumber(fields.expo_field_26), "30") + "+",
+      value: firstNonEmpty(extractFirstNumber(fields[F.areas]), "30") + "+",
       label: HY_UI.NAV_APARTMENTS,
       tone: "teal",
     },
     {
-      value: firstNonEmpty(extractFirstNumber(fields.expo_field_25), "6"),
+      value: firstNonEmpty(extractFirstNumber(fields[F.floors]), "6"),
       label: HY_UI.MOBILE_STAT_FLOORS,
       tone: "gold",
     },
     {
-      value: firstNonEmpty(extractFirstNumber(fields.expo_field_37), extractFirstNumber(fields.expo_field_38), "45"),
+      value: firstNonEmpty(
+        extractFirstNumber(fields[F.parkingOpen]),
+        extractFirstNumber(fields[F.parkingClosed]),
+        "45",
+      ),
       label: HY_UI.MOBILE_STAT_PARKING,
       tone: "navy",
     },

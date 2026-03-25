@@ -24,15 +24,18 @@ body {
 
 .toon-home-map {
   isolation: isolate;
+  /* Համընկնում է rounded-[26px] հիմնական քարտեզի հետ; ֆուտեր/մոբայլ — Tailwind-ով [--toon-map-corner-radius:…] */
+  --toon-map-corner-radius: 1.625rem;
 }
 
-/* Երբ բոլոր պիտակները բաց են — hovercard-ները կետից վերև են; overflow:hidden կտրում է */
-.toon-home-map:has(.map-zoom-labels-visible) {
-  overflow: visible;
-}
-
-.toon-home-map .map-zoom-labels-visible .maplibregl-map {
-  overflow: visible !important;
+/*
+ * Տiles-ը կլորացնել միայն canvas-ի կոնտեյներում. Նախկինում :has(.map-zoom-labels-visible)-ը
+ * դնում էր overflow:visible ամբողջ տարրին — քարտեզը դադարում էր կտրվել border-radius-ով։
+ * Մարկերները sibling են canvas-container-ին — overflow:hidden այստեղ չի կտրում պիտակները։
+ */
+.toon-home-map .maplibregl-canvas-container {
+  border-radius: var(--toon-map-corner-radius);
+  overflow: hidden;
 }
 
 .toon-home-map .maplibregl-map,

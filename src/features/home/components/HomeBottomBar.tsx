@@ -76,7 +76,7 @@ const MENU_CSS = `
   .home-menu-bar__icon {
     width: 2.6em;
     height: 2.6em;
-    stroke: #246976;
+    stroke: #2ba8b0;
     fill: transparent;
     stroke-width: 1pt;
     stroke-miterlimit: 10;
@@ -122,7 +122,7 @@ const MENU_CSS = `
   }
   .home-menu-bar__border-line path {
     fill: none;
-    stroke: #287691;
+    stroke: #2ba8b0;
     stroke-width: 1px;
     vector-effect: non-scaling-stroke;
   }

@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { parseDmsLatLng, parseLatLng, resolveLatLngForMap } from "./latLng";
+
+const L = PROJECT_FIELD.locationCoords;
 
 describe("parseLatLng", () => {
   it("parses decimal pair with comma", () => {
@@ -28,18 +31,16 @@ describe("parseDmsLatLng", () => {
 });
 
 describe("resolveLatLngForMap", () => {
-  it("prefers expo_field_16", () => {
+  it("prefers decimal in location cell", () => {
     const r = resolveLatLngForMap({
-      expo_field_15: `40°16'05.6"N 44°38'18.4"E`,
-      expo_field_16: "40.1, 44.2",
+      [L]: "40.1, 44.2",
     });
     expect(r).toEqual({ lat: 40.1, lng: 44.2 });
   });
 
-  it("falls back to DMS in expo_field_15", () => {
+  it("falls back to DMS in same cell", () => {
     const r = resolveLatLngForMap({
-      expo_field_15: `40°16'05.6"N 44°38'18.4"E`,
-      expo_field_16: "",
+      [L]: `40°16'05.6"N 44°38'18.4"E`,
     });
     expect(r).not.toBeNull();
   });

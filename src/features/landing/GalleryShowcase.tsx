@@ -23,6 +23,8 @@ type Props = {
   rightArrowSrc: string;
   /** Լայթբոքսում alt-ի հիմք (նախագծի անուն) */
   imageAltBase: string;
+  /** Գլխավոր պատկերի վրա վերնագիր (լռելյայն՝ SECTION_GALLERY) */
+  overlayHeading?: string;
 };
 
 function getVisibleItems(items: GalleryShowcaseItem[], startIndex: number): GalleryShowcaseItem[] {
@@ -40,7 +42,13 @@ function gridImageSrc(item: GalleryShowcaseItem): string {
 }
 
 /** Галерея проекта с рабочими стрелками и ротацией изображений. */
-export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBase }: Props) {
+export function GalleryShowcase({
+  items,
+  leftArrowSrc,
+  rightArrowSrc,
+  imageAltBase,
+  overlayHeading = HY_UI.SECTION_GALLERY,
+}: Props) {
   const [startIndex, setStartIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -85,7 +93,7 @@ export function GalleryShowcase({ items, leftArrowSrc, rightArrowSrc, imageAltBa
               />
               <div className="pointer-events-none absolute inset-0 bg-black/35" />
               <div className="pointer-events-none absolute bottom-6 left-5 text-white lg:left-[140px]">
-                <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">{HY_UI.SECTION_GALLERY}</h2>
+                <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase">{overlayHeading}</h2>
                 {mainItem.label.trim() ? (
                   <p className="mt-2 text-[clamp(1.05rem,1.5vw,1.7rem)]">{mainItem.label}</p>
                 ) : null}

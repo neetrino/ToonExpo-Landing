@@ -142,12 +142,20 @@ function buildResolvedFromRelativePaths(
     }
   }
 
+  const interiorPhotoRels = listImageRelsInSubdir(relativePaths, "Interior");
+  const exteriorPhotoRels = listImageRelsInSubdir(relativePaths, "Exterior");
+  const galleryInteriorThenExteriorUrls = [
+    ...interiorPhotoRels.map((rel) => toUrl(rel)),
+    ...exteriorPhotoRels.map((rel) => toUrl(rel)),
+  ];
+
   return {
     heroUrl: heroRel ? toUrl(heroRel) : null,
     aboutLargeUrl: aboutLargeRel ? toUrl(aboutLargeRel) : null,
     aboutSmallUrl: aboutSmallRel ? toUrl(aboutSmallRel) : null,
     logoUrl: logoRel ? toUrl(logoRel) : null,
     galleryUrls,
+    galleryInteriorThenExteriorUrls,
     infrastructureLeftUrl: infraLeftRel ? toUrl(infraLeftRel) : null,
     infrastructureRightUrl: infraRightRel ? toUrl(infraRightRel) : null,
   };
@@ -207,6 +215,7 @@ async function resolveProjectFolderMediaImpl(
     aboutSmallUrl: null,
     logoUrl: null,
     galleryUrls: [],
+    galleryInteriorThenExteriorUrls: [],
     infrastructureLeftUrl: null,
     infrastructureRightUrl: null,
   };

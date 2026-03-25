@@ -1,24 +1,34 @@
-/* eslint-disable @next/next/no-img-element */
+import {
+  CalendarClock,
+  CircleDollarSign,
+  Landmark,
+  Percent,
+  Ruler,
+  Wallet,
+} from "lucide-react";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
-import { parseMediaUrls } from "@/shared/lib/mediaUrls";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/lib/blockVisibility";
+import { ConstructionDetailIcon } from "@/features/landing/components/ConstructionDetailIcon";
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
 import { GalleryShowcase } from "@/features/landing/GalleryShowcase";
 import { Tour3DBlock } from "@/features/landing/Tour3DBlock";
 import { VideoEmbedBlock } from "@/features/landing/VideoEmbedBlock";
 import {
   constructionCards,
-  parkingCards,
   PARTICIPANT_SECTION_INSET,
   participantFigmaAssets,
 } from "@/features/landing/landingPage.constants";
 import {
   firstNonEmpty,
-  formatRange,
+  getLandingTitle,
   getProjectMedia,
-  splitListItems,
+  getVirtualTourUrl,
 } from "@/features/landing/landingPage.helpers";
-import { resolveGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
+import { formatAreasWithSqmSuffix } from "@/shared/lib/formatAreasDisplay";
+import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
+import { resolveGalleryItems, resolveSecondaryGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
@@ -45,61 +55,78 @@ type Props = {
 };
 
 export function LandingPageLower({ fields, title: _title, folderMedia }: Props) {
+  const F = PROJECT_FIELD;
   const vis = visibleBlocks(fields);
   const media = getProjectMedia(fields);
-  const exteriorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_43)));
-  const infrastructureItems = splitListItems(fields.expo_field_33);
   const galleryResolved = resolveGalleryItems(media, folderMedia);
-  /** Պլիտկայի ենթագրեր՝ միայն եթե տվյալներում կա առանձին տեքստ (հակառակ դեպքում կկրկնվի h2-ի SECTION_GALLERY)։ */
   const galleryItems = galleryResolved.map(({ fullUrl, thumbUrl }) => ({
     label: "",
     image: fullUrl,
     thumb: thumbUrl,
   }));
-  const infrastructureImages: [string | null, string | null] = [
-    folderMedia?.infrastructureLeftUrl ||
-      exteriorMedia[1] ||
-      exteriorMedia[0] ||
-      media[3] ||
-      null,
-    folderMedia?.infrastructureRightUrl ||
-      exteriorMedia[2] ||
-      exteriorMedia[1] ||
-      media[4] ||
-      null,
-  ];
+  const secondaryGalleryResolved = resolveSecondaryGalleryItems(folderMedia);
+  const infrastructureGalleryItems = secondaryGalleryResolved.map(({ fullUrl, thumbUrl }) => ({
+    label: "",
+    image: fullUrl,
+    thumb: thumbUrl,
+  }));
   const showGalleryBlock =
     (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryResolved.length > 0;
-  const showInfrastructureBlock =
-    vis.infrastructure ||
-    Boolean(folderMedia?.infrastructureLeftUrl || folderMedia?.infrastructureRightUrl);
+  const showInfrastructureBlock = secondaryGalleryResolved.length > 0;
+  const displayTitle = getLandingTitle(fields);
+  const virtualTourUrl = getVirtualTourUrl(fields);
 
   return (
     <>
       {vis.investment ? (
         <Section id="investment" className="bg-[#2ba8b0] py-16 text-white lg:py-24">
           <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
-            <h2 className="text-[clamp(1.55rem,2.1vw,1.95rem)] font-semibold uppercase">{HY_UI.NAV_INVESTMENT}</h2>
-            <div className="mt-7 grid gap-5 lg:grid-cols-3 lg:gap-6">
+            <div className="flex flex-col items-start">
+              <h2 className="text-[clamp(2.25rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-[0.03em] text-white">
+                {HY_UI.SECTION_INVESTMENT_OFFER}
+              </h2>
+              <span
+                className="mt-4 h-0.5 w-16 rounded-full bg-white/90 lg:mt-5 lg:w-20"
+                aria-hidden
+              />
+            </div>
+            <div className="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-3 lg:gap-8">
               {[
                 {
-                  title: firstNonEmpty(fields.expo_field_17, HY_UI.MOBILE_INVEST_HIGH_1),
-                  text: formatRange(fields.expo_field_17, fields.expo_field_18),
+                  title: HY_UI.INVEST_CARD_COMPLETION,
+                  text: firstNonEmpty(fields[F.completion], HY_UI.ON_REQUEST),
+                  Icon: CalendarClock,
                 },
                 {
-                  title: HY_UI.MOBILE_INVEST_HIGH_2,
-                  text: formatRange(fields.expo_field_07, fields.expo_field_08),
+                  title: HY_UI.INVEST_CARD_AREAS,
+                  text: firstNonEmpty(
+                    formatAreasWithSqmSuffix(fields[F.areas]),
+                    HY_UI.ON_REQUEST,
+                  ),
+                  Icon: Ruler,
                 },
                 {
-                  title: HY_UI.MOBILE_INVEST_HIGH_3,
-                  text: firstNonEmpty(fields.expo_field_10, fields.expo_field_09, HY_UI.ON_REQUEST),
+                  title: HY_UI.INVEST_CARD_PRICE_PER_SQM,
+                  text: firstNonEmpty(
+                    formatPriceMinForDisplay(fields[F.priceMin]),
+                    HY_UI.ON_REQUEST,
+                  ),
+                  Icon: CircleDollarSign,
                 },
-              ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3.5">
-                  <img src={participantFigmaAssets.investmentIcon} alt="" className="mt-0.5 h-6 w-6 shrink-0" />
+              ].map(({ title, text, Icon }) => (
+                <div key={title} className="flex items-start gap-4">
+                  <Icon
+                    aria-hidden
+                    className="mt-0.5 h-9 w-9 shrink-0 text-white lg:h-11 lg:w-11"
+                    strokeWidth={LANDING_LUCIDE_STROKE}
+                  />
                   <div className="min-w-0">
-                    <p className="text-[1rem] font-semibold leading-snug lg:text-[1.1rem]">{item.title}</p>
-                    <p className="mt-1.5 text-xs leading-5 text-white/88 lg:text-sm lg:leading-6">{item.text}</p>
+                    <p className="text-[clamp(0.95rem,1.35vw,1.1rem)] font-semibold leading-snug tracking-wide text-white/80 lg:text-[1.05rem]">
+                      {title}
+                    </p>
+                    <p className="mt-2.5 text-[clamp(1.15rem,1.85vw,1.5rem)] font-bold leading-snug text-white lg:mt-3 lg:text-[clamp(1.25rem,2vw,1.65rem)] lg:leading-tight">
+                      {text}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -127,24 +154,28 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
               {[
                 {
                   title: HY_UI.PAYMENT_INSTALLMENT,
-                  text: firstNonEmpty(fields.expo_field_19, HY_UI.ON_REQUEST),
-                  icon: participantFigmaAssets.paymentInstallmentIcon,
+                  text: firstNonEmpty(fields[F.paymentOptions], HY_UI.ON_REQUEST),
+                  Icon: Wallet,
                 },
                 {
                   title: HY_UI.PAYMENT_MORTGAGE,
-                  text: firstNonEmpty(fields.expo_field_10, HY_UI.ON_REQUEST),
-                  icon: participantFigmaAssets.paymentMortgageIcon,
+                  text: firstNonEmpty(fields[F.bank], HY_UI.ON_REQUEST),
+                  Icon: Landmark,
                 },
                 {
                   title: HY_UI.PAYMENT_TAX,
-                  text: firstNonEmpty(fields.expo_field_09, HY_UI.ON_REQUEST),
-                  icon: participantFigmaAssets.paymentTaxIcon,
+                  text: firstNonEmpty(fields[F.taxRefund], HY_UI.ON_REQUEST),
+                  Icon: Percent,
                 },
-              ].map((item) => (
-                <div key={item.title} className="lg:px-7">
-                  <img src={item.icon} alt="" className="h-[56px] w-[56px]" />
-                  <p className="mt-5 text-[1.3rem] font-semibold lg:text-[1.45rem]">{item.title}</p>
-                  <p className="mt-3 text-sm leading-7 lg:text-base">{item.text}</p>
+              ].map(({ title, text, Icon }) => (
+                <div key={title} className="lg:px-7">
+                  <Icon
+                    aria-hidden
+                    className="h-14 w-14 text-black"
+                    strokeWidth={LANDING_LUCIDE_STROKE}
+                  />
+                  <p className="mt-5 text-[1.3rem] font-semibold lg:text-[1.45rem]">{title}</p>
+                  <p className="mt-3 text-sm leading-7 lg:text-base">{text}</p>
                 </div>
               ))}
             </div>
@@ -153,35 +184,13 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
       ) : null}
 
       {showInfrastructureBlock ? (
-        <Section id="infrastructure" className="bg-white py-10 lg:py-14">
-          <div
-            className={`mx-auto grid max-w-[1920px] gap-6 lg:grid-cols-[minmax(0,1fr)_400px_400px] ${PARTICIPANT_SECTION_INSET} lg:pr-0 xl:pr-0`}
-          >
-            <div>
-              <h2 className="max-w-[360px] text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
-                {HY_UI.SECTION_INFRA}
-              </h2>
-              <ul className="mt-7 space-y-3 text-base leading-7 text-black/82 lg:text-[1.15rem] lg:leading-[1.5]">
-                {infrastructureItems.map((item) => (
-                  <li key={item} className="ml-6 list-disc">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {infrastructureImages.map((image, index) => (
-              <div key={`infra-${index}`} className="overflow-hidden">
-                {image ? (
-                  <img src={image} alt="" className="h-full min-h-[220px] w-full object-cover lg:min-h-[320px]" />
-                ) : (
-                  <div
-                    className="h-full min-h-[220px] w-full bg-neutral-900 lg:min-h-[320px]"
-                    aria-hidden
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+        <Section id="infrastructure" className="bg-white px-2 py-10 sm:px-3 lg:px-0 lg:py-14">
+          <GalleryShowcase
+            items={infrastructureGalleryItems}
+            leftArrowSrc={participantFigmaAssets.galleryArrowLeft}
+            rightArrowSrc={participantFigmaAssets.galleryArrowRight}
+            imageAltBase={_title}
+          />
         </Section>
       ) : null}
 
@@ -191,31 +200,12 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
               {HY_UI.SECTION_CONSTRUCTION}
             </h2>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-6">
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
               {constructionCards.map((card) => (
                 <div key={card.key} className="flex flex-col items-center text-center">
-                  <img src={card.icon} alt="" className="h-[62px] w-[62px] object-contain" />
-                  <p className="mt-4 text-[1.15rem] font-semibold text-[#2ba8b0] lg:text-[1.25rem]">{card.label}</p>
+                  <ConstructionDetailIcon variant={card.iconVariant} />
+                  <p className="mt-4 text-[1.15rem] font-semibold text-[#2ba8b0] lg:text-[1.25rem]">{card.key}</p>
                   <p className="mt-2 text-sm leading-7 text-white/88 lg:text-base">{firstNonEmpty(fields[card.key], HY_UI.ON_REQUEST)}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Section>
-      ) : null}
-
-      {vis.parking ? (
-        <Section id="parking" className="bg-[#2ba8b0] py-10 text-white lg:py-12">
-          <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
-            <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#192643]">
-              {HY_UI.SECTION_PARKING}
-            </h2>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
-              {parkingCards.map((card) => (
-                <div key={card.key} className="flex flex-col items-center text-center">
-                  <img src={card.icon} alt="" className="h-[62px] w-[62px] object-contain" />
-                  <p className="mt-4 text-[1.15rem] font-semibold text-[#192643] lg:text-[1.25rem]">{card.label}</p>
-                  <p className="mt-2 text-sm leading-7 lg:text-base">{firstNonEmpty(fields[card.key], HY_UI.ON_REQUEST)}</p>
                 </div>
               ))}
             </div>
@@ -229,25 +219,25 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
               {HY_UI.SECTION_TOURS_MEDIA}
             </h2>
-            {isFieldNonEmpty(fields.expo_field_45) ? (
+            {isFieldNonEmpty(virtualTourUrl) ? (
               <div>
                 <div className="mb-0 inline-flex rounded-t-[10px] bg-[#ffd24d] px-6 py-2 text-base font-semibold uppercase text-white lg:px-7">
                   {HY_UI.TOUR_3D_BADGE}
                 </div>
                 <Tour3DBlock
-                  url={fields.expo_field_45}
-                  title={fields.expo_field_02 || "3D Tour"}
+                  url={virtualTourUrl}
+                  title={displayTitle || "3D Tour"}
                 />
               </div>
             ) : null}
-            {isFieldNonEmpty(fields.expo_field_46) ? (
+            {isFieldNonEmpty(fields[F.video]) ? (
               <div>
                 <div className="mb-0 inline-flex rounded-t-[10px] bg-[#ffd24d] px-6 py-2 text-base font-semibold uppercase text-white lg:px-7">
                   {HY_UI.TAB_VIDEO}
                 </div>
                 <VideoEmbedBlock
-                  url={fields.expo_field_46}
-                  title={fields.expo_field_02}
+                  url={fields[F.video]}
+                  title={displayTitle}
                 />
               </div>
             ) : null}
@@ -258,8 +248,3 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
     </>
   );
 }
-
-
-
-
-

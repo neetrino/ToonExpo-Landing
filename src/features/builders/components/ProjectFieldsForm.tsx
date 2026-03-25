@@ -2,46 +2,27 @@ import {
   EXPO_EDIT_SECTIONS,
   EXPO_FIELD_GROUPS,
   EXPO_FIELD_LABELS_HY,
+  PROJECT_FIELD,
   type ExpoEditSectionId,
   type ExpoFieldGroupId,
 } from "@/shared/constants/expoFieldKeys";
 import type { ExpoFieldsFormValues } from "@/shared/lib/expoFields";
 import { UploadFieldButton } from "@/features/builders/components/UploadFieldButton";
-import { MediaListField } from "@/features/builders/components/MediaListField";
 import { ProjectMediaFolderHint } from "@/features/builders/components/ProjectMediaFolderHint";
 import { ProjectR2MediaManager } from "@/features/builders/components/ProjectR2MediaManager";
-import {
-  MEDIA_EMBED_EXTERNAL_URL_FIELD_KEYS,
-  MEDIA_GALLERY_FIELD_KEYS,
-  MEDIA_HIDDEN_PRESERVE_FIELD_KEYS,
-} from "@/features/builders/constants/adminMediaFieldGroups";
+import { MEDIA_EMBED_EXTERNAL_URL_FIELD_KEYS } from "@/features/builders/constants/adminMediaFieldGroups";
 
-/** Multiple images (gallery): upload several or add URLs */
-const MEDIA_LIST_FIELD_KEYS = new Set(["expo_field_43", "expo_field_44"]);
-
-const URL_FIELD_KEYS = new Set([
-  "expo_field_45",
-  "expo_field_46",
-  "expo_field_47",
-  "expo_field_48",
-  "expo_field_49",
-  "expo_field_50",
-  "expo_field_51",
-  "expo_field_52",
-  "expo_field_53",
+const URL_FIELD_KEYS: Set<string> = new Set([
+  PROJECT_FIELD.website,
+  PROJECT_FIELD.instagram,
+  PROJECT_FIELD.facebook,
+  PROJECT_FIELD.video,
+  PROJECT_FIELD.virtualTour,
 ]);
 
-const LONG_FIELDS = new Set([
-  "expo_field_06",
-  "expo_field_19",
-  "expo_field_33",
-  "expo_field_34",
-  "expo_field_42",
-]);
+const LONG_FIELDS: Set<string> = new Set([PROJECT_FIELD.description, PROJECT_FIELD.paymentOptions, PROJECT_FIELD.developer]);
 
 const EMBED_URL_KEYS = new Set<string>(MEDIA_EMBED_EXTERNAL_URL_FIELD_KEYS);
-const GALLERY_KEYS = new Set<string>(MEDIA_GALLERY_FIELD_KEYS);
-const HIDDEN_MEDIA_KEYS = new Set<string>(MEDIA_HIDDEN_PRESERVE_FIELD_KEYS);
 
 export type ProjectFieldsFormProps = {
   defaults: ExpoFieldsFormValues;
@@ -184,14 +165,6 @@ export function ProjectFieldsForm({
                 {group.keys.map((key) => {
                   const label = EXPO_FIELD_LABELS_HY[key] ?? key;
                   const val = d[key] ?? "";
-                  if (GALLERY_KEYS.has(key)) {
-                    return <input key={key} type="hidden" name={key} value="" />;
-                  }
-                  if (HIDDEN_MEDIA_KEYS.has(key)) {
-                    return (
-                      <input key={key} type="hidden" name={key} value={val} />
-                    );
-                  }
                   if (EMBED_URL_KEYS.has(key)) {
                     return (
                       <FieldRow
@@ -207,7 +180,7 @@ export function ProjectFieldsForm({
                     );
                   }
                   const isUrl = URL_FIELD_KEYS.has(key);
-                  const isLong = LONG_FIELDS.has(key) || key === "expo_field_19";
+                  const isLong = LONG_FIELDS.has(key);
                   return (
                     <FieldRow
                       key={key}
@@ -224,18 +197,8 @@ export function ProjectFieldsForm({
               group.keys.map((key) => {
                 const label = EXPO_FIELD_LABELS_HY[key] ?? key;
                 const val = d[key] ?? "";
-                if (MEDIA_LIST_FIELD_KEYS.has(key)) {
-                  return (
-                    <MediaListField
-                      key={key}
-                      name={key}
-                      label={label}
-                      defaultValue={val}
-                    />
-                  );
-                }
                 const isUrl = URL_FIELD_KEYS.has(key);
-                const isLong = LONG_FIELDS.has(key) || key === "expo_field_19";
+                const isLong = LONG_FIELDS.has(key);
                 return (
                   <FieldRow
                     key={key}

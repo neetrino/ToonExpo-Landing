@@ -6,13 +6,14 @@ import type { AdminProjectsViewMode } from "@/features/admin/lib/adminProjectsQu
 import { AdminProjectsToolbar } from "@/features/admin/components/AdminProjectsToolbar";
 import { AdminProjectsViews } from "@/features/admin/components/AdminProjectsViews";
 import { AdminProjectsPagination } from "@/features/admin/components/AdminProjectsPagination";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 
 export const dynamic = "force-dynamic";
 
 function expoTitle(raw: unknown): string {
   if (!raw || typeof raw !== "object") return "";
   const o = raw as Record<string, unknown>;
-  const v = o.expo_field_02 ?? o.expo_field_01;
+  const v = o[PROJECT_FIELD.titleExhibition] ?? o[PROJECT_FIELD.participantName];
   return typeof v === "string" ? v.trim() : "";
 }
 

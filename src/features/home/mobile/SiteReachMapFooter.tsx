@@ -10,6 +10,11 @@ import {
   MOBILE_SECTION_INSET,
 } from "@/features/landing/mobile/landingPage.constants";
 import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
+import { FooterEvolverLogoLink } from "@/features/home/components/FooterEvolverLogoLink";
+import { NeetrinoCreditPopover } from "@/features/home/components/NeetrinoCreditPopover";
+import { EVOLVER_LOGO_FOOTER_CLASSNAME_LIGHT } from "@/shared/constants/evolverCredit.constants";
+import { FOOTER_PARTNER_LOGO_IMG_BOX_LIGHT } from "@/shared/constants/footerPartnerLogo.constants";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 export type SiteReachMapFooterVariant = "home" | "participant";
@@ -23,14 +28,14 @@ export function SiteReachMapFooter({
 }) {
   const anchor = projects[0] ?? null;
   const markers = useMemo(() => buildMapMarkersFromProjects(projects), [projects]);
-  const footerSite = toExternalHref(anchor?.expoFields.expo_field_51);
+  const footerSite = toExternalHref(anchor?.expoFields[PROJECT_FIELD.website]);
   const footerHref = footerSite || "#top";
 
   return (
     <>
       <section id="contacts" className={`${MOBILE_SECTION_INSET} pt-9`}>
         <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.HOME_LOCATION}</h2>
-        <div className="toon-home-map mt-7 overflow-hidden rounded-[10px] border border-[#246976]/12 shadow-[0_8px_24px_rgba(16,24,40,0.08)]">
+        <div className="toon-home-map mt-7 overflow-visible rounded-[10px] border border-[#246976]/12 shadow-[0_8px_24px_rgba(16,24,40,0.08)] [--toon-map-corner-radius:10px]">
           <LazyWhenVisible
             className="h-64 w-full"
             fallback={
@@ -56,6 +61,14 @@ export function SiteReachMapFooter({
         <div className="space-y-2">
           <p className="text-[14px] font-semibold uppercase leading-5 tracking-[-0.1504px] text-black">{HY_UI.HOME_CONTACT}</p>
           <p className="text-[14px] leading-5 tracking-[-0.1504px] text-black/80">{MOBILE_CONTACT_EMAIL}</p>
+        </div>
+        <div className="mt-6 flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t border-black/15 pt-6">
+          <NeetrinoCreditPopover
+            variant="light"
+            menuAlign="center"
+            logoClassName={FOOTER_PARTNER_LOGO_IMG_BOX_LIGHT}
+          />
+          <FooterEvolverLogoLink variant="light" logoClassName={EVOLVER_LOGO_FOOTER_CLASSNAME_LIGHT} />
         </div>
         <div className="mt-4 border-t border-black/20 pt-4">
           <p className="text-[12px] leading-4 text-black/60">© 2026 Toon Expo. All rights reserved.</p>

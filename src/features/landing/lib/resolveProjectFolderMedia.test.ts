@@ -45,6 +45,7 @@ describe("resolveProjectFolderMedia", () => {
       aboutSmallUrl: null,
       logoUrl: null,
       galleryUrls: [] as string[],
+      galleryInteriorThenExteriorUrls: [] as string[],
       infrastructureLeftUrl: null,
       infrastructureRightUrl: null,
     };
@@ -96,6 +97,12 @@ describe("resolveProjectFolderMedia", () => {
       "/project/42/Interior/1.jpg",
       "/project/42/3DFloorplan/fp.png",
     ]);
+    expect(r.galleryInteriorThenExteriorUrls).toEqual([
+      "/project/42/Interior/1.jpg",
+      "/project/42/Exterior/1.webp",
+      "/project/42/Exterior/2.jpg",
+      "/project/42/Exterior/3.png",
+    ]);
   });
 
   it("R2: case-insensitive folders and arbitrary logo file resolve to public URLs", async () => {
@@ -115,6 +122,10 @@ describe("resolveProjectFolderMedia", () => {
     expect(r.logoUrl).toBe("https://cdn.example.com/projects/2/logo/company-brand.png");
     expect(r.galleryUrls).toContain("https://cdn.example.com/projects/2/exterior/1.webp");
     expect(r.galleryUrls.length).toBe(4);
+    expect(r.galleryInteriorThenExteriorUrls[0]).toBe(
+      "https://cdn.example.com/projects/2/interior/1.jpg",
+    );
+    expect(r.galleryInteriorThenExteriorUrls).toHaveLength(4);
   });
 
   it("R2: tries Projects/ prefix when projects/ returns no keys", async () => {

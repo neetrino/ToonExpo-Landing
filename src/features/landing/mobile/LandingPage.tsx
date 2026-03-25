@@ -4,6 +4,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { LandingPageLower } from "@/features/landing/mobile/LandingPageLower";
 import { visibleBlocks, type ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
 import {
@@ -81,7 +82,8 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const media = getProjectMedia(fields);
   const heroBg = folderMedia?.heroUrl || getHeroMedia(fields) || null;
   const heroLogoUrl = firstNonEmpty(folderMedia?.logoUrl, getLogoUrl(fields));
-  const aboutParagraphs = splitParagraphs(fields.expo_field_34);
+  const F = PROJECT_FIELD;
+  const aboutParagraphs = splitParagraphs(fields[F.description]);
   const leadText = getLeadText(fields);
   const rawAboutText = aboutParagraphs[0] ?? "";
   const hasDenseListCopy = (rawAboutText.match(/,/g) ?? []).length > 3 || rawAboutText.length > 120;
@@ -92,7 +94,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const heroSummary = hasDenseListCopy
     ? "Premium residential project with strong investment potential and comfortable urban living."
     : firstNonEmpty(rawAboutText, "Premium residential project with strong investment potential and comfortable urban living.");
-  const addressText = isFieldNonEmpty(fields.expo_field_03) ? fields.expo_field_03 : "";
+  const addressText = isFieldNonEmpty(fields[F.shortName]) ? fields[F.shortName] : "";
   const aboutText = firstNonEmpty(
     hasDenseListCopy ? "" : rawAboutText,
     addressText ? `${title} is a residential project located at ${addressText}.` : "",
@@ -106,7 +108,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
     () =>
       MOBILE_NAV_ITEMS.filter((item) => {
         if (item.id === "options") {
-          return Boolean(fields.expo_field_06?.trim());
+          return Boolean(fields[F.areas]?.trim());
         }
         if (item.block === "gallery") {
           return vis.gallery || galleryFromFolder;
@@ -114,7 +116,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
 
         return vis[item.block];
       }),
-    [fields.expo_field_06, galleryFromFolder, vis],
+    [fields, galleryFromFolder, vis],
   );
 
   useEffect(() => {

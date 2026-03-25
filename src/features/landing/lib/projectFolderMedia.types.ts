@@ -6,6 +6,10 @@ export type ResolvedProjectFolderMedia = {
   logoUrl: string | null;
   galleryUrls: string[];
   /**
+   * Երկրորդ գալերիա-գոտի՝ միայն լուսանկարներ՝ Interior, հետո Exterior (առանց 3D/2D հատակապատկերների)։
+   */
+  galleryInteriorThenExteriorUrls: string[];
+  /**
    * Նույն հերթականությամբ նախադիտման URL-ներ (թեթև) — բացակայության դեպքում ցանցում օգտագործվում է galleryUrls։
    */
   galleryThumbUrls?: string[];

@@ -1,19 +1,44 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
 import { LazyWhenVisible } from "@/features/map/components/LazyWhenVisible";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
+import { FooterEvolverCreditCard } from "@/features/home/components/FooterEvolverCreditCard";
+import { FooterNeetrinoCreditCard } from "@/features/home/components/FooterNeetrinoCreditCard";
 import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
 import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
+import {
+  FOOTER_ILLUSTRATION_UNIFY_FILTER_CLASSNAME,
+  FOOTER_OUTLINE_BORDER_CLASSNAME,
+  FOOTER_SOCIAL_ICON_UNIFY_FILTER_CLASSNAME,
+} from "@/shared/constants/footerBrand.constants";
+import {
+  FOOTER_PARTNER_LOGO_IMG_BOX_DARK,
+  FOOTER_PARTNER_LOGO_IMG_TRANSITION_DARK,
+} from "@/shared/constants/footerPartnerLogo.constants";
+import { EVOLVER_LOGO_FOOTER_CLASSNAME_DARK } from "@/shared/constants/evolverCredit.constants";
+import { NEETRINO_LOGO_FOOTER_WHITE_FILTER_CLASSNAME } from "@/shared/constants/neetrinoCredit.constants";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 const FOOTER_LEGAL_TEXT_CLASS =
   "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
-const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_TEXT_CLASS} shrink-0 transition hover:text-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black`;
+
+/** Neetrino լոգո — նույն տուփի չափեր, ինչ Evolver (տե՛ս `footerPartnerLogo.constants`)։ */
+const NEETRINO_FOOTER_LOGO_CLASS = [
+  FOOTER_PARTNER_LOGO_IMG_BOX_DARK,
+  NEETRINO_LOGO_FOOTER_WHITE_FILTER_CLASSNAME,
+  FOOTER_PARTNER_LOGO_IMG_TRANSITION_DARK,
+].join(" ");
+
+const FOOTER_NAV_PILL_CLASS = [
+  "rounded-lg bg-black px-2.5 py-2 sm:px-3.5 sm:py-2.5 lg:px-4 lg:py-3",
+  FOOTER_OUTLINE_BORDER_CLASSNAME,
+].join(" ");
 
 const FIGMA_ASSETS = {
   footerLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
@@ -45,11 +70,12 @@ export function SiteReachMapFooter({
     ? "text-2xl font-semibold uppercase tracking-[0.12em] text-[#246976] lg:text-[2.5rem]"
     : "text-2xl font-semibold uppercase tracking-[0.12em] text-white lg:text-[2.5rem]";
   const mapFrameClass = isParticipant
-    ? "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-[#246976]/25 shadow-[0_25px_60px_rgba(0,0,0,0.08)]"
-    : "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)]";
-  const footerSite = isParticipant ? toExternalHref(anchor?.expoFields.expo_field_51) : "";
-  const footerInstagram = anchor?.expoFields.expo_field_52?.trim() ?? "";
-  const footerFacebook = anchor?.expoFields.expo_field_53?.trim() ?? "";
+    ? "toon-home-map relative z-0 overflow-visible rounded-[20px] border border-[#246976]/25 shadow-[0_25px_60px_rgba(0,0,0,0.08)] [--toon-map-corner-radius:20px]"
+    : "toon-home-map relative z-0 overflow-visible rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)] [--toon-map-corner-radius:20px]";
+  const F = PROJECT_FIELD;
+  const footerSite = isParticipant ? toExternalHref(anchor?.expoFields[F.website]) : "";
+  const footerInstagram = anchor?.expoFields[F.instagram]?.trim() ?? "";
+  const footerFacebook = anchor?.expoFields[F.facebook]?.trim() ?? "";
 
   return (
     <>
@@ -116,29 +142,50 @@ export function SiteReachMapFooter({
       <footer className="relative flex min-h-[20rem] flex-col bg-black px-5 py-[5.2rem] lg:min-h-[24rem] lg:px-10 lg:py-[6.5rem]">
         <div className="relative mx-auto flex flex-1 min-h-0 w-full max-w-[1680px] flex-col">
           <div className="flex flex-1 flex-col">
-            <div className="flex flex-col gap-6 text-white/70 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
+            <div className="flex flex-col gap-8 text-white/70 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
               <img
                 src={FIGMA_ASSETS.footerLogo}
                 alt="Toon Expo"
                 className="-mt-8 hidden h-32 w-32 shrink-0 sm:block sm:h-40 sm:w-40 lg:-mt-12"
               />
-              <div className="-mt-8 flex min-w-0 flex-1 flex-col items-center lg:-mt-12 lg:items-end lg:justify-end">
-                <FooterBottomNav alignWithIllustration={false} />
+              <div className="-mt-8 flex min-w-0 flex-1 flex-col lg:-mt-12">
+                <div className="flex w-full min-w-0 flex-row flex-wrap items-stretch justify-end gap-x-3 gap-y-3 sm:gap-x-4 lg:gap-4">
+                  <div className="flex min-w-0 shrink-0 self-stretch overflow-visible">
+                    <div className="flex flex-wrap items-stretch gap-2 sm:gap-3">
+                      <FooterNeetrinoCreditCard
+                        logoClassName={NEETRINO_FOOTER_LOGO_CLASS}
+                        menuAlign="start"
+                        className="h-full min-h-0"
+                      />
+                      <FooterEvolverCreditCard
+                        logoClassName={EVOLVER_LOGO_FOOTER_CLASSNAME_DARK}
+                        className="h-full min-h-0"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex min-w-0 shrink-0 self-stretch">
+                    <div
+                      className={`flex h-full min-h-0 items-center ${FOOTER_NAV_PILL_CLASS}`}
+                    >
+                      <FooterBottomNav
+                        alignWithIllustration={false}
+                        socialIconImgClassName={FOOTER_SOCIAL_ICON_UNIFY_FILTER_CLASSNAME}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div
-          className="absolute bottom-0 left-0 right-0 flex max-w-full flex-wrap items-baseline gap-x-7 gap-y-2 px-5 pb-5 pt-4 sm:gap-x-10 lg:px-10 lg:pb-6 lg:pt-5"
+          className="absolute bottom-0 left-0 right-0 z-10 flex max-w-full flex-wrap items-center justify-start gap-x-6 gap-y-2 px-5 pb-5 pt-4 sm:gap-x-10 lg:gap-x-14 lg:px-10 lg:pb-6 lg:pt-5"
           role="group"
           aria-label="Legal"
         >
-          <p className={`${FOOTER_LEGAL_TEXT_CLASS} shrink-0`}>
+          <p className={`${FOOTER_LEGAL_TEXT_CLASS} min-w-0 shrink-0`}>
             © 2026 TOON EXPO. All rights reserved.
           </p>
-          <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
-            {HY_UI.FOOTER_PRIVACY}
-          </Link>
         </div>
         <div
           className="absolute right-0 bottom-0 h-40 w-[min(100%,1056px)] overflow-hidden opacity-90 lg:h-48 pr-5 lg:pr-10"
@@ -147,7 +194,7 @@ export function SiteReachMapFooter({
           <img
             src={FIGMA_ASSETS.footerIllustration}
             alt=""
-            className="absolute right-0 bottom-0 w-[220px] max-w-none origin-bottom-right scale-x-[4.8] scale-y-[1.333]"
+            className={`absolute right-0 bottom-0 w-[220px] max-w-none origin-bottom-right scale-x-[4.8] scale-y-[1.333] ${FOOTER_ILLUSTRATION_UNIFY_FILTER_CLASSNAME}`}
           />
         </div>
       </footer>

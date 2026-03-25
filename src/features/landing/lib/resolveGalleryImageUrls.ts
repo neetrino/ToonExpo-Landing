@@ -33,3 +33,33 @@ export function resolveGalleryItems(
     thumbUrl: thumbUrls?.[index] ?? fullUrl,
   }));
 }
+
+function thumbForFullUrlInMainGallery(
+  fullUrl: string,
+  mainGalleryUrls: readonly string[],
+  thumbUrls: readonly string[] | undefined,
+): string {
+  if (!thumbUrls || thumbUrls.length !== mainGalleryUrls.length) {
+    return fullUrl;
+  }
+  const idx = mainGalleryUrls.indexOf(fullUrl);
+  return idx >= 0 ? thumbUrls[idx]! : fullUrl;
+}
+
+/**
+ * Երկրորդ գալերիա՝ միայն Interior, հետո Exterior (folder-ից)։ Expo fallback-ում դատարկ է։
+ */
+export function resolveSecondaryGalleryItems(
+  folderMedia: ResolvedProjectFolderMedia | null,
+): GalleryResolvedItem[] {
+  const ordered = folderMedia?.galleryInteriorThenExteriorUrls ?? [];
+  if (ordered.length === 0) {
+    return [];
+  }
+  const mainGalleryUrls = folderMedia?.galleryUrls ?? [];
+  const thumbUrls = folderMedia?.galleryThumbUrls;
+  return ordered.map((fullUrl) => ({
+    fullUrl,
+    thumbUrl: thumbForFullUrlInMainGallery(fullUrl, mainGalleryUrls, thumbUrls),
+  }));
+}

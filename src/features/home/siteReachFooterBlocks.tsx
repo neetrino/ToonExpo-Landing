@@ -31,12 +31,19 @@ const FOOTER_NAV_ITEMS = [
   { href: "/#contacts", label: HY_UI.FOOTER_NAV_CONTACTS },
 ] as const;
 
-export function FooterBottomNav({ alignWithIllustration = false }: { alignWithIllustration?: boolean }) {
+export function FooterBottomNav({
+  alignWithIllustration = false,
+  socialIconImgClassName = "",
+}: {
+  alignWithIllustration?: boolean;
+  /** Սոցիալ պատկերակների լրացուցիչ դասեր (օր. brand teal unify filter) */
+  socialIconImgClassName?: string;
+}) {
   const fbIcon = (
     <img
       src={BLOCK_FIGMA.footerBadgeMark}
       alt=""
-      className={FOOTER_SOCIAL_FB_IMG_CLASS}
+      className={`${FOOTER_SOCIAL_FB_IMG_CLASS} ${socialIconImgClassName}`.trim()}
       width={18}
       height={40}
     />
@@ -45,7 +52,7 @@ export function FooterBottomNav({ alignWithIllustration = false }: { alignWithIl
     <img
       src={BLOCK_FIGMA.footerBadge}
       alt=""
-      className={FOOTER_SOCIAL_IG_IMG_CLASS}
+      className={`${FOOTER_SOCIAL_IG_IMG_CLASS} ${socialIconImgClassName}`.trim()}
       width={40}
       height={40}
     />
@@ -82,7 +89,7 @@ export function FooterBottomNav({ alignWithIllustration = false }: { alignWithIl
           target="_blank"
           rel="noreferrer"
           aria-label="Facebook"
-          className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80"
+          className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0]/75"
         >
           {fbIcon}
         </a>
@@ -91,7 +98,7 @@ export function FooterBottomNav({ alignWithIllustration = false }: { alignWithIl
           target="_blank"
           rel="noreferrer"
           aria-label="Instagram"
-          className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80"
+          className="transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2ba8b0]/75"
         >
           {igIcon}
         </a>

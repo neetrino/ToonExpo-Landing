@@ -1,17 +1,21 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { CircleDollarSign, MapPin, Percent, Ruler } from "lucide-react";
 import { useScrolledPastThreshold } from "@/shared/hooks/useScrolledPastThreshold";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
-import { parseMediaUrls } from "@/shared/lib/mediaUrls";
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
 import { MapSearch } from "@/features/home/components/MapSearch";
 import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
+import { formatTaxRefundForHomeCard } from "@/shared/lib/formatTaxRefundDisplayHy";
 import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 export type { HomeProject } from "@/features/home/homeProject.types";
@@ -24,11 +28,10 @@ const PROJECTS_PAGE_SIZE_MOBILE = 10;
 const FIGMA_ASSETS = {
   heroBg: publicAssetUrl("/figma/home/heroBg.webp"),
   siteHeaderLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
-  refundIcon: publicAssetUrl("/figma/home/refundIcon.svg"),
-  locationIcon: publicAssetUrl("/figma/home/loocation.svg"),
-  priceIcon: publicAssetUrl("/figma/home/priceIcon.svg"),
-  rangeIcon: publicAssetUrl("/figma/home/rangeIcon.svg"),
 } as const;
+
+const PROJECT_CARD_LUCIDE_CLASS =
+  "h-4 w-4 shrink-0 text-[#2ba8b0] sm:h-[18px] sm:w-[18px]" as const;
 
 /** Համապատասխանում է `#participants` grid-ին՝ 1 / 2 / 3 սյուն և padding-ներին (`max-w-[1680px]` px-4 … lg:px-10)։ */
 const PROJECT_CARD_HERO_SIZES =
@@ -37,29 +40,19 @@ const PROJECT_CARD_HERO_SIZES =
 const PROJECT_CARD_LOGO_MAX_PX = 156 as const;
 const PROJECT_CARD_LOGO_MAX_SM_PX = 68 as const;
 
+const PF = PROJECT_FIELD;
+
 function projectTitle(f: Record<string, string>): string {
-  return f.expo_field_02?.trim() || f.expo_field_01?.trim() || "—";
+  return f[PF.titleExhibition]?.trim() || f[PF.participantName]?.trim() || "—";
 }
 
-/** Fallback hero — միայն արտաքին/ներքին ռենդերների URL-ները (ոչ լոգո)։ */
-function projectThumb(f: Record<string, string>): string | null {
-  const media = [...parseMediaUrls(f.expo_field_43), ...parseMediaUrls(f.expo_field_44)];
-  return media[0] ?? null;
+/** Fallback hero — CSV-ում պատկերների URL չկա։ */
+function projectThumb(_f: Record<string, string>): string | null {
+  return null;
 }
 
 function projectLocation(f: Record<string, string>): string {
-  return f.expo_field_03?.trim() || "Location unavailable";
-}
-
-function formatRange(minValue?: string, maxValue?: string): string {
-  const min = minValue?.trim();
-  const max = maxValue?.trim();
-
-  if (min && max) {
-    return min === max ? min : `${min} — ${max}`;
-  }
-
-  return min || max || "On request";
+  return f[PF.shortName]?.trim() || "Location unavailable";
 }
 
 export function HomePageClient({ projects }: { projects: HomeProject[] }) {
@@ -80,9 +73,9 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
       const f = p.expoFields;
       const hay = [
         projectTitle(f),
-        f.expo_field_01,
-        f.expo_field_02,
-        f.expo_field_03,
+        f[PF.participantName],
+        f[PF.titleExhibition],
+        f[PF.shortName],
       ]
         .filter(Boolean)
         .join(" ")
@@ -236,7 +229,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           className="relative z-10 scroll-mt-6 px-4 pb-12 pt-[72px] sm:px-5 sm:pb-16 sm:pt-[72px] lg:px-[92px] lg:pb-28 lg:pr-[107px] lg:pt-8"
         >
           <div className="mx-auto grid max-w-[1920px] grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,1063px)_24px_634px] lg:gap-0">
-            <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-hidden rounded-[26px] border border-[#00303D] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
+            <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-visible rounded-[26px] border border-[#00303D] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] [--toon-map-corner-radius:26px] lg:min-h-[531px]">
               <div className="absolute left-4 top-4 z-20 sm:right-auto">
                 <MapSearch
                   value={q}
@@ -302,19 +295,41 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
               </div>
             </div>
 
-            {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. Figma: toon/expo 198px со сдвигом expo вправо, 2026 ~119px, INVEST italic #FFD700 */}
+            {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. Lg размеры подогнаны под высоту карты 531px — весь столбец не ниже её нижнего края. */}
             <div className="order-1 relative z-10 mb-6 flex w-full max-w-[634px] flex-col items-center gap-[11px] lg:order-2 lg:mb-0 lg:mt-0 lg:w-[634px] lg:max-w-none lg:items-end lg:self-start">
-              <div className="flex flex-col items-center gap-0 lg:items-end lg:w-full">
-                <p className="text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,198px)] lg:text-right lg:text-[198px]">
+              {/* До lg: две строки — бренд + год/акцент; после lg скрыто (дубликат не попадает в a11y-tree). */}
+              <div className="flex w-full min-w-0 flex-col items-center gap-2 px-1 lg:hidden">
+                <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center font-bold uppercase leading-[0.95] tracking-[0.14em] text-white [font-size:clamp(1.85rem,8.8vw,3.35rem)]">
+                  <span className="drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">TOON</span>
+                  <span
+                    className="inline-flex h-5 w-px shrink-0 bg-gradient-to-b from-transparent via-[#2ba8b0] to-transparent opacity-90"
+                    aria-hidden
+                  />
+                  <span className="drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">EXPO</span>
+                </p>
+                <p className="flex flex-wrap items-baseline justify-center gap-x-4 gap-y-1 text-center [font-size:clamp(1.5rem,7vw,2.85rem)]">
+                  <span className="font-bold tabular-nums tracking-[0.06em] text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.3)]">
+                    2026
+                  </span>
+                  <span
+                    className="font-bold italic leading-none text-[#FFD700] [font-size:clamp(1.2rem,5.5vw,2.35rem)] drop-shadow-[0_0_20px_rgba(255,215,0,0.25)]"
+                  >
+                    INVEST
+                  </span>
+                </p>
+              </div>
+
+              <div className="hidden flex-col items-center gap-0 lg:flex lg:items-end lg:w-full">
+                <p className="text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,184px)] lg:text-right lg:text-[184px]">
                   toon
                 </p>
-                <p className="-mt-2 text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,198px)] lg:-mt-4 lg:translate-x-20 lg:text-right lg:text-[198px]">
+                <p className="-mt-2 text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,184px)] lg:-mt-4 lg:translate-x-20 lg:text-right lg:text-[184px]">
                   expo
                 </p>
-                <p className="-mt-2 text-center font-bold text-white [font-size:clamp(1.75rem,6vw,119px)] lg:-mt-2 lg:text-right lg:text-[119px]">
+                <p className="-mt-2 text-center font-bold leading-[0.98] text-white [font-size:clamp(1.75rem,6vw,110px)] lg:-mt-2 lg:text-right lg:text-[110px]">
                   2026
                 </p>
-                <p className="-mt-1 text-center font-bold italic text-[#FFD700] [font-size:clamp(1.25rem,4vw,80px)] lg:text-right lg:text-[80px]">
+                <p className="-mt-1 text-center font-bold italic leading-none text-[#FFD700] [font-size:clamp(1.25rem,4vw,72px)] lg:text-right lg:text-[72px]">
                   INVEST
                 </p>
               </div>
@@ -337,7 +352,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             }}
           >
             <div
-              className="toon-home-map relative h-[74vh] w-[88vw] overflow-hidden rounded-[26px] border border-[#00303D] bg-black shadow-2xl"
+              className="toon-home-map relative h-[74vh] w-[88vw] overflow-visible rounded-[26px] border border-[#00303D] bg-black shadow-2xl [--toon-map-corner-radius:26px]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* В попапе поиск всегда раскрыт (не зависим от isSearchExpanded) */}
@@ -462,9 +477,10 @@ function ProjectCard({ project }: { project: HomeProject }) {
   const logoSrc = project.cardLogoUrl?.trim() || null;
   const title = projectTitle(fields);
   const location = projectLocation(fields);
-  const taxRefund = fields.expo_field_09?.trim() || "On request";
-  const pricePerMeter = formatRange(fields.expo_field_07, fields.expo_field_08);
-  const priceRange = formatRange(fields.expo_field_17, fields.expo_field_18);
+  const taxRefundDisplay = formatTaxRefundForHomeCard(fields[PF.taxRefund]);
+  const priceMinDisplay =
+    formatPriceMinForDisplay(fields[PF.priceMin]) || HY_UI.ON_REQUEST;
+  const areasDisplay = fields[PF.areas]?.trim() || HY_UI.ON_REQUEST;
 
   return (
     <Link
@@ -509,35 +525,54 @@ function ProjectCard({ project }: { project: HomeProject }) {
           <h2 className="min-w-0 truncate text-[17px] font-bold leading-tight tracking-[-0.45px] text-[#0f172b] sm:text-[20px] sm:leading-7">
             {title}
           </h2>
-          <div className="flex min-w-0 items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
-            <img src={FIGMA_ASSETS.refundIcon} alt="" className="h-4 w-4 shrink-0 object-contain" />
-            <span className="min-w-0 line-clamp-2">{taxRefund}</span>
+          <div className="flex min-w-0 items-start gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
+            <Percent
+              aria-hidden
+              className={`${PROJECT_CARD_LUCIDE_CLASS} mt-0.5`}
+              strokeWidth={LANDING_LUCIDE_STROKE}
+            />
+            <span className="min-w-0 line-clamp-3">
+              <span className="font-normal">{HY_UI.PAYMENT_TAX}՝ </span>
+              <span className="font-bold text-[#0f172b]">{taxRefundDisplay}</span>
+            </span>
           </div>
           <div className="flex min-w-0 items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
-            <img
-              src={FIGMA_ASSETS.locationIcon}
-              alt=""
-              className="h-5 w-5 shrink-0 object-contain"
-              width={20}
-              height={20}
+            <MapPin
+              aria-hidden
+              className={PROJECT_CARD_LUCIDE_CLASS}
+              strokeWidth={LANDING_LUCIDE_STROKE}
             />
             <span className="min-w-0 truncate">{location}</span>
           </div>
         </div>
 
         <div className="flex min-w-0 flex-wrap items-center gap-3 border-b border-[#f1f5f9] pb-2 sm:gap-4 sm:pb-3">
-          <div className="flex min-w-0 items-center gap-1.5 text-[13px] text-[#45556c] sm:text-[14px]">
-            <img src={FIGMA_ASSETS.priceIcon} alt="" className="h-4 w-4 shrink-0" />
-            <span className="min-w-0 truncate">{pricePerMeter}</span>
+          <div className="flex min-w-0 items-start gap-1.5 text-[13px] text-[#45556c] sm:text-[14px]">
+            <CircleDollarSign
+              aria-hidden
+              className={`${PROJECT_CARD_LUCIDE_CLASS} mt-0.5`}
+              strokeWidth={LANDING_LUCIDE_STROKE}
+            />
+            <span className="min-w-0 break-words leading-snug">
+              <span className="font-normal">{HY_UI.HOME_CARD_MIN_PRICE_PER_SQM}՝ </span>
+              <span className="font-bold text-[#0f172b]">{priceMinDisplay}</span>
+            </span>
           </div>
         </div>
 
         <div className="mt-auto flex min-w-0 items-center justify-between gap-2 sm:gap-3">
-          <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-[13px] text-[#45556c] sm:text-[14px]">
-            <img src={FIGMA_ASSETS.rangeIcon} alt="" className="h-4 w-4 shrink-0" />
-            <span className="min-w-0 truncate">{priceRange}</span>
+          <div className="flex min-w-0 flex-1 items-start gap-2 overflow-hidden text-[13px] text-[#45556c] sm:text-[14px]">
+            <Ruler
+              aria-hidden
+              className={`${PROJECT_CARD_LUCIDE_CLASS} mt-0.5`}
+              strokeWidth={LANDING_LUCIDE_STROKE}
+            />
+            <span className="min-w-0 line-clamp-2">
+              <span className="font-normal">{HY_UI.INVEST_CARD_AREAS}՝ </span>
+              <span className="font-bold text-[#0f172b]">{areasDisplay}</span>
+            </span>
           </div>
-          <span className="shrink-0 rounded-[10px] bg-[#0f172b] px-4 py-2 text-center text-[14px] font-medium leading-6 text-white sm:px-5 sm:py-2.5 sm:text-[16px]">
+          <span className="shrink-0 rounded-[10px] bg-[#00303D] px-4 py-2 text-center text-[14px] font-medium leading-6 text-white sm:px-5 sm:py-2.5 sm:text-[16px]">
             Դիտել
           </span>
         </div>
