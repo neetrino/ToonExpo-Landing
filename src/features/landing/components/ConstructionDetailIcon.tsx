@@ -1,6 +1,7 @@
 /**
  * Lucide React — մեկ ընդհանուր stroke-ոճ, գույնը՝ բլոկի ակցենտ (#2ba8b0)։
  */
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
 import {
   ArrowUpDown,
   Building2,
@@ -22,12 +23,9 @@ export const CONSTRUCTION_DETAIL_ICON_VARIANTS = [
 export type ConstructionDetailIconVariant =
   (typeof CONSTRUCTION_DETAIL_ICON_VARIANTS)[number];
 
-/** Lucide default stroke ~1.5; slightly heavier for 62px tiles on dark bg */
-const CONSTRUCTION_ICON_STROKE_PX = 1.75;
-
 const ICON_PROPS = {
   className: "h-[62px] w-[62px] shrink-0 text-[#2ba8b0]",
-  strokeWidth: CONSTRUCTION_ICON_STROKE_PX,
+  strokeWidth: LANDING_LUCIDE_STROKE,
   "aria-hidden": true as const,
 };
 

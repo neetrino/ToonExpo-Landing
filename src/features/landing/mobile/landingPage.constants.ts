@@ -3,12 +3,8 @@ import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 export const participantFigmaAssets = {
   headerLogo: publicAssetUrl("/figma/project-mobile/toon-logo.svg"),
   menuIcon: publicAssetUrl("/figma/project-mobile/menu.svg"),
-  investmentIcon: publicAssetUrl("/figma/project-mobile/investment-icon.svg"),
   readMoreIcon: publicAssetUrl("/figma/project-mobile/read-more.svg"),
   sizeNoteIcon: publicAssetUrl("/figma/project-mobile/size-note.svg"),
-  paymentInstallmentIcon: publicAssetUrl("/figma/project-mobile/payment-icon.svg"),
-  paymentMortgageIcon: publicAssetUrl("/figma/project-mobile/construction-icon.svg"),
-  paymentTaxIcon: publicAssetUrl("/figma/project-mobile/parking-icon.svg"),
   paymentArrowLight: publicAssetUrl("/figma/project-mobile/accordion-arrow-light.svg"),
   paymentArrowDark: publicAssetUrl("/figma/project-mobile/accordion-arrow-dark.svg"),
 } as const;

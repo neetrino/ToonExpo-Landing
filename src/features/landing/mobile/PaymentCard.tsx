@@ -1,7 +1,8 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
 import { useLayoutEffect, useRef, useState, type RefObject } from "react";
+import type { LucideIcon } from "lucide-react";
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
 
 function usePaymentBodyCanExpand(
   text: string,
@@ -60,10 +61,10 @@ type PaymentCardProps = {
   title: string;
   text: string;
   tone: "teal" | "gold" | "navy";
-  icon: string;
+  Icon: LucideIcon;
 };
 
-export function PaymentCard({ title, text, tone, icon }: PaymentCardProps) {
+export function PaymentCard({ title, text, tone, Icon }: PaymentCardProps) {
   const [expanded, setExpanded] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
   const canExpand = usePaymentBodyCanExpand(text, expanded, textRef);
@@ -87,7 +88,7 @@ export function PaymentCard({ title, text, tone, icon }: PaymentCardProps) {
   return (
     <div className={`flex gap-4 rounded-[14px] bg-gradient-to-r px-4 py-4 ${toneClass} ${rowAlign}`}>
       <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${iconShellClass}`}>
-        <img src={icon} alt="" className="h-6 w-6" />
+        <Icon aria-hidden className="h-6 w-6" strokeWidth={LANDING_LUCIDE_STROKE} />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-[14px] font-bold leading-5">{title}</p>

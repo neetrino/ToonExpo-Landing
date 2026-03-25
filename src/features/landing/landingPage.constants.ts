@@ -47,10 +47,6 @@ export const MOBILE_HERO_PROJECT_LOGO_IMG_CLASS =
 
 /** Միայն SVG/քիչ ակտիվներ — լուսանկար-զանգվածներ հանված են (դատարկ slot → սև ֆոն UI-ում)։ */
 export const participantFigmaAssets = {
-  investmentIcon: publicAssetUrl("/figma/participant/investmentIcon.svg"),
-  paymentInstallmentIcon: publicAssetUrl("/figma/participant/paymentInstallmentIcon.svg"),
-  paymentMortgageIcon: publicAssetUrl("/figma/participant/paymentMortgageIcon.svg"),
-  paymentTaxIcon: publicAssetUrl("/figma/participant/paymentTaxIcon.svg"),
   galleryArrowLeft: publicAssetUrl("/figma/participant/galleryArrowLeft.svg"),
   galleryArrowRight: publicAssetUrl("/figma/participant/galleryArrowRight.svg"),
 } as const;

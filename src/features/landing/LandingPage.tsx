@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import { Building2, MapPin } from "lucide-react";
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { LandingPageLower } from "@/features/landing/LandingPageLower";
@@ -39,44 +41,6 @@ function Section({
     <section id={id} className={className}>
       {children}
     </section>
-  );
-}
-
-function AboutLocationPinIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={40}
-      height={56}
-      viewBox="0 0 40 56"
-      fill="none"
-      aria-hidden
-      className="h-10 w-10 shrink-0 lg:h-14 lg:w-10"
-    >
-      <path
-        d="M39.9969 19.8089C39.9613 23.1196 39.2004 26.7162 37.7374 30.1507C33.8401 39.2937 27.9044 47.0941 21.2604 54.4188C20.5289 55.2262 19.6907 55.4663 18.9004 54.5733C11.2388 45.9242 3.91584 37.0382 0.779427 25.6442C-2.38637 14.1295 4.39063 2.7937 15.6897 0.457111C28.2014 -2.13026 39.3102 6.52796 40 19.8074H39.9969V19.8089ZM31.9657 19.6422C31.9889 12.9995 26.6517 7.57392 20.0758 7.55404C13.4844 7.53416 7.94151 12.9566 7.91213 19.4648C7.88274 26.0602 13.2617 31.3756 19.9706 31.3848C26.6533 31.394 31.9425 26.2162 31.9641 19.6407L31.9657 19.6422Z"
-        fill="#2BA8B0"
-      />
-    </svg>
-  );
-}
-
-function AboutDeveloperIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={40}
-      height={44}
-      viewBox="0 0 40 44"
-      fill="none"
-      aria-hidden
-      className="h-10 w-10 shrink-0 lg:h-11 lg:w-11"
-    >
-      <path
-        d="M4 44V11.5L20 2L36 11.5V44H26V28H14V44H4Z"
-        fill="#2BA8B0"
-      />
-    </svg>
   );
 }
 
@@ -192,14 +156,22 @@ export function LandingPage({ fields, folderMedia }: Props) {
                 </h2>
                 <div className="mt-10 lg:mt-[126px]">
                   <div className="flex items-center gap-4 lg:gap-5">
-                    <AboutDeveloperIcon />
+                    <Building2
+                      aria-hidden
+                      className="h-10 w-10 shrink-0 text-[#2ba8b0] lg:h-11 lg:w-11"
+                      strokeWidth={LANDING_LUCIDE_STROKE}
+                    />
                     <p className="min-w-0 flex-1 text-[1rem] font-light leading-[1.45] text-white/90 lg:text-[1.55rem] lg:leading-[1.2]">
                       {aboutIntroText}
                     </p>
                   </div>
                   {isFieldNonEmpty(aboutSupportingText) && aboutSupportingText !== aboutIntroText ? (
                     <div className="mt-5 flex items-center gap-4 lg:mt-[34px] lg:gap-5">
-                      <AboutLocationPinIcon />
+                      <MapPin
+                        aria-hidden
+                        className="h-10 w-10 shrink-0 text-[#2ba8b0] lg:h-14 lg:w-10"
+                        strokeWidth={LANDING_LUCIDE_STROKE}
+                      />
                       <p className="min-w-0 flex-1 max-w-[620px] text-[0.95rem] font-light leading-[1.4] text-white/88 lg:text-[1.55rem] lg:leading-[1.15]">
                         {aboutSupportingText}
                       </p>

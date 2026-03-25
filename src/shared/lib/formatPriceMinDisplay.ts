@@ -1,3 +1,6 @@
+/** Հայաստանի դրամի նշան (֏, U+058F) */
+const DRAM_SIGN = "\u058F";
+
 /** Հայերեն UI — հազարական բաժանիչ (օր. 550 000)։ */
 const AMD_INTEGER_FORMAT = new Intl.NumberFormat("hy-AM", {
   maximumFractionDigits: 0,
@@ -23,12 +26,12 @@ function parseWholeNumberFromPriceField(raw: string): number | null {
 /**
  * «Մինիմում արժեք» (Excel G) ցուցադրություն՝ միայն նվազագույնը, հազարական բաժանիչներով։
  *
- * @returns ձևաչափված թիվ կամ դատարկ տող, եթե թիվ չի ճանաչվել
+ * @returns ձևաչափված թիվ + «֏» կամ դատարկ տող, եթե թիվ չի ճանաչվել
  */
 export function formatPriceMinForDisplay(raw: string | undefined): string {
   const n = parseWholeNumberFromPriceField(raw?.trim() ?? "");
   if (n === null) {
     return "";
   }
-  return AMD_INTEGER_FORMAT.format(n);
+  return `${AMD_INTEGER_FORMAT.format(n)}\u00A0${DRAM_SIGN}`;
 }
