@@ -41,6 +41,9 @@ export const HY_UI = {
   FOOTER_NAV_PROJECTS: "Նախագծեր",
   FOOTER_NAV_CONTACTS: "Կապ մեզ հետ",
 
+  /** Գլխավոր — որոնման և նախագծերի ցանկի վերնագիր */
+  HOME_FEATURED_HEADING: "Որոնիր նախագիծ",
+
   /** Քարտեզի բաժնի վերնագիր */
   HOME_LOCATION: "Տեղադիրք",
   HOME_CONTACT: "Կապ մեզ հետ",

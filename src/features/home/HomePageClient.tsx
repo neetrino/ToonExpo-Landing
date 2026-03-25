@@ -420,11 +420,11 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             </div>
             <div>
               <h2
-id="featured-heading"
-                  className="text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl"
-                >
-                  Ընտիր օբյեկտներ
-                </h2>
+                id="featured-heading"
+                className="text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl"
+              >
+                {HY_UI.HOME_FEATURED_HEADING}
+              </h2>
               <p className="mt-1 text-base text-white/90 sm:text-lg">
                 Ձեզ համար ձեռքով ընտրված բացառիկ առաջարկներ
               </p>
