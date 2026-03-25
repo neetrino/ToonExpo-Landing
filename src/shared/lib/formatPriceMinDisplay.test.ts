@@ -2,12 +2,8 @@ import { describe, expect, it } from "vitest";
 import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
 
 describe("formatPriceMinForDisplay", () => {
-  it("formats plain digits with hy-AM grouping and dram sign", () => {
-    const num = new Intl.NumberFormat("hy-AM", {
-      maximumFractionDigits: 0,
-      useGrouping: true,
-    }).format(550000);
-    expect(formatPriceMinForDisplay("550000")).toBe(`${num}\u00A0\u058F`);
+  it("formats plain digits with NBSP grouping and dram sign (SSR-safe)", () => {
+    expect(formatPriceMinForDisplay("550000")).toBe("550\u00A0000\u00A0\u058F");
   });
 
   it("strips spaces from source", () => {

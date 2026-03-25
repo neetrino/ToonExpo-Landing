@@ -1,11 +1,14 @@
 /** Հայաստանի դրամի նշան (֏, U+058F) */
 const DRAM_SIGN = "\u058F";
 
-/** Հայերեն UI — հազարական բաժանիչ (օր. 550 000)։ */
-const AMD_INTEGER_FORMAT = new Intl.NumberFormat("hy-AM", {
-  maximumFractionDigits: 0,
-  useGrouping: true,
-});
+/**
+ * Հազարական խմբավորում՝ NBSP-ով (օր. 550 000)։
+ * Չի օգտագործում `Intl` — Node-ի և բրաուզերի ICU տարբերությունները SSR hydration չեն խախտում։
+ */
+function formatGroupedInteger(n: number): string {
+  const s = String(Math.trunc(Math.abs(n)));
+  return s.replace(/\B(?=(\d{3})+(?!\d))/g, "\u00A0");
+}
 
 /**
  * Տողից հանում է ամբողջ թիվը (CSV-ում կարող են լինել բացատներ, ստորակետներ)։
@@ -33,5 +36,5 @@ export function formatPriceMinForDisplay(raw: string | undefined): string {
   if (n === null) {
     return "";
   }
-  return `${AMD_INTEGER_FORMAT.format(n)}\u00A0${DRAM_SIGN}`;
+  return `${formatGroupedInteger(n)}\u00A0${DRAM_SIGN}`;
 }
