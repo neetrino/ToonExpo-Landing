@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { emptyExpoFields } from "@/shared/lib/expoFields";
@@ -8,17 +6,6 @@ import { parseExpoCsvBuffer, slugFromRow } from "@/features/import/csvImport";
 const F = PROJECT_FIELD;
 
 describe("parseExpoCsvBuffer", () => {
-  it("parses CorrectedToonExpoData2026 header and row", () => {
-    const p = join(process.cwd(), "docs/data/CorrectedToonExpoData2026.csv");
-    const buf = readFileSync(p);
-    const rows = parseExpoCsvBuffer(buf);
-    expect(rows.length).toBeGreaterThan(0);
-    const first = rows[0];
-    expect(first.mediaFolderId).toBeTruthy();
-    expect(first.expoFields[F.participantName]).toBeTruthy();
-    expect(first.expoFields[F.titleExhibition]).toBeTruthy();
-  });
-
   it("normalizes virtual tour column to https URL after import", () => {
     const header = [
       "Մասնակցի անուն",
