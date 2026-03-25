@@ -3,6 +3,7 @@ import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/lib/blockVisibility";
+import { ConstructionDetailIcon } from "@/features/landing/components/ConstructionDetailIcon";
 import { GalleryShowcase } from "@/features/landing/GalleryShowcase";
 import { Tour3DBlock } from "@/features/landing/Tour3DBlock";
 import { VideoEmbedBlock } from "@/features/landing/VideoEmbedBlock";
@@ -169,7 +170,7 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
               {constructionCards.map((card) => (
                 <div key={card.key} className="flex flex-col items-center text-center">
-                  <img src={card.icon} alt="" className="h-[62px] w-[62px] object-contain" />
+                  <ConstructionDetailIcon variant={card.iconVariant} />
                   <p className="mt-4 text-[1.15rem] font-semibold text-[#2ba8b0] lg:text-[1.25rem]">{card.key}</p>
                   <p className="mt-2 text-sm leading-7 text-white/88 lg:text-base">{firstNonEmpty(fields[card.key], HY_UI.ON_REQUEST)}</p>
                 </div>

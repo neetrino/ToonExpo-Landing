@@ -1,5 +1,6 @@
+import type { ConstructionDetailIconVariant } from "@/features/landing/components/ConstructionDetailIcon";
 import type { LandingBlockId } from "@/features/landing/lib/blockVisibility";
-import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
+import { PROJECT_FIELD, type ProjectFieldKey } from "@/shared/constants/expoFieldKeys";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
@@ -50,13 +51,6 @@ export const participantFigmaAssets = {
   paymentInstallmentIcon: publicAssetUrl("/figma/participant/paymentInstallmentIcon.svg"),
   paymentMortgageIcon: publicAssetUrl("/figma/participant/paymentMortgageIcon.svg"),
   paymentTaxIcon: publicAssetUrl("/figma/participant/paymentTaxIcon.svg"),
-  constructionStructureIcon: publicAssetUrl("/figma/participant/constructionStructureIcon.svg"),
-  constructionMaterialsIcon: publicAssetUrl("/figma/participant/constructionMaterialsIcon.svg"),
-  constructionInsulationIcon: publicAssetUrl("/figma/participant/constructionInsulationIcon.svg"),
-  constructionCompletionIcon: publicAssetUrl("/figma/participant/constructionCompletionIcon.svg"),
-  constructionCeilingIcon: publicAssetUrl("/figma/participant/constructionCeilingIcon.svg"),
-  constructionFloorsIcon: publicAssetUrl("/figma/participant/constructionFloorsIcon.svg"),
-  parkingClosedIcon: publicAssetUrl("/figma/participant/parkingClosedIcon.svg"),
   galleryArrowLeft: publicAssetUrl("/figma/participant/galleryArrowLeft.svg"),
   galleryArrowRight: publicAssetUrl("/figma/participant/galleryArrowRight.svg"),
 } as const;
@@ -65,29 +59,14 @@ export const participantFigmaAssets = {
  * Excel սյուներ N → T → Q → R → P → O (`docs/data/CorrectedToonExpoData2026.xlsx` / նույն CSV)։
  * Վերնագիր = `PROJECT_FIELD` բանալու տեքստը (սյունակի անվանումը), արժեքը՝ `fields[card.key]`։
  */
-export const constructionCards = [
-  {
-    key: F.structure,
-    icon: participantFigmaAssets.constructionStructureIcon,
-  },
-  {
-    key: F.parkingClosed,
-    icon: participantFigmaAssets.parkingClosedIcon,
-  },
-  {
-    key: F.elevators,
-    icon: participantFigmaAssets.constructionMaterialsIcon,
-  },
-  {
-    key: F.handover,
-    icon: participantFigmaAssets.constructionCompletionIcon,
-  },
-  {
-    key: F.ceiling,
-    icon: participantFigmaAssets.constructionCeilingIcon,
-  },
-  {
-    key: F.floors,
-    icon: participantFigmaAssets.constructionFloorsIcon,
-  },
+export const constructionCards: readonly {
+  key: ProjectFieldKey;
+  iconVariant: ConstructionDetailIconVariant;
+}[] = [
+  { key: F.structure, iconVariant: "structure" },
+  { key: F.parkingClosed, iconVariant: "parkingClosed" },
+  { key: F.elevators, iconVariant: "elevators" },
+  { key: F.handover, iconVariant: "handover" },
+  { key: F.ceiling, iconVariant: "ceiling" },
+  { key: F.floors, iconVariant: "floors" },
 ] as const;
