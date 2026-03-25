@@ -33,8 +33,9 @@ temp/
 # *.swo
 
 # Локальные/генерируемые медиа и данные (не коммитим)
-/project/
+projects/
 public/projects/
 public/project/
 public/data/
 docs/data/
+fail/
