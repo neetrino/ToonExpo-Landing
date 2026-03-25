@@ -16,6 +16,14 @@ import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 const FOOTER_LEGAL_TEXT_CLASS =
   "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
 
+/** Neetrino լոգո — ներքևի գոտի (sm+) */
+const NEETRINO_FOOTER_LOGO_CLASS =
+  "h-5 w-auto max-w-[72px] object-contain opacity-50 transition-[filter,opacity,transform,box-shadow] duration-200 ease-out group-hover:opacity-100 group-hover:brightness-125 group-hover:contrast-110 group-hover:drop-shadow-[0_0_16px_rgba(43,168,176,0.85)] group-hover:ring-1 group-hover:ring-[#2ba8b0]/50 group-active:scale-[0.98] lg:h-6 lg:max-w-[88px]";
+
+/** Neetrino լոգո — մոբայլ xs, ավելի մեծ, ֆուտերի teal-ի հետ համահունչ */
+const NEETRINO_FOOTER_LOGO_MOBILE_CLASS =
+  "h-10 w-auto max-w-[min(220px,78vw)] object-contain opacity-80 transition-[filter,opacity,transform,box-shadow] duration-200 ease-out group-hover:opacity-100 group-hover:brightness-110 group-hover:drop-shadow-[0_0_18px_rgba(43,168,176,0.65)] group-hover:ring-1 group-hover:ring-[#2ba8b0]/55 group-active:scale-[0.98]";
+
 const FIGMA_ASSETS = {
   footerLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
   footerIllustration: publicAssetUrl("/figma/home/footerIllustration.svg"),
@@ -124,8 +132,22 @@ export function SiteReachMapFooter({
                 alt="Toon Expo"
                 className="-mt-8 hidden h-32 w-32 shrink-0 sm:block sm:h-40 sm:w-40 lg:-mt-12"
               />
-              <div className="-mt-8 flex min-w-0 flex-1 flex-col items-center lg:-mt-12 lg:items-end lg:justify-end">
-                <FooterBottomNav alignWithIllustration={false} />
+              <div className="-mt-8 flex min-w-0 flex-1 flex-col items-stretch lg:-mt-12 lg:items-end lg:justify-end">
+                <div className="flex w-full min-w-0 flex-row flex-wrap items-start justify-between gap-x-4 gap-y-4 sm:items-center sm:justify-end">
+                  <div className="flex min-w-0 max-w-[min(100%,calc(100%-5.5rem))] flex-col items-start gap-3 border-l-2 border-[#2ba8b0]/40 pl-3 sm:hidden">
+                    <p className="text-left text-[0.72rem] font-semibold uppercase leading-snug tracking-[0.2em] text-[#2ba8b0]">
+                      {HY_UI.FOOTER_CREATED_BY}
+                    </p>
+                    <NeetrinoCreditPopover
+                      variant="dark"
+                      menuAlign="start"
+                      logoClassName={NEETRINO_FOOTER_LOGO_MOBILE_CLASS}
+                    />
+                  </div>
+                  <div className="flex min-w-0 shrink-0 flex-1 justify-end self-start pt-0.5 sm:flex-initial sm:self-center sm:pt-0">
+                    <FooterBottomNav alignWithIllustration={false} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -138,14 +160,14 @@ export function SiteReachMapFooter({
           <p className={`${FOOTER_LEGAL_TEXT_CLASS} min-w-0 shrink-0`}>
             © 2026 TOON EXPO. All rights reserved.
           </p>
-          <div className="ml-1 flex min-w-0 shrink-0 flex-row flex-wrap items-center gap-x-3 gap-y-1 sm:ml-2 lg:ml-3">
+          <div className="ml-1 hidden min-w-0 shrink-0 flex-row flex-wrap items-center gap-x-3 gap-y-1 sm:ml-2 sm:flex lg:ml-3">
             <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/50 sm:text-[0.68rem]">
               {HY_UI.FOOTER_CREATED_BY}
             </p>
             <NeetrinoCreditPopover
               variant="dark"
               menuAlign="start"
-              logoClassName="h-5 w-auto max-w-[72px] object-contain opacity-50 transition-[filter,opacity,transform,box-shadow] duration-200 ease-out group-hover:opacity-100 group-hover:brightness-125 group-hover:contrast-110 group-hover:drop-shadow-[0_0_16px_rgba(43,168,176,0.85)] group-hover:ring-1 group-hover:ring-[#2ba8b0]/50 group-active:scale-[0.98] lg:h-6 lg:max-w-[88px]"
+              logoClassName={NEETRINO_FOOTER_LOGO_CLASS}
             />
           </div>
         </div>

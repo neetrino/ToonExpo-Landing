@@ -303,19 +303,19 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
               </div>
             </div>
 
-            {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. Figma: toon/expo 198px со сдвигом expo вправо, 2026 ~119px, INVEST italic #FFD700 */}
+            {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. Lg размеры подогнаны под высоту карты 531px — весь столбец не ниже её нижнего края. */}
             <div className="order-1 relative z-10 mb-6 flex w-full max-w-[634px] flex-col items-center gap-[11px] lg:order-2 lg:mb-0 lg:mt-0 lg:w-[634px] lg:max-w-none lg:items-end lg:self-start">
               <div className="flex flex-col items-center gap-0 lg:items-end lg:w-full">
-                <p className="text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,198px)] lg:text-right lg:text-[198px]">
+                <p className="text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,184px)] lg:text-right lg:text-[184px]">
                   toon
                 </p>
-                <p className="-mt-2 text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,198px)] lg:-mt-4 lg:translate-x-20 lg:text-right lg:text-[198px]">
+                <p className="-mt-2 text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,184px)] lg:-mt-4 lg:translate-x-20 lg:text-right lg:text-[184px]">
                   expo
                 </p>
-                <p className="-mt-2 text-center font-bold text-white [font-size:clamp(1.75rem,6vw,119px)] lg:-mt-2 lg:text-right lg:text-[119px]">
+                <p className="-mt-2 text-center font-bold leading-[0.98] text-white [font-size:clamp(1.75rem,6vw,110px)] lg:-mt-2 lg:text-right lg:text-[110px]">
                   2026
                 </p>
-                <p className="-mt-1 text-center font-bold italic text-[#FFD700] [font-size:clamp(1.25rem,4vw,80px)] lg:text-right lg:text-[80px]">
+                <p className="-mt-1 text-center font-bold italic leading-none text-[#FFD700] [font-size:clamp(1.25rem,4vw,72px)] lg:text-right lg:text-[72px]">
                   INVEST
                 </p>
               </div>
