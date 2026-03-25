@@ -426,7 +426,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
                 {HY_UI.HOME_FEATURED_HEADING}
               </h2>
               <p className="mt-1 text-base text-white/90 sm:text-lg">
-                Ձեզ համար ձեռքով ընտրված բացառիկ առաջարկներ
+                {HY_UI.HOME_FEATURED_SUBLINE}
               </p>
             </div>
           </div>
