@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { CircleDollarSign, MapPin, Percent, Ruler } from "lucide-react";
 import { useScrolledPastThreshold } from "@/shared/hooks/useScrolledPastThreshold";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
 import { MapSearch } from "@/features/home/components/MapSearch";
@@ -24,11 +26,10 @@ const PROJECTS_PAGE_SIZE_MOBILE = 10;
 const FIGMA_ASSETS = {
   heroBg: publicAssetUrl("/figma/home/heroBg.webp"),
   siteHeaderLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
-  refundIcon: publicAssetUrl("/figma/home/refundIcon.svg"),
-  locationIcon: publicAssetUrl("/figma/home/loocation.svg"),
-  priceIcon: publicAssetUrl("/figma/home/priceIcon.svg"),
-  rangeIcon: publicAssetUrl("/figma/home/rangeIcon.svg"),
 } as const;
+
+const PROJECT_CARD_LUCIDE_CLASS =
+  "h-4 w-4 shrink-0 text-[#2ba8b0] sm:h-[18px] sm:w-[18px]" as const;
 
 /** Համապատասխանում է `#participants` grid-ին՝ 1 / 2 / 3 սյուն և padding-ներին (`max-w-[1680px]` px-4 … lg:px-10)։ */
 const PROJECT_CARD_HERO_SIZES =
@@ -533,16 +534,18 @@ function ProjectCard({ project }: { project: HomeProject }) {
             {title}
           </h2>
           <div className="flex min-w-0 items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
-            <img src={FIGMA_ASSETS.refundIcon} alt="" className="h-4 w-4 shrink-0 object-contain" />
+            <Percent
+              aria-hidden
+              className={PROJECT_CARD_LUCIDE_CLASS}
+              strokeWidth={LANDING_LUCIDE_STROKE}
+            />
             <span className="min-w-0 line-clamp-2">{taxRefund}</span>
           </div>
           <div className="flex min-w-0 items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
-            <img
-              src={FIGMA_ASSETS.locationIcon}
-              alt=""
-              className="h-5 w-5 shrink-0 object-contain"
-              width={20}
-              height={20}
+            <MapPin
+              aria-hidden
+              className={PROJECT_CARD_LUCIDE_CLASS}
+              strokeWidth={LANDING_LUCIDE_STROKE}
             />
             <span className="min-w-0 truncate">{location}</span>
           </div>
@@ -550,17 +553,25 @@ function ProjectCard({ project }: { project: HomeProject }) {
 
         <div className="flex min-w-0 flex-wrap items-center gap-3 border-b border-[#f1f5f9] pb-2 sm:gap-4 sm:pb-3">
           <div className="flex min-w-0 items-center gap-1.5 text-[13px] text-[#45556c] sm:text-[14px]">
-            <img src={FIGMA_ASSETS.priceIcon} alt="" className="h-4 w-4 shrink-0" />
+            <CircleDollarSign
+              aria-hidden
+              className={PROJECT_CARD_LUCIDE_CLASS}
+              strokeWidth={LANDING_LUCIDE_STROKE}
+            />
             <span className="min-w-0 truncate">{pricePerMeter}</span>
           </div>
         </div>
 
         <div className="mt-auto flex min-w-0 items-center justify-between gap-2 sm:gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-[13px] text-[#45556c] sm:text-[14px]">
-            <img src={FIGMA_ASSETS.rangeIcon} alt="" className="h-4 w-4 shrink-0" />
+            <Ruler
+              aria-hidden
+              className={PROJECT_CARD_LUCIDE_CLASS}
+              strokeWidth={LANDING_LUCIDE_STROKE}
+            />
             <span className="min-w-0 truncate">{priceRange}</span>
           </div>
-          <span className="shrink-0 rounded-[10px] bg-[#0f172b] px-4 py-2 text-center text-[14px] font-medium leading-6 text-white sm:px-5 sm:py-2.5 sm:text-[16px]">
+          <span className="shrink-0 rounded-[10px] bg-[#00303D] px-4 py-2 text-center text-[14px] font-medium leading-6 text-white sm:px-5 sm:py-2.5 sm:text-[16px]">
             Դիտել
           </span>
         </div>
