@@ -17,6 +17,7 @@ jobs:
           node-version: "22"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level=high
       - run: pnpm lint
         env:
           AUTH_SECRET: ci-auth-secret-at-least-32-characters-long

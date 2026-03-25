@@ -34,7 +34,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "File too large" }, { status: 400 });
   }
   const type = file.type || "application/octet-stream";
-  if (!ALLOWED.has(type) && !type.startsWith("image/")) {
+  if (!ALLOWED.has(type)) {
     return NextResponse.json({ error: "Unsupported type" }, { status: 400 });
   }
   const ext = file.name.split(".").pop()?.slice(0, 8) || "bin";

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextMiddleware, NextRequest } from "next/server";
 import { auth } from "@/auth";
+import { authRateLimitResponse } from "@/shared/lib/authRateLimit";
 
 const ADMIN_LOGIN = "/admin/login";
 const MOBILE_UA_REGEX =
@@ -23,7 +25,7 @@ function isMobileRequest(req: Parameters<Parameters<typeof auth>[0]>[0]): boolea
   return MOBILE_UA_REGEX.test(userAgent);
 }
 
-export default auth((req) => {
+const authMiddleware = auth((req) => {
   const { pathname } = req.nextUrl;
 
   if (isProjectMobileLandingPath(pathname) && !isMobileRequest(req)) {
@@ -50,8 +52,24 @@ export default auth((req) => {
     return NextResponse.redirect(url);
   }
   return NextResponse.next();
-});
+}) as unknown as NextMiddleware;
+
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  if (req.nextUrl.pathname.startsWith("/api/auth")) {
+    const limited = authRateLimitResponse(req);
+    if (limited) {
+      return limited;
+    }
+  }
+  return authMiddleware(req, event);
+}
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/p/:path*"],
+  matcher: [
+    "/admin",
+    "/admin/:path*",
+    "/p/:path*",
+    "/api/auth",
+    "/api/auth/:path*",
+  ],
 };
