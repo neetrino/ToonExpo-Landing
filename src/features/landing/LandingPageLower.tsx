@@ -80,10 +80,16 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
       {vis.investment ? (
         <Section id="investment" className="bg-[#2ba8b0] py-16 text-white lg:py-24">
           <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
-            <h2 className="text-[clamp(1.9rem,2.6vw,2.35rem)] font-semibold leading-tight tracking-tight">
-              {HY_UI.SECTION_INVESTMENT_OFFER}
-            </h2>
-            <div className="mt-7 grid gap-6 lg:grid-cols-3 lg:gap-8">
+            <div className="flex flex-col items-center">
+              <h2 className="text-center text-[clamp(2.25rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-[0.03em] text-white">
+                {HY_UI.SECTION_INVESTMENT_OFFER}
+              </h2>
+              <span
+                className="mt-4 h-0.5 w-16 rounded-full bg-white/90 lg:mt-5 lg:w-20"
+                aria-hidden
+              />
+            </div>
+            <div className="mt-10 grid gap-6 lg:mt-12 lg:grid-cols-3 lg:gap-8">
               {[
                 {
                   title: HY_UI.INVEST_CARD_COMPLETION,
@@ -111,10 +117,10 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
                     strokeWidth={LANDING_LUCIDE_STROKE}
                   />
                   <div className="min-w-0">
-                    <p className="text-[clamp(1.25rem,2vw,1.45rem)] font-bold leading-tight tracking-tight text-white lg:text-[clamp(1.45rem,1.8vw,1.85rem)]">
+                    <p className="text-[clamp(0.95rem,1.35vw,1.1rem)] font-semibold leading-snug tracking-wide text-white/80 lg:text-[1.05rem]">
                       {title}
                     </p>
-                    <p className="mt-3 text-[clamp(1.05rem,1.6vw,1.2rem)] font-semibold leading-snug text-white/92 lg:mt-3.5 lg:text-[clamp(1.2rem,1.9vw,1.55rem)] lg:leading-tight">
+                    <p className="mt-2.5 text-[clamp(1.15rem,1.85vw,1.5rem)] font-bold leading-snug text-white lg:mt-3 lg:text-[clamp(1.25rem,2vw,1.65rem)] lg:leading-tight">
                       {text}
                     </p>
                   </div>

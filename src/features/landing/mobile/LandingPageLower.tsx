@@ -59,8 +59,8 @@ function InvestmentCard({
           />
         </div>
         <div className="min-w-0">
-          <p className="text-[19px] font-bold leading-snug tracking-tight">{title}</p>
-          <p className="mt-2 text-[16px] font-semibold leading-snug text-white/92">{text}</p>
+          <p className="text-[14px] font-semibold leading-snug tracking-wide text-white/80">{title}</p>
+          <p className="mt-2 text-[17px] font-bold leading-snug text-white">{text}</p>
         </div>
       </div>
     </div>
@@ -144,8 +144,16 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
     <>
       {vis.investment ? (
         <section id="investment" className={`${MOBILE_SECTION_INSET} pt-6`}>
-          <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.MOBILE_INVESTMENT_HIGHLIGHTS}</h2>
-          <div className="mt-3 space-y-3">
+          <div className="flex flex-col items-center">
+            <h2 className="text-center text-[clamp(1.35rem,4.5vw,1.75rem)] font-bold leading-tight tracking-wide text-[#101828]">
+              {HY_UI.MOBILE_INVESTMENT_HIGHLIGHTS}
+            </h2>
+            <span
+              className="mt-3 h-0.5 w-14 rounded-full bg-[#2ba8b0]"
+              aria-hidden
+            />
+          </div>
+          <div className="mt-4 space-y-3">
             {investmentCards.map((item) => (
               <InvestmentCard key={item.title} title={item.title} text={item.text} Icon={item.Icon} />
             ))}

@@ -177,7 +177,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
                       </p>
                     </div>
                   ) : null}
-                  <p className="mt-8 max-w-[620px] text-[1.2rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[1.8rem] lg:leading-[1.28]">
+                  <p className="mt-8 max-w-[620px] text-[0.95rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[1.35rem] lg:leading-[1.28]">
                     {aboutMainText}
                   </p>
                   <a
