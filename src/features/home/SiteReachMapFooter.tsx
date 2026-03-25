@@ -12,6 +12,7 @@ import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import {
   FOOTER_ILLUSTRATION_UNIFY_FILTER_CLASSNAME,
+  FOOTER_OUTLINE_BORDER_CLASSNAME,
   FOOTER_SOCIAL_ICON_UNIFY_FILTER_CLASSNAME,
 } from "@/shared/constants/footerBrand.constants";
 import { NEETRINO_LOGO_FOOTER_WHITE_FILTER_CLASSNAME } from "@/shared/constants/neetrinoCredit.constants";
@@ -21,15 +22,17 @@ import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 const FOOTER_LEGAL_TEXT_CLASS =
   "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
 
-/** Neetrino լոգո — բարակ քարտ (xs → desktop) */
+/** Neetrino լոգո — ~30% փոքր (բազա՝ նախորդ չափերից ×0.7) */
 const NEETRINO_FOOTER_LOGO_CLASS = [
-  "h-5 w-auto max-w-[min(110px,39vw)] object-contain opacity-90 sm:h-7 sm:max-w-[128px] lg:h-8 lg:max-w-[148px]",
+  "h-[0.7875rem] w-auto max-w-[min(70px,25vw)] object-contain opacity-90 sm:h-[1.05rem] sm:max-w-[81px] lg:h-[1.225rem] lg:max-w-[95px]",
   NEETRINO_LOGO_FOOTER_WHITE_FILTER_CLASSNAME,
   "transition-[filter,opacity,transform] duration-200 ease-out group-hover:opacity-100 group-active:scale-[0.98]",
 ].join(" ");
 
-const FOOTER_NAV_PILL_CLASS =
-  "rounded-2xl border border-[#2ba8b0]/35 bg-black px-2.5 py-2 sm:px-3.5 sm:py-2.5 lg:px-4 lg:py-3";
+const FOOTER_NAV_PILL_CLASS = [
+  "rounded-lg bg-black px-2.5 py-2 sm:px-3.5 sm:py-2.5 lg:px-4 lg:py-3",
+  FOOTER_OUTLINE_BORDER_CLASSNAME,
+].join(" ");
 
 const FIGMA_ASSETS = {
   footerLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
@@ -139,19 +142,19 @@ export function SiteReachMapFooter({
                 alt="Toon Expo"
                 className="-mt-8 hidden h-32 w-32 shrink-0 sm:block sm:h-40 sm:w-40 lg:-mt-12"
               />
-              <div className="-mt-8 flex min-w-0 flex-1 flex-col gap-2 lg:-mt-12">
-                <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-[#2ba8b0] sm:text-[0.68rem] lg:text-[0.7rem]">
-                  {HY_UI.FOOTER_CREATED_BY}
-                </p>
-                <div className="flex w-full min-w-0 flex-row flex-wrap items-center justify-between gap-x-3 gap-y-3 sm:gap-x-4 lg:gap-8">
-                  <div className="min-w-0 shrink-0 overflow-visible">
+              <div className="-mt-8 flex min-w-0 flex-1 flex-col lg:-mt-12">
+                <div className="flex w-full min-w-0 flex-row flex-wrap items-stretch justify-end gap-x-3 gap-y-3 sm:gap-x-4 lg:gap-4">
+                  <div className="flex min-w-0 shrink-0 self-stretch overflow-visible">
                     <FooterNeetrinoCreditCard
                       logoClassName={NEETRINO_FOOTER_LOGO_CLASS}
                       menuAlign="start"
+                      className="h-full min-h-0"
                     />
                   </div>
-                  <div className="flex min-w-0 flex-1 justify-end self-center">
-                    <div className={FOOTER_NAV_PILL_CLASS}>
+                  <div className="flex min-w-0 shrink-0 self-stretch">
+                    <div
+                      className={`flex h-full min-h-0 items-center ${FOOTER_NAV_PILL_CLASS}`}
+                    >
                       <FooterBottomNav
                         alignWithIllustration={false}
                         socialIconImgClassName={FOOTER_SOCIAL_ICON_UNIFY_FILTER_CLASSNAME}

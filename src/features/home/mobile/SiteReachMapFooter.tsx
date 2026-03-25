@@ -60,13 +60,10 @@ export function SiteReachMapFooter({
           <p className="text-[14px] leading-5 tracking-[-0.1504px] text-black/80">{MOBILE_CONTACT_EMAIL}</p>
         </div>
         <div className="mt-6 flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t border-black/15 pt-6">
-          <p className="shrink-0 text-[11px] font-medium uppercase tracking-[0.18em] text-black/45">
-            {HY_UI.FOOTER_CREATED_BY}
-          </p>
           <NeetrinoCreditPopover
             variant="light"
             menuAlign="center"
-            logoClassName="h-4 w-auto max-w-[56px] object-contain opacity-50 transition-[filter,opacity,transform,box-shadow] duration-200 ease-out group-hover:opacity-100 group-hover:brightness-120 group-hover:drop-shadow-[0_0_12px_rgba(43,168,176,0.75)] group-hover:ring-1 group-hover:ring-[#2ba8b0]/45 group-active:scale-[0.98]"
+            logoClassName="h-[0.91rem] w-auto max-w-[51px] object-contain opacity-50 transition-[filter,opacity,transform,box-shadow] duration-200 ease-out group-hover:opacity-100 group-hover:brightness-120 group-hover:drop-shadow-[0_0_12px_rgba(43,168,176,0.75)] group-hover:ring-1 group-hover:ring-[#2ba8b0]/45 group-active:scale-[0.98]"
           />
         </div>
         <div className="mt-4 border-t border-black/20 pt-4">

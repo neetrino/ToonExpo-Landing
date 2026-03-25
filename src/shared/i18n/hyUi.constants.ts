@@ -44,8 +44,6 @@ export const HY_UI = {
   /** Քարտեզի բաժնի վերնագիր */
   HOME_LOCATION: "Տեղադիրք",
   HOME_CONTACT: "Կապ մեզ հետ",
-  /** Ֆուտերի կրեդիտ — դիզայն/զարգացում */
-  FOOTER_CREATED_BY: "Ստեղծված է",
   /** Neetrino լոգոյի կոճակ — բացել Instagram/կայք ընտրությունը */
   FOOTER_NEETRINO_LOGO_ARIA: "Neetrino — բացել հղումները",
   /** Անգլերեն պիտակ՝ քարտի վերին աջ անկյունում */
