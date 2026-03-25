@@ -46,6 +46,8 @@ export const HY_UI = {
   HOME_CONTACT: "Կապ մեզ հետ",
   /** Neetrino լոգոյի կոճակ — բացել Instagram/կայք ընտրությունը */
   FOOTER_NEETRINO_LOGO_ARIA: "Neetrino — բացել հղումները",
+  /** Evolver լոգո — անցում evolver.am */
+  FOOTER_EVOLVER_LOGO_ARIA: "Evolver — բացել կայքը",
   /** Անգլերեն պիտակ՝ քարտի վերին աջ անկյունում */
   FOOTER_POWERED_BY: "Powered by",
 

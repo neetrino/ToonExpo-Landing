@@ -11,7 +11,10 @@ import {
 } from "@/features/landing/mobile/landingPage.constants";
 import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
+import { FooterEvolverLogoLink } from "@/features/home/components/FooterEvolverLogoLink";
 import { NeetrinoCreditPopover } from "@/features/home/components/NeetrinoCreditPopover";
+import { EVOLVER_LOGO_FOOTER_CLASSNAME_LIGHT } from "@/shared/constants/evolverCredit.constants";
+import { FOOTER_PARTNER_LOGO_IMG_BOX_LIGHT } from "@/shared/constants/footerPartnerLogo.constants";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 export type SiteReachMapFooterVariant = "home" | "participant";
@@ -63,8 +66,9 @@ export function SiteReachMapFooter({
           <NeetrinoCreditPopover
             variant="light"
             menuAlign="center"
-            logoClassName="h-[0.91rem] w-auto max-w-[51px] object-contain opacity-50 transition-[filter,opacity,transform,box-shadow] duration-200 ease-out group-hover:opacity-100 group-hover:brightness-120 group-hover:drop-shadow-[0_0_12px_rgba(43,168,176,0.75)] group-hover:ring-1 group-hover:ring-[#2ba8b0]/45 group-active:scale-[0.98]"
+            logoClassName={FOOTER_PARTNER_LOGO_IMG_BOX_LIGHT}
           />
+          <FooterEvolverLogoLink variant="light" logoClassName={EVOLVER_LOGO_FOOTER_CLASSNAME_LIGHT} />
         </div>
         <div className="mt-4 border-t border-black/20 pt-4">
           <p className="text-[12px] leading-4 text-black/60">© 2026 Toon Expo. All rights reserved.</p>

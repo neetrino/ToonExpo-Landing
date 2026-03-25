@@ -6,6 +6,7 @@ import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewD
 import { LazyWhenVisible } from "@/features/map/components/LazyWhenVisible";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
+import { FooterEvolverCreditCard } from "@/features/home/components/FooterEvolverCreditCard";
 import { FooterNeetrinoCreditCard } from "@/features/home/components/FooterNeetrinoCreditCard";
 import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
 import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
@@ -15,6 +16,11 @@ import {
   FOOTER_OUTLINE_BORDER_CLASSNAME,
   FOOTER_SOCIAL_ICON_UNIFY_FILTER_CLASSNAME,
 } from "@/shared/constants/footerBrand.constants";
+import {
+  FOOTER_PARTNER_LOGO_IMG_BOX_DARK,
+  FOOTER_PARTNER_LOGO_IMG_TRANSITION_DARK,
+} from "@/shared/constants/footerPartnerLogo.constants";
+import { EVOLVER_LOGO_FOOTER_CLASSNAME_DARK } from "@/shared/constants/evolverCredit.constants";
 import { NEETRINO_LOGO_FOOTER_WHITE_FILTER_CLASSNAME } from "@/shared/constants/neetrinoCredit.constants";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
@@ -22,11 +28,11 @@ import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 const FOOTER_LEGAL_TEXT_CLASS =
   "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
 
-/** Neetrino լոգո — ~30% փոքր (բազա՝ նախորդ չափերից ×0.7) */
+/** Neetrino լոգո — նույն տուփի չափեր, ինչ Evolver (տե՛ս `footerPartnerLogo.constants`)։ */
 const NEETRINO_FOOTER_LOGO_CLASS = [
-  "h-[0.7875rem] w-auto max-w-[min(70px,25vw)] object-contain opacity-90 sm:h-[1.05rem] sm:max-w-[81px] lg:h-[1.225rem] lg:max-w-[95px]",
+  FOOTER_PARTNER_LOGO_IMG_BOX_DARK,
   NEETRINO_LOGO_FOOTER_WHITE_FILTER_CLASSNAME,
-  "transition-[filter,opacity,transform] duration-200 ease-out group-hover:opacity-100 group-active:scale-[0.98]",
+  FOOTER_PARTNER_LOGO_IMG_TRANSITION_DARK,
 ].join(" ");
 
 const FOOTER_NAV_PILL_CLASS = [
@@ -145,11 +151,17 @@ export function SiteReachMapFooter({
               <div className="-mt-8 flex min-w-0 flex-1 flex-col lg:-mt-12">
                 <div className="flex w-full min-w-0 flex-row flex-wrap items-stretch justify-end gap-x-3 gap-y-3 sm:gap-x-4 lg:gap-4">
                   <div className="flex min-w-0 shrink-0 self-stretch overflow-visible">
-                    <FooterNeetrinoCreditCard
-                      logoClassName={NEETRINO_FOOTER_LOGO_CLASS}
-                      menuAlign="start"
-                      className="h-full min-h-0"
-                    />
+                    <div className="flex flex-wrap items-stretch gap-2 sm:gap-3">
+                      <FooterNeetrinoCreditCard
+                        logoClassName={NEETRINO_FOOTER_LOGO_CLASS}
+                        menuAlign="start"
+                        className="h-full min-h-0"
+                      />
+                      <FooterEvolverCreditCard
+                        logoClassName={EVOLVER_LOGO_FOOTER_CLASSNAME_DARK}
+                        className="h-full min-h-0"
+                      />
+                    </div>
                   </div>
                   <div className="flex min-w-0 shrink-0 self-stretch">
                     <div
