@@ -33,6 +33,8 @@ export const HY_UI = {
   /** Սեկցիայի վերնագիր (#192643) */
   SECTION_PARKING: "Կայանատեղի",
   SECTION_TOURS_MEDIA: "Տուրեր",
+  /** #investment թեյլ բլոկի վերնագիր (նավիգացիան՝ NAV_INVESTMENT) */
+  SECTION_INVESTMENT_OFFER: "Առաջարկ",
 
   /** Ֆուտերի առաջին հղում — «մեր մասին» */
   FOOTER_NAV_ABOUT: "Մեր մասին",
@@ -86,14 +88,15 @@ export const HY_UI = {
   ARIA_PREV_GALLERY: "Նախորդ",
   ARIA_NEXT_GALLERY: "Հաջորդ",
 
-  MOBILE_INVESTMENT_HIGHLIGHTS: "Ներդրումային ցուցանիշներ",
+  /** Համընկնում է SECTION_INVESTMENT_OFFER */
+  MOBILE_INVESTMENT_HIGHLIGHTS: "Առաջարկ",
   MOBILE_INVEST_HIGH_1: "Վարձավճարային եկամուտ",
   MOBILE_INVEST_HIGH_2: "Գին և տեսարան",
   MOBILE_INVEST_HIGH_3: "Սեզոնային վարձ",
   /** Ներդրումի երեք քարտ՝ CSV E, F, G+H */
-  INVEST_CARD_COMPLETION: "Շին ավարտ",
+  INVEST_CARD_COMPLETION: "Շինավարտ",
   INVEST_CARD_AREAS: "Մակերեսներ",
-  INVEST_CARD_PRICE_PER_SQM: "Գներ (ք/մ)",
+  INVEST_CARD_PRICE_PER_SQM: "ԳՆԵՐԸ ք/մ ՍԿՍԱԾ",
   MOBILE_PAYMENT_CARD_1: "Վճարման պայմաններ",
   MOBILE_PAYMENT_CARD_2: "Կառուցման մանրամասներ",
   MOBILE_PAYMENT_CARD_3: "Կայանատեղի",

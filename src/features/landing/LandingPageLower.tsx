@@ -72,7 +72,9 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
       {vis.investment ? (
         <Section id="investment" className="bg-[#2ba8b0] py-16 text-white lg:py-24">
           <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
-            <h2 className="text-[clamp(1.55rem,2.1vw,1.95rem)] font-semibold uppercase">{HY_UI.NAV_INVESTMENT}</h2>
+            <h2 className="text-[clamp(1.9rem,2.6vw,2.35rem)] font-semibold leading-tight tracking-tight">
+              {HY_UI.SECTION_INVESTMENT_OFFER}
+            </h2>
             <div className="mt-7 grid gap-5 lg:grid-cols-3 lg:gap-6">
               {[
                 {
@@ -92,10 +94,10 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
                 },
               ].map((item) => (
                 <div key={item.title} className="flex items-start gap-3.5">
-                  <img src={participantFigmaAssets.investmentIcon} alt="" className="mt-0.5 h-6 w-6 shrink-0" />
+                  <img src={participantFigmaAssets.investmentIcon} alt="" className="mt-1 h-7 w-7 shrink-0 lg:h-8 lg:w-8" />
                   <div className="min-w-0">
-                    <p className="text-[1rem] font-semibold leading-snug lg:text-[1.1rem]">{item.title}</p>
-                    <p className="mt-1.5 text-xs leading-5 text-white/88 lg:text-sm lg:leading-6">{item.text}</p>
+                    <p className="text-[1.2rem] font-semibold leading-snug lg:text-[1.45rem]">{item.title}</p>
+                    <p className="mt-2 text-sm leading-6 text-white/88 lg:text-base lg:leading-7">{item.text}</p>
                   </div>
                 </div>
               ))}

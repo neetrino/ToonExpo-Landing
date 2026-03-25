@@ -43,8 +43,8 @@ function InvestmentCard({
           <img src={participantFigmaAssets.investmentIcon} alt="" className="h-8 w-8" />
         </div>
         <div className="min-w-0">
-          <p className="text-[16px] font-bold leading-6">{title}</p>
-          <p className="mt-1 text-[14px] leading-5 text-white/90">{text}</p>
+          <p className="text-[18px] font-bold leading-7">{title}</p>
+          <p className="mt-1 text-[15px] leading-6 text-white/90">{text}</p>
         </div>
       </div>
     </div>
