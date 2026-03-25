@@ -305,7 +305,29 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
 
             {/* Мобильный: первый блок (order-1). Десктоп: справа от карты. Lg размеры подогнаны под высоту карты 531px — весь столбец не ниже её нижнего края. */}
             <div className="order-1 relative z-10 mb-6 flex w-full max-w-[634px] flex-col items-center gap-[11px] lg:order-2 lg:mb-0 lg:mt-0 lg:w-[634px] lg:max-w-none lg:items-end lg:self-start">
-              <div className="flex flex-col items-center gap-0 lg:items-end lg:w-full">
+              {/* До lg: две строки — бренд + год/акцент; после lg скрыто (дубликат не попадает в a11y-tree). */}
+              <div className="flex w-full min-w-0 flex-col items-center gap-2 px-1 lg:hidden">
+                <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center font-bold uppercase leading-[0.95] tracking-[0.14em] text-white [font-size:clamp(1.85rem,8.8vw,3.35rem)]">
+                  <span className="drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">TOON</span>
+                  <span
+                    className="inline-flex h-5 w-px shrink-0 bg-gradient-to-b from-transparent via-[#2ba8b0] to-transparent opacity-90"
+                    aria-hidden
+                  />
+                  <span className="drop-shadow-[0_2px_24px_rgba(0,0,0,0.35)]">EXPO</span>
+                </p>
+                <p className="flex flex-wrap items-baseline justify-center gap-x-4 gap-y-1 text-center [font-size:clamp(1.5rem,7vw,2.85rem)]">
+                  <span className="font-bold tabular-nums tracking-[0.06em] text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.3)]">
+                    2026
+                  </span>
+                  <span
+                    className="font-bold italic leading-none text-[#FFD700] [font-size:clamp(1.2rem,5.5vw,2.35rem)] drop-shadow-[0_0_20px_rgba(255,215,0,0.25)]"
+                  >
+                    INVEST
+                  </span>
+                </p>
+              </div>
+
+              <div className="hidden flex-col items-center gap-0 lg:flex lg:items-end lg:w-full">
                 <p className="text-center font-bold uppercase leading-[0.98] text-white [font-size:clamp(2rem,8vw,184px)] lg:text-right lg:text-[184px]">
                   toon
                 </p>
