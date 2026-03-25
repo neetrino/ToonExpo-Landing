@@ -1,11 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
 import { LazyWhenVisible } from "@/features/map/components/LazyWhenVisible";
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
+import { NeetrinoCreditPopover } from "@/features/home/components/NeetrinoCreditPopover";
 import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
 import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
@@ -14,7 +15,6 @@ import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 const FOOTER_LEGAL_TEXT_CLASS =
   "whitespace-nowrap text-xs uppercase leading-snug tracking-[0.14em] text-white/55 sm:text-sm sm:tracking-[0.16em]";
-const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_TEXT_CLASS} shrink-0 transition hover:text-white/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#277691]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black`;
 
 const FIGMA_ASSETS = {
   footerLogo: publicAssetUrl("/figma/home/footerLogo.svg"),
@@ -131,16 +131,23 @@ export function SiteReachMapFooter({
           </div>
         </div>
         <div
-          className="absolute bottom-0 left-0 right-0 flex max-w-full flex-wrap items-baseline gap-x-7 gap-y-2 px-5 pb-5 pt-4 sm:gap-x-10 lg:px-10 lg:pb-6 lg:pt-5"
+          className="absolute bottom-0 left-0 right-0 z-10 flex max-w-full flex-wrap items-center justify-start gap-x-6 gap-y-2 px-5 pb-5 pt-4 sm:gap-x-10 lg:gap-x-14 lg:px-10 lg:pb-6 lg:pt-5"
           role="group"
           aria-label="Legal"
         >
-          <p className={`${FOOTER_LEGAL_TEXT_CLASS} shrink-0`}>
+          <p className={`${FOOTER_LEGAL_TEXT_CLASS} min-w-0 shrink-0`}>
             © 2026 TOON EXPO. All rights reserved.
           </p>
-          <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
-            {HY_UI.FOOTER_PRIVACY}
-          </Link>
+          <div className="ml-1 flex min-w-0 shrink-0 flex-row flex-wrap items-center gap-x-3 gap-y-1 sm:ml-2 lg:ml-3">
+            <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/50 sm:text-[0.68rem]">
+              {HY_UI.FOOTER_CREATED_BY}
+            </p>
+            <NeetrinoCreditPopover
+              variant="dark"
+              menuAlign="start"
+              logoClassName="h-5 w-auto max-w-[72px] object-contain opacity-50 transition-[filter,opacity,transform,box-shadow] duration-200 ease-out group-hover:opacity-100 group-hover:brightness-125 group-hover:contrast-110 group-hover:drop-shadow-[0_0_16px_rgba(43,168,176,0.85)] group-hover:ring-1 group-hover:ring-[#2ba8b0]/50 group-active:scale-[0.98] lg:h-6 lg:max-w-[88px]"
+            />
+          </div>
         </div>
         <div
           className="absolute right-0 bottom-0 h-40 w-[min(100%,1056px)] overflow-hidden opacity-90 lg:h-48 pr-5 lg:pr-10"
