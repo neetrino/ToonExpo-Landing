@@ -1,9 +1,17 @@
-/* eslint-disable @next/next/no-img-element */
+import {
+  CalendarClock,
+  CircleDollarSign,
+  Landmark,
+  Percent,
+  Ruler,
+  Wallet,
+} from "lucide-react";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/lib/blockVisibility";
 import { ConstructionDetailIcon } from "@/features/landing/components/ConstructionDetailIcon";
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
 import { GalleryShowcase } from "@/features/landing/GalleryShowcase";
 import { Tour3DBlock } from "@/features/landing/Tour3DBlock";
 import { VideoEmbedBlock } from "@/features/landing/VideoEmbedBlock";
@@ -14,11 +22,11 @@ import {
 } from "@/features/landing/landingPage.constants";
 import {
   firstNonEmpty,
-  formatRange,
   getLandingTitle,
   getProjectMedia,
   getVirtualTourUrl,
 } from "@/features/landing/landingPage.helpers";
+import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
 import { resolveGalleryItems, resolveSecondaryGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
@@ -75,29 +83,40 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             <h2 className="text-[clamp(1.9rem,2.6vw,2.35rem)] font-semibold leading-tight tracking-tight">
               {HY_UI.SECTION_INVESTMENT_OFFER}
             </h2>
-            <div className="mt-7 grid gap-5 lg:grid-cols-3 lg:gap-6">
+            <div className="mt-7 grid gap-6 lg:grid-cols-3 lg:gap-8">
               {[
                 {
                   title: HY_UI.INVEST_CARD_COMPLETION,
                   text: firstNonEmpty(fields[F.completion], HY_UI.ON_REQUEST),
+                  Icon: CalendarClock,
                 },
                 {
                   title: HY_UI.INVEST_CARD_AREAS,
                   text: firstNonEmpty(fields[F.areas], HY_UI.ON_REQUEST),
+                  Icon: Ruler,
                 },
                 {
                   title: HY_UI.INVEST_CARD_PRICE_PER_SQM,
                   text: firstNonEmpty(
-                    formatRange(fields[F.priceMin], fields[F.priceMax]),
+                    formatPriceMinForDisplay(fields[F.priceMin]),
                     HY_UI.ON_REQUEST,
                   ),
+                  Icon: CircleDollarSign,
                 },
-              ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3.5">
-                  <img src={participantFigmaAssets.investmentIcon} alt="" className="mt-1 h-7 w-7 shrink-0 lg:h-8 lg:w-8" />
+              ].map(({ title, text, Icon }) => (
+                <div key={title} className="flex items-start gap-4">
+                  <Icon
+                    aria-hidden
+                    className="mt-0.5 h-9 w-9 shrink-0 text-white lg:h-11 lg:w-11"
+                    strokeWidth={LANDING_LUCIDE_STROKE}
+                  />
                   <div className="min-w-0">
-                    <p className="text-[1.2rem] font-semibold leading-snug lg:text-[1.45rem]">{item.title}</p>
-                    <p className="mt-2 text-sm leading-6 text-white/88 lg:text-base lg:leading-7">{item.text}</p>
+                    <p className="text-[clamp(1.25rem,2vw,1.45rem)] font-bold leading-tight tracking-tight text-white lg:text-[clamp(1.45rem,1.8vw,1.85rem)]">
+                      {title}
+                    </p>
+                    <p className="mt-3 text-[clamp(1.05rem,1.6vw,1.2rem)] font-semibold leading-snug text-white/92 lg:mt-3.5 lg:text-[clamp(1.2rem,1.9vw,1.55rem)] lg:leading-tight">
+                      {text}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -126,23 +145,27 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
                 {
                   title: HY_UI.PAYMENT_INSTALLMENT,
                   text: firstNonEmpty(fields[F.paymentOptions], HY_UI.ON_REQUEST),
-                  icon: participantFigmaAssets.paymentInstallmentIcon,
+                  Icon: Wallet,
                 },
                 {
                   title: HY_UI.PAYMENT_MORTGAGE,
                   text: firstNonEmpty(fields[F.bank], HY_UI.ON_REQUEST),
-                  icon: participantFigmaAssets.paymentMortgageIcon,
+                  Icon: Landmark,
                 },
                 {
                   title: HY_UI.PAYMENT_TAX,
                   text: firstNonEmpty(fields[F.taxRefund], HY_UI.ON_REQUEST),
-                  icon: participantFigmaAssets.paymentTaxIcon,
+                  Icon: Percent,
                 },
-              ].map((item) => (
-                <div key={item.title} className="lg:px-7">
-                  <img src={item.icon} alt="" className="h-[56px] w-[56px]" />
-                  <p className="mt-5 text-[1.3rem] font-semibold lg:text-[1.45rem]">{item.title}</p>
-                  <p className="mt-3 text-sm leading-7 lg:text-base">{item.text}</p>
+              ].map(({ title, text, Icon }) => (
+                <div key={title} className="lg:px-7">
+                  <Icon
+                    aria-hidden
+                    className="h-14 w-14 text-black"
+                    strokeWidth={LANDING_LUCIDE_STROKE}
+                  />
+                  <p className="mt-5 text-[1.3rem] font-semibold lg:text-[1.45rem]">{title}</p>
+                  <p className="mt-3 text-sm leading-7 lg:text-base">{text}</p>
                 </div>
               ))}
             </div>

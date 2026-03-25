@@ -2,8 +2,18 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useMemo, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import {
+  CalendarClock,
+  CircleDollarSign,
+  Landmark,
+  Percent,
+  Ruler,
+  Wallet,
+} from "lucide-react";
 import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/mobile/lib/blockVisibility";
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
 import {
   MOBILE_SECTION_INSET,
   participantFigmaAssets,
@@ -15,13 +25,13 @@ import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import {
   firstNonEmpty,
-  formatRange,
   getProjectMedia,
   parseSizeOptions,
   splitListItems,
 } from "@/features/landing/mobile/landingPage.helpers";
 import { PaymentCard } from "@/features/landing/mobile/PaymentCard";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
+import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
 
 type Props = {
   fields: ExpoMap;
@@ -32,19 +42,25 @@ type Props = {
 function InvestmentCard({
   title,
   text,
+  Icon,
 }: {
   title: string;
   text: string;
+  Icon: LucideIcon;
 }) {
   return (
     <div className="rounded-[14px] bg-gradient-to-r from-[#2ba8b0] to-[rgba(43,168,176,0.9)] px-5 py-5 text-white">
       <div className="flex items-center gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/20">
-          <img src={participantFigmaAssets.investmentIcon} alt="" className="h-8 w-8" />
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-white/20">
+          <Icon
+            aria-hidden
+            className="h-9 w-9 text-white"
+            strokeWidth={LANDING_LUCIDE_STROKE}
+          />
         </div>
         <div className="min-w-0">
-          <p className="text-[18px] font-bold leading-7">{title}</p>
-          <p className="mt-1 text-[15px] leading-6 text-white/90">{text}</p>
+          <p className="text-[19px] font-bold leading-snug tracking-tight">{title}</p>
+          <p className="mt-2 text-[16px] font-semibold leading-snug text-white/92">{text}</p>
         </div>
       </div>
     </div>
@@ -84,33 +100,39 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
       title: HY_UI.MOBILE_PAYMENT_CARD_1,
       text: firstNonEmpty(fields[F.paymentOptions], "Strong rental demand year-round"),
       tone: "teal" as const,
-      icon: participantFigmaAssets.paymentInstallmentIcon,
+      Icon: Wallet,
     },
     {
       title: HY_UI.MOBILE_PAYMENT_CARD_2,
       text: firstNonEmpty(fields[F.bank], "Ski-in/ski-out access"),
       tone: "gold" as const,
-      icon: participantFigmaAssets.paymentMortgageIcon,
+      Icon: Landmark,
     },
     {
       title: HY_UI.MOBILE_PAYMENT_CARD_3,
       text: firstNonEmpty(fields[F.taxRefund], "30% down, installments until 2027"),
       tone: "navy" as const,
-      icon: participantFigmaAssets.paymentTaxIcon,
+      Icon: Percent,
     },
   ];
   const investmentCards = [
     {
       title: HY_UI.INVEST_CARD_COMPLETION,
       text: firstNonEmpty(fields[F.completion], "Strong year-round rental demand"),
+      Icon: CalendarClock,
     },
     {
       title: HY_UI.INVEST_CARD_AREAS,
       text: firstNonEmpty(fields[F.areas], "Premium pricing for better views"),
+      Icon: Ruler,
     },
     {
       title: HY_UI.INVEST_CARD_PRICE_PER_SQM,
-      text: firstNonEmpty(formatRange(fields[F.priceMin], fields[F.priceMax]), "Ski season premium rates"),
+      text: firstNonEmpty(
+        formatPriceMinForDisplay(fields[F.priceMin]),
+        "Ski season premium rates",
+      ),
+      Icon: CircleDollarSign,
     },
   ];
   const showGallery =
@@ -125,7 +147,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
           <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.MOBILE_INVESTMENT_HIGHLIGHTS}</h2>
           <div className="mt-3 space-y-3">
             {investmentCards.map((item) => (
-              <InvestmentCard key={item.title} title={item.title} text={item.text} />
+              <InvestmentCard key={item.title} title={item.title} text={item.text} Icon={item.Icon} />
             ))}
             <div className="rounded-[14px] bg-white px-4 py-4 text-[14px] leading-[1.625] text-[#364153] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
               {investmentSummary}
@@ -276,7 +298,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
           <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.SECTION_PAYMENT}</h2>
           <div className="mt-4 space-y-3">
             {paymentCards.map((card) => (
-              <PaymentCard key={card.title} title={card.title} text={card.text} tone={card.tone} icon={card.icon} />
+              <PaymentCard key={card.title} title={card.title} text={card.text} tone={card.tone} Icon={card.Icon} />
             ))}
             <div className="rounded-[14px] bg-white px-4 py-4 text-[14px] leading-[1.625] text-[#364153] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
               {paymentSummary}
