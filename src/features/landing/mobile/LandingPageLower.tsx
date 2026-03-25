@@ -31,6 +31,7 @@ import {
 } from "@/features/landing/mobile/landingPage.helpers";
 import { PaymentCard } from "@/features/landing/mobile/PaymentCard";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
+import { formatAreasWithSqmSuffix } from "@/shared/lib/formatAreasDisplay";
 import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
 
 type Props = {
@@ -123,7 +124,10 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
     },
     {
       title: HY_UI.INVEST_CARD_AREAS,
-      text: firstNonEmpty(fields[F.areas], "Premium pricing for better views"),
+      text: firstNonEmpty(
+        formatAreasWithSqmSuffix(fields[F.areas]),
+        "Premium pricing for better views",
+      ),
       Icon: Ruler,
     },
     {

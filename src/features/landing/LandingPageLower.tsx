@@ -26,6 +26,7 @@ import {
   getProjectMedia,
   getVirtualTourUrl,
 } from "@/features/landing/landingPage.helpers";
+import { formatAreasWithSqmSuffix } from "@/shared/lib/formatAreasDisplay";
 import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
 import { resolveGalleryItems, resolveSecondaryGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
@@ -98,7 +99,10 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
                 },
                 {
                   title: HY_UI.INVEST_CARD_AREAS,
-                  text: firstNonEmpty(fields[F.areas], HY_UI.ON_REQUEST),
+                  text: firstNonEmpty(
+                    formatAreasWithSqmSuffix(fields[F.areas]),
+                    HY_UI.ON_REQUEST,
+                  ),
                   Icon: Ruler,
                 },
                 {
