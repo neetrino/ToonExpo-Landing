@@ -83,15 +83,15 @@ function AboutDeveloperIcon() {
 export function LandingPage({ fields, folderMedia }: Props) {
   const vis = visibleBlocks(fields);
   const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
-  const infrastructureFromFolder = Boolean(
-    folderMedia?.infrastructureLeftUrl || folderMedia?.infrastructureRightUrl,
-  );
+  const secondaryGalleryFromFolder =
+    (folderMedia?.galleryInteriorThenExteriorUrls.length ?? 0) > 0;
+  const hasGalleryNav = vis.gallery || galleryFromFolder;
   const navItems = participantNav.filter((item) => {
     if (item.block === "gallery") {
-      return vis.gallery || galleryFromFolder;
+      return hasGalleryNav;
     }
     if (item.block === "infrastructure") {
-      return vis.infrastructure || infrastructureFromFolder;
+      return secondaryGalleryFromFolder;
     }
     return vis[item.block];
   });

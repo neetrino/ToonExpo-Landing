@@ -16,7 +16,6 @@ export const participantNav: Array<{
   { id: "payment", label: HY_UI.NAV_PAYMENT, block: "payment" },
   { id: "infrastructure", label: HY_UI.NAV_INFRASTRUCTURE, block: "infrastructure" },
   { id: "construction", label: HY_UI.NAV_CONSTRUCTION, block: "construction" },
-  { id: "parking", label: HY_UI.NAV_PARKING, block: "parking" },
   { id: "tours", label: HY_UI.NAV_TOURS, block: "tours" },
   { id: "location", label: HY_UI.NAV_LOCATION, block: "location" },
   { id: "contacts", label: HY_UI.NAV_CONTACTS, block: "footer" },
@@ -57,29 +56,38 @@ export const participantFigmaAssets = {
   constructionCompletionIcon: publicAssetUrl("/figma/participant/constructionCompletionIcon.svg"),
   constructionCeilingIcon: publicAssetUrl("/figma/participant/constructionCeilingIcon.svg"),
   constructionFloorsIcon: publicAssetUrl("/figma/participant/constructionFloorsIcon.svg"),
-  parkingOpenIcon: publicAssetUrl("/figma/participant/parkingOpenIcon.svg"),
   parkingClosedIcon: publicAssetUrl("/figma/participant/parkingClosedIcon.svg"),
   galleryArrowLeft: publicAssetUrl("/figma/participant/galleryArrowLeft.svg"),
   galleryArrowRight: publicAssetUrl("/figma/participant/galleryArrowRight.svg"),
 } as const;
 
-/** «Կառուցվածք» սյունակը մակետով չի ցուցադրվում — հարկ, առաստաղ, վերելակ, հանձնում։ */
+/**
+ * Excel սյուներ N → T → Q → R → P → O (`docs/data/CorrectedToonExpoData2026.xlsx` / նույն CSV)։
+ * Վերնագիր = `PROJECT_FIELD` բանալու տեքստը (սյունակի անվանումը), արժեքը՝ `fields[card.key]`։
+ */
 export const constructionCards = [
-  { key: F.floors, label: HY_UI.CONSTRUCTION_FLOORS, icon: participantFigmaAssets.constructionFloorsIcon },
-  { key: F.ceiling, label: HY_UI.CONSTRUCTION_CEILING, icon: participantFigmaAssets.constructionCeilingIcon },
+  {
+    key: F.structure,
+    icon: participantFigmaAssets.constructionStructureIcon,
+  },
+  {
+    key: F.parkingClosed,
+    icon: participantFigmaAssets.parkingClosedIcon,
+  },
   {
     key: F.elevators,
-    label: HY_UI.CONSTRUCTION_ELEVATORS,
     icon: participantFigmaAssets.constructionMaterialsIcon,
   },
   {
     key: F.handover,
-    label: HY_UI.CONSTRUCTION_COMPLETION,
     icon: participantFigmaAssets.constructionCompletionIcon,
   },
-] as const;
-
-export const parkingCards = [
-  { key: F.parkingOpen, label: HY_UI.PARKING_OPEN, icon: participantFigmaAssets.parkingOpenIcon },
-  { key: F.parkingClosed, label: HY_UI.PARKING_CLOSED, icon: participantFigmaAssets.parkingClosedIcon },
+  {
+    key: F.ceiling,
+    icon: participantFigmaAssets.constructionCeilingIcon,
+  },
+  {
+    key: F.floors,
+    icon: participantFigmaAssets.constructionFloorsIcon,
+  },
 ] as const;

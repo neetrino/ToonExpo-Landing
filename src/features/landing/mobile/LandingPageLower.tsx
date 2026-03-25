@@ -115,7 +115,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
   ];
   const showGallery =
     (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryResolved.length > 0;
-  const showPayment = vis.payment || vis.construction || vis.parking;
+  const showPayment = vis.payment || vis.construction;
   const showOptions = sizeOptions.length > 0;
 
   return (

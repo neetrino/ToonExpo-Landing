@@ -8,7 +8,6 @@ import { Tour3DBlock } from "@/features/landing/Tour3DBlock";
 import { VideoEmbedBlock } from "@/features/landing/VideoEmbedBlock";
 import {
   constructionCards,
-  parkingCards,
   PARTICIPANT_SECTION_INSET,
   participantFigmaAssets,
 } from "@/features/landing/landingPage.constants";
@@ -19,7 +18,7 @@ import {
   getProjectMedia,
   getVirtualTourUrl,
 } from "@/features/landing/landingPage.helpers";
-import { resolveGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
+import { resolveGalleryItems, resolveSecondaryGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
@@ -55,15 +54,15 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
     image: fullUrl,
     thumb: thumbUrl,
   }));
-  const infrastructureImages: [string | null, string | null] = [
-    folderMedia?.infrastructureLeftUrl || media[1] || media[0] || null,
-    folderMedia?.infrastructureRightUrl || media[2] || media[1] || null,
-  ];
+  const secondaryGalleryResolved = resolveSecondaryGalleryItems(folderMedia);
+  const infrastructureGalleryItems = secondaryGalleryResolved.map(({ fullUrl, thumbUrl }) => ({
+    label: "",
+    image: fullUrl,
+    thumb: thumbUrl,
+  }));
   const showGalleryBlock =
     (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryResolved.length > 0;
-  const showInfrastructureBlock =
-    vis.infrastructure ||
-    Boolean(folderMedia?.infrastructureLeftUrl || folderMedia?.infrastructureRightUrl);
+  const showInfrastructureBlock = secondaryGalleryResolved.length > 0;
   const displayTitle = getLandingTitle(fields);
   const virtualTourUrl = getVirtualTourUrl(fields);
 
@@ -151,24 +150,13 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
       ) : null}
 
       {showInfrastructureBlock ? (
-        <Section id="infrastructure" className="bg-white py-10 lg:py-14">
-          <div
-            className={`mx-auto grid max-w-[1920px] gap-6 lg:grid-cols-[minmax(0,1fr)_400px_400px] ${PARTICIPANT_SECTION_INSET} lg:pr-0 xl:pr-0`}
-          >
-            <div />
-            {infrastructureImages.map((image, index) => (
-              <div key={`infra-${index}`} className="overflow-hidden">
-                {image ? (
-                  <img src={image} alt="" className="h-full min-h-[220px] w-full object-cover lg:min-h-[320px]" />
-                ) : (
-                  <div
-                    className="h-full min-h-[220px] w-full bg-neutral-900 lg:min-h-[320px]"
-                    aria-hidden
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+        <Section id="infrastructure" className="bg-white px-2 py-10 sm:px-3 lg:px-0 lg:py-14">
+          <GalleryShowcase
+            items={infrastructureGalleryItems}
+            leftArrowSrc={participantFigmaAssets.galleryArrowLeft}
+            rightArrowSrc={participantFigmaAssets.galleryArrowRight}
+            imageAltBase={_title}
+          />
         </Section>
       ) : null}
 
@@ -178,31 +166,12 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
               {HY_UI.SECTION_CONSTRUCTION}
             </h2>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
               {constructionCards.map((card) => (
                 <div key={card.key} className="flex flex-col items-center text-center">
                   <img src={card.icon} alt="" className="h-[62px] w-[62px] object-contain" />
-                  <p className="mt-4 text-[1.15rem] font-semibold text-[#2ba8b0] lg:text-[1.25rem]">{card.label}</p>
+                  <p className="mt-4 text-[1.15rem] font-semibold text-[#2ba8b0] lg:text-[1.25rem]">{card.key}</p>
                   <p className="mt-2 text-sm leading-7 text-white/88 lg:text-base">{firstNonEmpty(fields[card.key], HY_UI.ON_REQUEST)}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Section>
-      ) : null}
-
-      {vis.parking ? (
-        <Section id="parking" className="bg-[#2ba8b0] py-10 text-white lg:py-12">
-          <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
-            <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#192643]">
-              {HY_UI.SECTION_PARKING}
-            </h2>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-2">
-              {parkingCards.map((card) => (
-                <div key={card.key} className="flex flex-col items-center text-center">
-                  <img src={card.icon} alt="" className="h-[62px] w-[62px] object-contain" />
-                  <p className="mt-4 text-[1.15rem] font-semibold text-[#192643] lg:text-[1.25rem]">{card.label}</p>
-                  <p className="mt-2 text-sm leading-7 lg:text-base">{firstNonEmpty(fields[card.key], HY_UI.ON_REQUEST)}</p>
                 </div>
               ))}
             </div>
