@@ -14,6 +14,8 @@ import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext"
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
+import { formatTaxRefundForHomeCard } from "@/shared/lib/formatTaxRefundDisplayHy";
 import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 export type { HomeProject } from "@/features/home/homeProject.types";
@@ -51,17 +53,6 @@ function projectThumb(_f: Record<string, string>): string | null {
 
 function projectLocation(f: Record<string, string>): string {
   return f[PF.shortName]?.trim() || "Location unavailable";
-}
-
-function formatRange(minValue?: string, maxValue?: string): string {
-  const min = minValue?.trim();
-  const max = maxValue?.trim();
-
-  if (min && max) {
-    return min === max ? min : `${min} — ${max}`;
-  }
-
-  return min || max || "On request";
 }
 
 export function HomePageClient({ projects }: { projects: HomeProject[] }) {
@@ -486,9 +477,10 @@ function ProjectCard({ project }: { project: HomeProject }) {
   const logoSrc = project.cardLogoUrl?.trim() || null;
   const title = projectTitle(fields);
   const location = projectLocation(fields);
-  const taxRefund = fields[PF.taxRefund]?.trim() || "On request";
-  const pricePerMeter = formatRange(fields[PF.priceMin], fields[PF.priceMax]);
-  const priceRange = fields[PF.areas]?.trim() || pricePerMeter;
+  const taxRefundDisplay = formatTaxRefundForHomeCard(fields[PF.taxRefund]);
+  const priceMinDisplay =
+    formatPriceMinForDisplay(fields[PF.priceMin]) || HY_UI.ON_REQUEST;
+  const areasDisplay = fields[PF.areas]?.trim() || HY_UI.ON_REQUEST;
 
   return (
     <Link
@@ -533,13 +525,16 @@ function ProjectCard({ project }: { project: HomeProject }) {
           <h2 className="min-w-0 truncate text-[17px] font-bold leading-tight tracking-[-0.45px] text-[#0f172b] sm:text-[20px] sm:leading-7">
             {title}
           </h2>
-          <div className="flex min-w-0 items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
+          <div className="flex min-w-0 items-start gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
             <Percent
               aria-hidden
-              className={PROJECT_CARD_LUCIDE_CLASS}
+              className={`${PROJECT_CARD_LUCIDE_CLASS} mt-0.5`}
               strokeWidth={LANDING_LUCIDE_STROKE}
             />
-            <span className="min-w-0 line-clamp-2">{taxRefund}</span>
+            <span className="min-w-0 line-clamp-3">
+              <span className="font-normal">{HY_UI.PAYMENT_TAX}՝ </span>
+              <span className="font-bold text-[#0f172b]">{taxRefundDisplay}</span>
+            </span>
           </div>
           <div className="flex min-w-0 items-center gap-2 text-[13px] leading-tight text-[#45556c] sm:text-[14px] sm:leading-5">
             <MapPin
@@ -552,24 +547,30 @@ function ProjectCard({ project }: { project: HomeProject }) {
         </div>
 
         <div className="flex min-w-0 flex-wrap items-center gap-3 border-b border-[#f1f5f9] pb-2 sm:gap-4 sm:pb-3">
-          <div className="flex min-w-0 items-center gap-1.5 text-[13px] text-[#45556c] sm:text-[14px]">
+          <div className="flex min-w-0 items-start gap-1.5 text-[13px] text-[#45556c] sm:text-[14px]">
             <CircleDollarSign
               aria-hidden
-              className={PROJECT_CARD_LUCIDE_CLASS}
+              className={`${PROJECT_CARD_LUCIDE_CLASS} mt-0.5`}
               strokeWidth={LANDING_LUCIDE_STROKE}
             />
-            <span className="min-w-0 truncate">{pricePerMeter}</span>
+            <span className="min-w-0 break-words leading-snug">
+              <span className="font-normal">{HY_UI.HOME_CARD_MIN_PRICE_PER_SQM}՝ </span>
+              <span className="font-bold text-[#0f172b]">{priceMinDisplay}</span>
+            </span>
           </div>
         </div>
 
         <div className="mt-auto flex min-w-0 items-center justify-between gap-2 sm:gap-3">
-          <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-[13px] text-[#45556c] sm:text-[14px]">
+          <div className="flex min-w-0 flex-1 items-start gap-2 overflow-hidden text-[13px] text-[#45556c] sm:text-[14px]">
             <Ruler
               aria-hidden
-              className={PROJECT_CARD_LUCIDE_CLASS}
+              className={`${PROJECT_CARD_LUCIDE_CLASS} mt-0.5`}
               strokeWidth={LANDING_LUCIDE_STROKE}
             />
-            <span className="min-w-0 truncate">{priceRange}</span>
+            <span className="min-w-0 line-clamp-2">
+              <span className="font-normal">{HY_UI.INVEST_CARD_AREAS}՝ </span>
+              <span className="font-bold text-[#0f172b]">{areasDisplay}</span>
+            </span>
           </div>
           <span className="shrink-0 rounded-[10px] bg-[#00303D] px-4 py-2 text-center text-[14px] font-medium leading-6 text-white sm:px-5 sm:py-2.5 sm:text-[16px]">
             Դիտել

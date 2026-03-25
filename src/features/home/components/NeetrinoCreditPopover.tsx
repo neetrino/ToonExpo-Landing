@@ -139,8 +139,8 @@ export function NeetrinoCreditPopover({
 
   const panelClass =
     variant === "dark"
-      ? "border border-white/15 bg-[#141a22] shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
-      : "border border-black/12 bg-white shadow-[0_12px_32px_rgba(0,0,0,0.12)]";
+      ? "border border-white/15 bg-[#141a22]"
+      : "border border-black/12 bg-white";
 
   const linkClass =
     variant === "dark"

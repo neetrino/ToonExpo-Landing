@@ -17,3 +17,7 @@ export const NEETRINO_MENU_LABEL_WEBSITE = "Website" as const;
  */
 export const NEETRINO_LOGO_FOOTER_TEAL_FILTER_CLASSNAME =
   "[filter:brightness(0)_saturate(100%)_invert(58%)_sepia(47%)_saturate(720%)_hue-rotate(144deg)_brightness(0.95)_contrast(0.92)]" as const;
+
+/** Ֆուտերի մուգ ֆոնի վրա սպիտակ լոգո (գունավոր SVG → monochrome սպիտակ)։ */
+export const NEETRINO_LOGO_FOOTER_WHITE_FILTER_CLASSNAME =
+  "[filter:brightness(0)_invert(1)]" as const;

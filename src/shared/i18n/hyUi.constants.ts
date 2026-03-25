@@ -48,6 +48,8 @@ export const HY_UI = {
   FOOTER_CREATED_BY: "Ստեղծված է",
   /** Neetrino լոգոյի կոճակ — բացել Instagram/կայք ընտրությունը */
   FOOTER_NEETRINO_LOGO_ARIA: "Neetrino — բացել հղումները",
+  /** Անգլերեն պիտակ՝ քարտի վերին աջ անկյունում */
+  FOOTER_POWERED_BY: "Powered by",
 
   MENU_TITLE: "Մենյու",
   GALLERY_PREVIEW: "Պատկերներ",
@@ -79,6 +81,10 @@ export const HY_UI = {
 
   ON_REQUEST: "Հայցով",
 
+  /** Գլխավոր քարտ — եկամտահարկի վերադարձ (այո/ոչ → Կա/Չկա) */
+  TAX_REFUND_PRESENT: "Կա",
+  TAX_REFUND_ABSENT: "Չկա",
+
   ARIA_CLOSE: "Փակել",
   ARIA_CLOSE_FULLTEXT: "Փակել",
   ARIA_OPEN_MENU: "Բացել մենյու",
@@ -99,7 +105,8 @@ export const HY_UI = {
   /** Ներդրումի երեք քարտ՝ CSV E, F, G+H */
   INVEST_CARD_COMPLETION: "Շինավարտ",
   INVEST_CARD_AREAS: "Մակերեսներ",
-  INVEST_CARD_PRICE_PER_SQM: "ԳՆԵՐԸ ք/մ ՍԿՍԱԾ",
+  /** Սկզբից «սկսած», հետո գինը ք/մ */
+  INVEST_CARD_PRICE_PER_SQM: "ՍԿՍԱԾ ԳՆԵՐԸ ք/մ",
   MOBILE_PAYMENT_CARD_1: "Վճարման պայմաններ",
   MOBILE_PAYMENT_CARD_2: "Կառուցման մանրամասներ",
   MOBILE_PAYMENT_CARD_3: "Կայանատեղի",
@@ -119,6 +126,9 @@ export const HY_UI = {
   MAP_INTERACTIVE: "Ինտերակտիվ քարտեզ",
 
   GO_HOME: "Գլխավոր",
+
+  /** Գլխավոր քարտ — գնի տող, մեկ բառ («սկսած»), արժեքը՝ նվազագույն գինը ք/մ (CSV) */
+  HOME_CARD_MIN_PRICE_PER_SQM: "Սկսած",
 
   /** Ստորին նավիգացիա (գլխավոր էջ) */
   BOTTOM_SCROLL_TOP: "Վերև",
