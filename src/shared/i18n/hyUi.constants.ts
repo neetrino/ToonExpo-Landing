@@ -59,6 +59,7 @@ export const HY_UI = {
   CONSTRUCTION_COMPLETION: "Ավարտման ժամկետ",
   CONSTRUCTION_CEILING: "Առաստաղի բարձրություն",
   CONSTRUCTION_FLOORS: "Հարկերի քանակ",
+  CONSTRUCTION_ELEVATORS: "Վերելակներ",
 
   PARKING_OPEN: "Բաց կայանատեղի",
   PARKING_CLOSED: "Փակ կայանատեղի",
@@ -89,6 +90,10 @@ export const HY_UI = {
   MOBILE_INVEST_HIGH_1: "Վարձավճարային եկամուտ",
   MOBILE_INVEST_HIGH_2: "Գին և տեսարան",
   MOBILE_INVEST_HIGH_3: "Սեզոնային վարձ",
+  /** Ներդրումի երեք քարտ՝ CSV E, F, G+H */
+  INVEST_CARD_COMPLETION: "Շին ավարտ",
+  INVEST_CARD_AREAS: "Մակերեսներ",
+  INVEST_CARD_PRICE_PER_SQM: "Գներ (ք/մ)",
   MOBILE_PAYMENT_CARD_1: "Վճարման պայմաններ",
   MOBILE_PAYMENT_CARD_2: "Կառուցման մանրամասներ",
   MOBILE_PAYMENT_CARD_3: "Կայանատեղի",

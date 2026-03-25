@@ -13,6 +13,7 @@ import { slugifyTitle } from "@/shared/lib/slug";
 import { sanitizeMediaFolderId } from "@/shared/lib/mediaFolderId";
 import { parseProjectSortOrder } from "@/shared/lib/parseProjectSortOrder";
 import { z } from "zod";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 
 const projectMetaSchema = z.object({
   published: z.coerce.boolean().optional().default(true),
@@ -51,8 +52,8 @@ export async function createProjectAction(
 ): Promise<{ error?: string }> {
   await requireAdmin();
   const title =
-    (formData.get("expo_field_02") as string)?.trim() ||
-    (formData.get("expo_field_01") as string)?.trim() ||
+    (formData.get(PROJECT_FIELD.titleExhibition) as string)?.trim() ||
+    (formData.get(PROJECT_FIELD.participantName) as string)?.trim() ||
     "project";
   const fromProjectId = parsePublicProjectId(formData.get("projectId"));
   let slugBase: string;

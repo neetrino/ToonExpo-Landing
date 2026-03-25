@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
-import { parseMediaUrls } from "@/shared/lib/mediaUrls";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { visibleBlocks } from "@/features/landing/lib/blockVisibility";
 import { GalleryShowcase } from "@/features/landing/GalleryShowcase";
@@ -15,8 +15,9 @@ import {
 import {
   firstNonEmpty,
   formatRange,
+  getLandingTitle,
   getProjectMedia,
-  splitListItems,
+  getVirtualTourUrl,
 } from "@/features/landing/landingPage.helpers";
 import { resolveGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
@@ -45,34 +46,26 @@ type Props = {
 };
 
 export function LandingPageLower({ fields, title: _title, folderMedia }: Props) {
+  const F = PROJECT_FIELD;
   const vis = visibleBlocks(fields);
   const media = getProjectMedia(fields);
-  const exteriorMedia = Array.from(new Set(parseMediaUrls(fields.expo_field_43)));
-  const infrastructureItems = splitListItems(fields.expo_field_33);
   const galleryResolved = resolveGalleryItems(media, folderMedia);
-  /** Պլիտկայի ենթագրեր՝ միայն եթե տվյալներում կա առանձին տեքստ (հակառակ դեպքում կկրկնվի h2-ի SECTION_GALLERY)։ */
   const galleryItems = galleryResolved.map(({ fullUrl, thumbUrl }) => ({
     label: "",
     image: fullUrl,
     thumb: thumbUrl,
   }));
   const infrastructureImages: [string | null, string | null] = [
-    folderMedia?.infrastructureLeftUrl ||
-      exteriorMedia[1] ||
-      exteriorMedia[0] ||
-      media[3] ||
-      null,
-    folderMedia?.infrastructureRightUrl ||
-      exteriorMedia[2] ||
-      exteriorMedia[1] ||
-      media[4] ||
-      null,
+    folderMedia?.infrastructureLeftUrl || media[1] || media[0] || null,
+    folderMedia?.infrastructureRightUrl || media[2] || media[1] || null,
   ];
   const showGalleryBlock =
     (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryResolved.length > 0;
   const showInfrastructureBlock =
     vis.infrastructure ||
     Boolean(folderMedia?.infrastructureLeftUrl || folderMedia?.infrastructureRightUrl);
+  const displayTitle = getLandingTitle(fields);
+  const virtualTourUrl = getVirtualTourUrl(fields);
 
   return (
     <>
@@ -83,16 +76,19 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             <div className="mt-7 grid gap-5 lg:grid-cols-3 lg:gap-6">
               {[
                 {
-                  title: firstNonEmpty(fields.expo_field_17, HY_UI.MOBILE_INVEST_HIGH_1),
-                  text: formatRange(fields.expo_field_17, fields.expo_field_18),
+                  title: HY_UI.INVEST_CARD_COMPLETION,
+                  text: firstNonEmpty(fields[F.completion], HY_UI.ON_REQUEST),
                 },
                 {
-                  title: HY_UI.MOBILE_INVEST_HIGH_2,
-                  text: formatRange(fields.expo_field_07, fields.expo_field_08),
+                  title: HY_UI.INVEST_CARD_AREAS,
+                  text: firstNonEmpty(fields[F.areas], HY_UI.ON_REQUEST),
                 },
                 {
-                  title: HY_UI.MOBILE_INVEST_HIGH_3,
-                  text: firstNonEmpty(fields.expo_field_10, fields.expo_field_09, HY_UI.ON_REQUEST),
+                  title: HY_UI.INVEST_CARD_PRICE_PER_SQM,
+                  text: firstNonEmpty(
+                    formatRange(fields[F.priceMin], fields[F.priceMax]),
+                    HY_UI.ON_REQUEST,
+                  ),
                 },
               ].map((item) => (
                 <div key={item.title} className="flex items-start gap-3.5">
@@ -127,17 +123,17 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
               {[
                 {
                   title: HY_UI.PAYMENT_INSTALLMENT,
-                  text: firstNonEmpty(fields.expo_field_19, HY_UI.ON_REQUEST),
+                  text: firstNonEmpty(fields[F.paymentOptions], HY_UI.ON_REQUEST),
                   icon: participantFigmaAssets.paymentInstallmentIcon,
                 },
                 {
                   title: HY_UI.PAYMENT_MORTGAGE,
-                  text: firstNonEmpty(fields.expo_field_10, HY_UI.ON_REQUEST),
+                  text: firstNonEmpty(fields[F.bank], HY_UI.ON_REQUEST),
                   icon: participantFigmaAssets.paymentMortgageIcon,
                 },
                 {
                   title: HY_UI.PAYMENT_TAX,
-                  text: firstNonEmpty(fields.expo_field_09, HY_UI.ON_REQUEST),
+                  text: firstNonEmpty(fields[F.taxRefund], HY_UI.ON_REQUEST),
                   icon: participantFigmaAssets.paymentTaxIcon,
                 },
               ].map((item) => (
@@ -157,18 +153,7 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
           <div
             className={`mx-auto grid max-w-[1920px] gap-6 lg:grid-cols-[minmax(0,1fr)_400px_400px] ${PARTICIPANT_SECTION_INSET} lg:pr-0 xl:pr-0`}
           >
-            <div>
-              <h2 className="max-w-[360px] text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
-                {HY_UI.SECTION_INFRA}
-              </h2>
-              <ul className="mt-7 space-y-3 text-base leading-7 text-black/82 lg:text-[1.15rem] lg:leading-[1.5]">
-                {infrastructureItems.map((item) => (
-                  <li key={item} className="ml-6 list-disc">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <div />
             {infrastructureImages.map((image, index) => (
               <div key={`infra-${index}`} className="overflow-hidden">
                 {image ? (
@@ -191,7 +176,7 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
               {HY_UI.SECTION_CONSTRUCTION}
             </h2>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-6">
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
               {constructionCards.map((card) => (
                 <div key={card.key} className="flex flex-col items-center text-center">
                   <img src={card.icon} alt="" className="h-[62px] w-[62px] object-contain" />
@@ -210,7 +195,7 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#192643]">
               {HY_UI.SECTION_PARKING}
             </h2>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-2">
               {parkingCards.map((card) => (
                 <div key={card.key} className="flex flex-col items-center text-center">
                   <img src={card.icon} alt="" className="h-[62px] w-[62px] object-contain" />
@@ -229,25 +214,25 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
             <h2 className="text-[clamp(1.7rem,2.4vw,2.15rem)] font-semibold uppercase text-[#2ba8b0]">
               {HY_UI.SECTION_TOURS_MEDIA}
             </h2>
-            {isFieldNonEmpty(fields.expo_field_45) ? (
+            {isFieldNonEmpty(virtualTourUrl) ? (
               <div>
                 <div className="mb-0 inline-flex rounded-t-[10px] bg-[#ffd24d] px-6 py-2 text-base font-semibold uppercase text-white lg:px-7">
                   {HY_UI.TOUR_3D_BADGE}
                 </div>
                 <Tour3DBlock
-                  url={fields.expo_field_45}
-                  title={fields.expo_field_02 || "3D Tour"}
+                  url={virtualTourUrl}
+                  title={displayTitle || "3D Tour"}
                 />
               </div>
             ) : null}
-            {isFieldNonEmpty(fields.expo_field_46) ? (
+            {isFieldNonEmpty(fields[F.video]) ? (
               <div>
                 <div className="mb-0 inline-flex rounded-t-[10px] bg-[#ffd24d] px-6 py-2 text-base font-semibold uppercase text-white lg:px-7">
                   {HY_UI.TAB_VIDEO}
                 </div>
                 <VideoEmbedBlock
-                  url={fields.expo_field_46}
-                  title={fields.expo_field_02}
+                  url={fields[F.video]}
+                  title={displayTitle}
                 />
               </div>
             ) : null}
@@ -258,8 +243,3 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
     </>
   );
 }
-
-
-
-
-

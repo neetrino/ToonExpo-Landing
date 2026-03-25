@@ -1,6 +1,9 @@
 import type { LandingBlockId } from "@/features/landing/lib/blockVisibility";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
+
+const F = PROJECT_FIELD;
 
 export const participantNav: Array<{
   id: string;
@@ -56,26 +59,27 @@ export const participantFigmaAssets = {
   constructionFloorsIcon: publicAssetUrl("/figma/participant/constructionFloorsIcon.svg"),
   parkingOpenIcon: publicAssetUrl("/figma/participant/parkingOpenIcon.svg"),
   parkingClosedIcon: publicAssetUrl("/figma/participant/parkingClosedIcon.svg"),
-  parkingPriceIcon: publicAssetUrl("/figma/participant/parkingPriceIcon.svg"),
-  parkingStandardIcon: publicAssetUrl("/figma/participant/parkingStandardIcon.svg"),
-  parkingCommercialIcon: publicAssetUrl("/figma/participant/parkingCommercialIcon.svg"),
   galleryArrowLeft: publicAssetUrl("/figma/participant/galleryArrowLeft.svg"),
   galleryArrowRight: publicAssetUrl("/figma/participant/galleryArrowRight.svg"),
 } as const;
 
+/** «Կառուցվածք» սյունակը մակետով չի ցուցադրվում — հարկ, առաստաղ, վերելակ, հանձնում։ */
 export const constructionCards = [
-  { key: "expo_field_20", label: HY_UI.CONSTRUCTION_STRUCTURE, icon: participantFigmaAssets.constructionStructureIcon },
-  { key: "expo_field_21", label: HY_UI.CONSTRUCTION_MATERIALS, icon: participantFigmaAssets.constructionMaterialsIcon },
-  { key: "expo_field_22", label: HY_UI.CONSTRUCTION_INSULATION, icon: participantFigmaAssets.constructionInsulationIcon },
-  { key: "expo_field_31", label: HY_UI.CONSTRUCTION_COMPLETION, icon: participantFigmaAssets.constructionCompletionIcon },
-  { key: "expo_field_29", label: HY_UI.CONSTRUCTION_CEILING, icon: participantFigmaAssets.constructionCeilingIcon },
-  { key: "expo_field_25", label: HY_UI.CONSTRUCTION_FLOORS, icon: participantFigmaAssets.constructionFloorsIcon },
+  { key: F.floors, label: HY_UI.CONSTRUCTION_FLOORS, icon: participantFigmaAssets.constructionFloorsIcon },
+  { key: F.ceiling, label: HY_UI.CONSTRUCTION_CEILING, icon: participantFigmaAssets.constructionCeilingIcon },
+  {
+    key: F.elevators,
+    label: HY_UI.CONSTRUCTION_ELEVATORS,
+    icon: participantFigmaAssets.constructionMaterialsIcon,
+  },
+  {
+    key: F.handover,
+    label: HY_UI.CONSTRUCTION_COMPLETION,
+    icon: participantFigmaAssets.constructionCompletionIcon,
+  },
 ] as const;
 
 export const parkingCards = [
-  { key: "expo_field_37", label: HY_UI.PARKING_OPEN, icon: participantFigmaAssets.parkingOpenIcon },
-  { key: "expo_field_38", label: HY_UI.PARKING_CLOSED, icon: participantFigmaAssets.parkingClosedIcon },
-  { key: "expo_field_40", label: HY_UI.PARKING_PRICE, icon: participantFigmaAssets.parkingPriceIcon },
-  { key: "expo_field_39", label: HY_UI.PARKING_STANDARD, icon: participantFigmaAssets.parkingStandardIcon },
-  { key: "expo_field_41", label: HY_UI.PARKING_COMMERCIAL, icon: participantFigmaAssets.parkingCommercialIcon },
+  { key: F.parkingOpen, label: HY_UI.PARKING_OPEN, icon: participantFigmaAssets.parkingOpenIcon },
+  { key: F.parkingClosed, label: HY_UI.PARKING_CLOSED, icon: participantFigmaAssets.parkingClosedIcon },
 ] as const;

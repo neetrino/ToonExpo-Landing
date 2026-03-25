@@ -6,9 +6,12 @@ import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext"
 import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { LandingMapFullscreenOverlay } from "@/features/landing/components/LandingMapFullscreenOverlay";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 
 function projectTitle(f: Record<string, string>): string {
-  return f.expo_field_02?.trim() || f.expo_field_01?.trim() || "—";
+  return (
+    f[PROJECT_FIELD.titleExhibition]?.trim() || f[PROJECT_FIELD.participantName]?.trim() || "—"
+  );
 }
 
 type Props = {

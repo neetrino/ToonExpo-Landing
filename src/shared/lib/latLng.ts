@@ -1,3 +1,5 @@
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
+
 /** WGS84 bounds for map markers */
 const LAT_MIN = -90;
 const LAT_MAX = 90;
@@ -88,14 +90,15 @@ export function parseDmsLatLng(raw: string | undefined): { lat: number; lng: num
 }
 
 /**
- * Prefer explicit decimal coordinates (`expo_field_16`); otherwise DMS in map link cell (`expo_field_15`).
+ * Decimal coordinates from «7.1 Տեղադիրք»; optional DMS in the same cell.
  */
 export function resolveLatLngForMap(
   fields: Record<string, string>,
 ): { lat: number; lng: number } | null {
-  const fromDecimal = parseLatLng(fields.expo_field_16);
+  const cell = fields[PROJECT_FIELD.locationCoords];
+  const fromDecimal = parseLatLng(cell);
   if (fromDecimal) {
     return fromDecimal;
   }
-  return parseDmsLatLng(fields.expo_field_15);
+  return parseDmsLatLng(cell);
 }

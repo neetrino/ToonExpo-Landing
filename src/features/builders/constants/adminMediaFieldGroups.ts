@@ -1,29 +1,14 @@
-/**
- * Ադմինի «Մեդիա» բաժնի դաշտերի խմբավորում՝ R2 որպես աղբյուր, բացառությամբ embed URL-ների։
- */
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 
 /**
- * Գալերիա — R2 պանակում (`ProjectR2MediaManager`), ոչ թե URL ցուցակ ադմինում։
- * Ձևում՝ hidden դաշտեր (դատարկ)։
+ * Ադմինի «Մեդիա» բաժին — R2 որպես աղբյուր պատկերների համար։
+ * Տեսանյութ և վիրտուալ տուր՝ միայն URL (embed)։
  */
-export const MEDIA_GALLERY_FIELD_KEYS = ["expo_field_43", "expo_field_44"] as const;
 
-/** Արտաքին embed (տուր, տեսանյութ) — միայն տեքստ, առանց ֆայլի վերբեռնման կոճակի */
+/** Արտաքին embed — միայն տեքստ, առանց ֆայլի վերբեռնման */
 export const MEDIA_EMBED_EXTERNAL_URL_FIELD_KEYS = [
-  "expo_field_45",
-  "expo_field_46",
+  PROJECT_FIELD.video,
+  PROJECT_FIELD.virtualTour,
 ] as const;
 
-/**
- * Թաքնված դաշտեր (լենդինգում չեն ցուցադրվում կամ secondary) — ձևում պահելու համար hidden input
- */
-export const MEDIA_HIDDEN_PRESERVE_FIELD_KEYS = [
-  "expo_field_47",
-  "expo_field_48",
-  "expo_field_49",
-  "expo_field_50",
-] as const;
-
-export type MediaGalleryFieldKey = (typeof MEDIA_GALLERY_FIELD_KEYS)[number];
 export type MediaEmbedFieldKey = (typeof MEDIA_EMBED_EXTERNAL_URL_FIELD_KEYS)[number];
-export type MediaHiddenPreserveFieldKey = (typeof MEDIA_HIDDEN_PRESERVE_FIELD_KEYS)[number];

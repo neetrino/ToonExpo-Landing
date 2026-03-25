@@ -12,6 +12,7 @@ import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
 import { RemoteAwareImage } from "@/shared/components/RemoteAwareImage";
 import { resolveGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import {
   firstNonEmpty,
   formatRange,
@@ -51,6 +52,7 @@ function InvestmentCard({
 }
 
 export function LandingPageLower({ fields, title, folderMedia }: Props) {
+  const F = PROJECT_FIELD;
   const vis = visibleBlocks(fields);
   const media = getProjectMedia(fields);
   const galleryResolved = useMemo(() => resolveGalleryItems(media, folderMedia), [folderMedia, media]);
@@ -59,7 +61,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
     [galleryResolved],
   );
   const [galleryLightboxIndex, setGalleryLightboxIndex] = useState<number | null>(null);
-  const sizeOptions = useMemo(() => parseSizeOptions(fields.expo_field_06), [fields.expo_field_06]);
+  const sizeOptions = useMemo(() => parseSizeOptions(fields[F.areas]), [fields, F.areas]);
   const defaultSizeIndex = sizeOptions.length > 3 ? 3 : 0;
   const [selectedSize, setSelectedSize] = useState(defaultSizeIndex);
   const sizeRange = firstNonEmpty(
@@ -69,46 +71,46 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
     "30.7 m² - 60.5 m².",
   );
   const investmentSummary = firstNonEmpty(
-    splitListItems(fields.expo_field_34)[0],
+    splitListItems(fields[F.description])[0],
     "Price varies by view and floor. Higher floors and better views command premium. Strong rental demand for ski-in/ski-out units.",
   );
   const paymentSummary = firstNonEmpty(
-    fields.expo_field_19,
+    fields[F.paymentOptions],
     investmentSummary,
     "Price varies by view and floor. Higher floors and better views command premium. Strong rental demand for ski-in/ski-out units.",
   );
   const paymentCards = [
     {
       title: HY_UI.MOBILE_PAYMENT_CARD_1,
-      text: firstNonEmpty(fields.expo_field_19, "Strong rental demand year-round"),
+      text: firstNonEmpty(fields[F.paymentOptions], "Strong rental demand year-round"),
       tone: "teal" as const,
       icon: participantFigmaAssets.paymentInstallmentIcon,
     },
     {
       title: HY_UI.MOBILE_PAYMENT_CARD_2,
-      text: firstNonEmpty(fields.expo_field_20, fields.expo_field_21, "Ski-in/ski-out access"),
+      text: firstNonEmpty(fields[F.bank], "Ski-in/ski-out access"),
       tone: "gold" as const,
       icon: participantFigmaAssets.paymentMortgageIcon,
     },
     {
       title: HY_UI.MOBILE_PAYMENT_CARD_3,
-      text: firstNonEmpty(fields.expo_field_41, fields.expo_field_40, "30% down, installments until 2027"),
+      text: firstNonEmpty(fields[F.taxRefund], "30% down, installments until 2027"),
       tone: "navy" as const,
       icon: participantFigmaAssets.paymentTaxIcon,
     },
   ];
   const investmentCards = [
     {
-      title: HY_UI.MOBILE_INVEST_HIGH_1,
-      text: firstNonEmpty(formatRange(fields.expo_field_17, fields.expo_field_18), "Strong year-round rental demand"),
+      title: HY_UI.INVEST_CARD_COMPLETION,
+      text: firstNonEmpty(fields[F.completion], "Strong year-round rental demand"),
     },
     {
-      title: HY_UI.MOBILE_INVEST_HIGH_2,
-      text: firstNonEmpty(formatRange(fields.expo_field_07, fields.expo_field_08), "Premium pricing for better views"),
+      title: HY_UI.INVEST_CARD_AREAS,
+      text: firstNonEmpty(fields[F.areas], "Premium pricing for better views"),
     },
     {
-      title: HY_UI.MOBILE_INVEST_HIGH_3,
-      text: firstNonEmpty(fields.expo_field_10, fields.expo_field_09, "Ski season premium rates"),
+      title: HY_UI.INVEST_CARD_PRICE_PER_SQM,
+      text: firstNonEmpty(formatRange(fields[F.priceMin], fields[F.priceMax]), "Ski season premium rates"),
     },
   ];
   const showGallery =
@@ -239,7 +241,7 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
               </p>
               <p className="max-w-[281px]">
                 <span className="font-bold">{HY_UI.MOBILE_LABEL_FLOOR}</span>{" "}
-                {firstNonEmpty(fields.expo_field_28, "12-13 units per floor depending on level.")}
+                {firstNonEmpty(fields[F.elevators], "12-13 units per floor depending on level.")}
               </p>
             </div>
             <div className="mt-5 grid grid-cols-4 gap-2.5">

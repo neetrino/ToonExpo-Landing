@@ -1,9 +1,11 @@
 import { parseMediaUrls } from "@/shared/lib/mediaUrls";
 import type { ExpoFieldsFormValues } from "@/shared/lib/expoFields";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
+import { extractVirtualTourUrl } from "@/shared/lib/extractVirtualTourUrl";
 
 /**
  * Google Drive / Docs — ոչ թե ուղղակի պատկեր/PDF URL լենդինգի համար։
- * R2-ն միակ աղբյուրն է ֆայլերի համար (բացառությամբ embed `expo_field_45`/`46`)։
+ * R2-ն միակ աղբյուրն է ֆայլերի համար (բացառությամբ embed տուր/տեսանյութ դաշտերից)։
  */
 export function isDriveOrDocsUrl(url: string): boolean {
   const lower = url.toLowerCase();
@@ -34,28 +36,15 @@ export function sanitizeMediaSingleUrlField(raw: string): string {
   return isDriveOrDocsUrl(t) ? "" : t;
 }
 
-const CSV_OMIT_FROM_IMPORT_KEYS = [
-  "expo_field_43",
-  "expo_field_44",
-  "expo_field_47",
-  "expo_field_48",
-  "expo_field_49",
-  "expo_field_50",
-] as const;
-
 /**
- * CSV ներմուծումից հետո — մեդիա դաշտերը համաձայն քաղաքականության.
- * - 43–44, 47–50. CSV-ից չեն ներմուծվում (դատարկ — գալերիան R2 պանակում է)
- * - 45–46. embed (YouTube, Matterport, …) — Drive հղումները հանվում են
+ * CSV ներմուծումից հետո — տեսանյութ և վիրտուալ տուր՝ մաքրել Drive, iframe-ից URL։
  */
 export function sanitizeExpoFieldsFromCsvForMediaPolicy(
   fields: ExpoFieldsFormValues,
 ): ExpoFieldsFormValues {
   const o = { ...fields } as Record<string, string>;
-  o.expo_field_45 = sanitizeMediaSingleUrlField(o.expo_field_45 ?? "");
-  o.expo_field_46 = sanitizeMediaSingleUrlField(o.expo_field_46 ?? "");
-  for (const key of CSV_OMIT_FROM_IMPORT_KEYS) {
-    o[key] = "";
-  }
+  o[PROJECT_FIELD.video] = sanitizeMediaSingleUrlField(o[PROJECT_FIELD.video] ?? "");
+  const vt = extractVirtualTourUrl(o[PROJECT_FIELD.virtualTour] ?? "");
+  o[PROJECT_FIELD.virtualTour] = sanitizeMediaSingleUrlField(vt);
   return o as ExpoFieldsFormValues;
 }

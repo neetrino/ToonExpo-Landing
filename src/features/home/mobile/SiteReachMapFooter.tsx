@@ -10,6 +10,7 @@ import {
   MOBILE_SECTION_INSET,
 } from "@/features/landing/mobile/landingPage.constants";
 import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
 export type SiteReachMapFooterVariant = "home" | "participant";
@@ -23,7 +24,7 @@ export function SiteReachMapFooter({
 }) {
   const anchor = projects[0] ?? null;
   const markers = useMemo(() => buildMapMarkersFromProjects(projects), [projects]);
-  const footerSite = toExternalHref(anchor?.expoFields.expo_field_51);
+  const footerSite = toExternalHref(anchor?.expoFields[PROJECT_FIELD.website]);
   const footerHref = footerSite || "#top";
 
   return (

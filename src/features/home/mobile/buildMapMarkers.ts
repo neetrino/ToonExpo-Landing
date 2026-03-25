@@ -3,9 +3,12 @@ import { formatMapPricePerSqm } from "@/shared/lib/formatMapPricePerSqm";
 import type { MapMarker } from "@/features/map/components/HomeMapPreview";
 import type { HomeProject } from "@/features/home/mobile/homeProject.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
+
+const F = PROJECT_FIELD;
 
 function projectTitle(f: Record<string, string>): string {
-  return f.expo_field_02?.trim() || f.expo_field_01?.trim() || "—";
+  return f[F.titleExhibition]?.trim() || f[F.participantName]?.trim() || "—";
 }
 
 export function buildMapMarkersFromProjects(list: HomeProject[]): MapMarker[] {
@@ -14,7 +17,7 @@ export function buildMapMarkersFromProjects(list: HomeProject[]): MapMarker[] {
     const f = p.expoFields;
     const ll = resolveLatLngForMap(f);
     if (ll) {
-      const priceLine = formatMapPricePerSqm(f.expo_field_07, f.expo_field_08);
+      const priceLine = formatMapPricePerSqm(f[F.priceMin], f[F.priceMax]);
       markers.push({
         lat: ll.lat,
         lng: ll.lng,

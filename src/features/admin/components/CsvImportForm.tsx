@@ -25,7 +25,7 @@ export function CsvImportForm() {
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
       <label className="flex flex-col gap-1 text-sm">
-        <span className="text-slate-600">ToonExpoData2026.csv</span>
+        <span className="text-slate-600">CorrectedToonExpoData2026.csv</span>
         <input name="file" type="file" accept=".csv,text/csv" required className="text-sm" />
       </label>
       <button

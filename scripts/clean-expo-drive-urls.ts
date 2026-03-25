@@ -9,6 +9,7 @@ import {
   sanitizeMediaSingleUrlField,
   sanitizeMediaUrlList,
 } from "../src/shared/lib/expoFieldsMediaPolicy";
+import { PROJECT_FIELD } from "../src/shared/constants/expoFieldKeys";
 import { loadEnvFile } from "./loadEnvFile";
 
 loadEnvFile();
@@ -29,14 +30,13 @@ function cleanSingleField(raw: string): { next: string; changed: boolean } {
   return { next, changed };
 }
 
-const LIST_KEYS = ["expo_field_43", "expo_field_44"] as const;
+const LIST_KEYS = [] as const;
 const SINGLE_KEYS = [
-  "expo_field_45",
-  "expo_field_46",
-  "expo_field_47",
-  "expo_field_48",
-  "expo_field_49",
-  "expo_field_50",
+  PROJECT_FIELD.video,
+  PROJECT_FIELD.virtualTour,
+  PROJECT_FIELD.website,
+  PROJECT_FIELD.instagram,
+  PROJECT_FIELD.facebook,
 ] as const;
 
 function stripEmptyStrings(obj: Record<string, string>): Record<string, string> {
@@ -77,6 +77,7 @@ async function main(): Promise<void> {
         changes.push(`${key}: list filtered`);
       }
     }
+
 
     for (const key of SINGLE_KEYS) {
       const v = expo[key];

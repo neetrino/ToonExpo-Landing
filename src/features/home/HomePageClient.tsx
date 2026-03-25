@@ -5,7 +5,7 @@ import { useScrolledPastThreshold } from "@/shared/hooks/useScrolledPastThreshol
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
-import { parseMediaUrls } from "@/shared/lib/mediaUrls";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { HomeMapPreviewDynamic } from "@/features/map/components/HomeMapPreviewDynamic";
 import { MapSearch } from "@/features/home/components/MapSearch";
 import { useBottomBarCallbacks } from "@/features/home/context/BottomBarContext";
@@ -37,18 +37,19 @@ const PROJECT_CARD_HERO_SIZES =
 const PROJECT_CARD_LOGO_MAX_PX = 156 as const;
 const PROJECT_CARD_LOGO_MAX_SM_PX = 68 as const;
 
+const PF = PROJECT_FIELD;
+
 function projectTitle(f: Record<string, string>): string {
-  return f.expo_field_02?.trim() || f.expo_field_01?.trim() || "—";
+  return f[PF.titleExhibition]?.trim() || f[PF.participantName]?.trim() || "—";
 }
 
-/** Fallback hero — միայն արտաքին/ներքին ռենդերների URL-ները (ոչ լոգո)։ */
-function projectThumb(f: Record<string, string>): string | null {
-  const media = [...parseMediaUrls(f.expo_field_43), ...parseMediaUrls(f.expo_field_44)];
-  return media[0] ?? null;
+/** Fallback hero — CSV-ում պատկերների URL չկա։ */
+function projectThumb(_f: Record<string, string>): string | null {
+  return null;
 }
 
 function projectLocation(f: Record<string, string>): string {
-  return f.expo_field_03?.trim() || "Location unavailable";
+  return f[PF.shortName]?.trim() || "Location unavailable";
 }
 
 function formatRange(minValue?: string, maxValue?: string): string {
@@ -80,9 +81,9 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
       const f = p.expoFields;
       const hay = [
         projectTitle(f),
-        f.expo_field_01,
-        f.expo_field_02,
-        f.expo_field_03,
+        f[PF.participantName],
+        f[PF.titleExhibition],
+        f[PF.shortName],
       ]
         .filter(Boolean)
         .join(" ")
@@ -462,9 +463,9 @@ function ProjectCard({ project }: { project: HomeProject }) {
   const logoSrc = project.cardLogoUrl?.trim() || null;
   const title = projectTitle(fields);
   const location = projectLocation(fields);
-  const taxRefund = fields.expo_field_09?.trim() || "On request";
-  const pricePerMeter = formatRange(fields.expo_field_07, fields.expo_field_08);
-  const priceRange = formatRange(fields.expo_field_17, fields.expo_field_18);
+  const taxRefund = fields[PF.taxRefund]?.trim() || "On request";
+  const pricePerMeter = formatRange(fields[PF.priceMin], fields[PF.priceMax]);
+  const priceRange = fields[PF.areas]?.trim() || pricePerMeter;
 
   return (
     <Link

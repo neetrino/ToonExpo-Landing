@@ -8,6 +8,7 @@ import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
 import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
@@ -47,9 +48,10 @@ export function SiteReachMapFooter({
   const mapFrameClass = isParticipant
     ? "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-[#246976]/25 shadow-[0_25px_60px_rgba(0,0,0,0.08)]"
     : "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)]";
-  const footerSite = isParticipant ? toExternalHref(anchor?.expoFields.expo_field_51) : "";
-  const footerInstagram = anchor?.expoFields.expo_field_52?.trim() ?? "";
-  const footerFacebook = anchor?.expoFields.expo_field_53?.trim() ?? "";
+  const F = PROJECT_FIELD;
+  const footerSite = isParticipant ? toExternalHref(anchor?.expoFields[F.website]) : "";
+  const footerInstagram = anchor?.expoFields[F.instagram]?.trim() ?? "";
+  const footerFacebook = anchor?.expoFields[F.facebook]?.trim() ?? "";
 
   return (
     <>

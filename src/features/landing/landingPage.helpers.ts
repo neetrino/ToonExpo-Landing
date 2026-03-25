@@ -1,10 +1,12 @@
-import { parseMediaUrls } from "@/shared/lib/mediaUrls";
-import { isFieldNonEmpty } from "@/shared/lib/expoFields";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
+import { extractVirtualTourUrl } from "@/shared/lib/extractVirtualTourUrl";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 
 /** Վերադարձնում է նախագծի ցուցադրվող վերնագիրը։ */
 export function getLandingTitle(fields: ExpoMap): string {
-  return fields.expo_field_02?.trim() || fields.expo_field_01?.trim() || "Project";
+  const t = PROJECT_FIELD.titleExhibition;
+  const p = PROJECT_FIELD.participantName;
+  return fields[t]?.trim() || fields[p]?.trim() || "Project";
 }
 
 /** Վերադարձնում է առաջին ոչ դատարկ արժեքը։ */
@@ -14,7 +16,7 @@ export function firstNonEmpty(...values: Array<string | null | undefined>): stri
 
 /** Կտրում է երկար տեքստը առաջին նախադասության սահմանում։ */
 export function getLeadText(fields: ExpoMap): string {
-  const raw = fields.expo_field_34?.trim();
+  const raw = fields[PROJECT_FIELD.description]?.trim();
   if (!raw) {
     return "Discover the joy again!";
   }
@@ -23,12 +25,12 @@ export function getLeadText(fields: ExpoMap): string {
   return sentence?.trim() || raw;
 }
 
-/** Վերադարձնում է նկարների ցուցակը հերոյի/պատկերասրահի համար։ */
-export function getProjectMedia(fields: ExpoMap): string[] {
-  return [...parseMediaUrls(fields.expo_field_43), ...parseMediaUrls(fields.expo_field_44)];
+/** Գալերիայի URL-ներ CSV-ում չկան — դատարկ ցուցակ (R2 պանակ)։ */
+export function getProjectMedia(_fields: ExpoMap): string[] {
+  return [];
 }
 
-/** Վերադարձնում է տեքստը պարբերությունների տեսքով։ */
+/** Տեքստը պարբերությունների տեսքով։ */
 export function splitParagraphs(raw: string | undefined): string[] {
   if (!raw?.trim()) {
     return [];
@@ -73,7 +75,12 @@ export function formatRange(minValue?: string, maxValue?: string): string {
   return min || max || "On request";
 }
 
-/** Վերադարձնում է նախագծի լոգոն, եթե այն հղում է։ */
-export function getLogoUrl(fields: ExpoMap): string {
-  return isFieldNonEmpty(fields.expo_field_50) ? fields.expo_field_50.trim() : "";
+/** Լոգոն միայն R2/պանակից — CSV-ում URL չկա։ */
+export function getLogoUrl(_fields: ExpoMap): string {
+  return "";
+}
+
+/** Վիրտուալ տուր՝ iframe-ից URL։ */
+export function getVirtualTourUrl(fields: ExpoMap): string {
+  return extractVirtualTourUrl(fields[PROJECT_FIELD.virtualTour] ?? "");
 }

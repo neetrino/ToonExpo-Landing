@@ -13,6 +13,8 @@ const prisma = new PrismaClient();
 
 function resolveSeedCsvPath(): string | null {
   const candidates = [
+    join(process.cwd(), "docs/data/CorrectedToonExpoData2026.csv"),
+    join(process.cwd(), "public/data/CorrectedToonExpoData2026.csv"),
     join(process.cwd(), "public/data/ToonExpoData2026.csv"),
     join(process.cwd(), "docs/data/ToonExpoData2026.csv"),
   ];
@@ -57,7 +59,7 @@ async function main(): Promise<void> {
   const csvPath = resolveSeedCsvPath();
   if (!csvPath) {
     console.info(
-      "Seed: CSV not found (docs/data or public/data ToonExpoData2026.csv), skip projects",
+      "Seed: CSV not found (CorrectedToonExpoData2026.csv or ToonExpoData2026.csv), skip projects",
     );
     return;
   }

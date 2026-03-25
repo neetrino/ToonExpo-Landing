@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/shared/lib/db";
 import { adminProjectsOrderBySql } from "@/features/admin/lib/adminProjectsOrderBySql";
+import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 
 export const ADMIN_PROJECTS_PAGE_SIZE = 20;
 
@@ -15,7 +16,7 @@ export type ProjectListRow = {
 };
 
 /**
- * Սերվերի կողմից էջավորում + որոնում (slug, expo_field_02, expo_field_01)։
+ * Սերվերի կողմից էջավորում + որոնում (slug, վերնագիր, մասնակից)։
  */
 export async function fetchProjectsPage(params: {
   page: number;
@@ -59,7 +60,7 @@ export async function fetchProjectsPage(params: {
   }
   if (qLike) {
     parts.push(
-      Prisma.sql`(slug ILIKE ${qLike} OR COALESCE("mediaFolderId",'') ILIKE ${qLike} OR COALESCE("expoFields"->>'expo_field_02','') ILIKE ${qLike} OR COALESCE("expoFields"->>'expo_field_01','') ILIKE ${qLike})`,
+      Prisma.sql`(slug ILIKE ${qLike} OR COALESCE("mediaFolderId",'') ILIKE ${qLike} OR COALESCE("expoFields"->>${PROJECT_FIELD.titleExhibition},'') ILIKE ${qLike} OR COALESCE("expoFields"->>${PROJECT_FIELD.participantName},'') ILIKE ${qLike})`,
     );
   }
   const whereSql = Prisma.sql`WHERE ${Prisma.join(parts, " AND ")}`;

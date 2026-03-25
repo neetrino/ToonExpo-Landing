@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { EXPO_FIELD_COUNT, PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import {
   emptyExpoFields,
   expoFieldsToJson,
@@ -7,15 +8,15 @@ import {
 } from "@/shared/lib/expoFields";
 
 describe("expoFields", () => {
-  it("emptyExpoFields has 53 keys", () => {
+  it("emptyExpoFields has corrected column count", () => {
     const e = emptyExpoFields();
-    expect(Object.keys(e).length).toBe(53);
+    expect(Object.keys(e).length).toBe(EXPO_FIELD_COUNT);
   });
 
   it("expoFieldsToJson drops empty", () => {
     const v = emptyExpoFields();
-    (v as Record<string, string>).expo_field_01 = "  x  ";
-    expect(expoFieldsToJson(v)).toEqual({ expo_field_01: "x" });
+    (v as Record<string, string>)[PROJECT_FIELD.participantName] = "  x  ";
+    expect(expoFieldsToJson(v)).toEqual({ [PROJECT_FIELD.participantName]: "x" });
   });
 
   it("isFieldNonEmpty", () => {
@@ -26,8 +27,8 @@ describe("expoFields", () => {
 
   it("trimExpoFields", () => {
     const v = emptyExpoFields();
-    (v as Record<string, string>).expo_field_02 = "  hi  ";
+    (v as Record<string, string>)[PROJECT_FIELD.titleExhibition] = "  hi  ";
     const t = trimExpoFields(v);
-    expect((t as Record<string, string>).expo_field_02).toBe("hi");
+    expect((t as Record<string, string>)[PROJECT_FIELD.titleExhibition]).toBe("hi");
   });
 });
