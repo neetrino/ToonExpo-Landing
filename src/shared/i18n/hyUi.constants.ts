@@ -12,7 +12,7 @@ export const HY_UI = {
   /** Նավիգացիայում՝ կարճ */
   NAV_PARKING: "Կայանատեղի",
   NAV_TOURS: "Տուրեր",
-  NAV_LOCATION: "Տեղադրություն",
+  NAV_LOCATION: "Տեղադիրք",
   NAV_CONTACTS: "Կապ մեզ հետ",
   NAV_APARTMENTS: "Բնակարաններ",
 
@@ -42,7 +42,7 @@ export const HY_UI = {
   FOOTER_NAV_CONTACTS: "Կապ մեզ հետ",
 
   /** Քարտեզի բաժնի վերնագիր */
-  HOME_LOCATION: "Տեղադրություն",
+  HOME_LOCATION: "Տեղադիրք",
   HOME_CONTACT: "Կապ մեզ հետ",
   FOOTER_PRIVACY: "Գաղտնիություն",
 
