@@ -1,9 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
+
+const SITE_ICON = publicAssetUrl("/figma/home/footerLogo.svg");
 
 export const metadata: Metadata = {
   title: "Toon Expo",
   description: "Շինարարական ցուցահանդեսի հարթակ",
+  icons: {
+    icon: [{ url: SITE_ICON, type: "image/svg+xml" }],
+    shortcut: SITE_ICON,
+    apple: SITE_ICON,
+  },
 };
 
 /** Մոբայլում pinch-zoom և input focus zoom-ը անջատելու համար */
