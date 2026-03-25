@@ -11,9 +11,20 @@ import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
 
 const FOOTER_SOCIAL_FB_IMG_CLASS = "h-[40px] w-[18px] shrink-0 object-contain object-left";
 const FOOTER_SOCIAL_IG_IMG_CLASS = "h-[40px] w-[40px] shrink-0 object-contain";
-const FOOTER_NAV_LINK_CLASS =
-  "whitespace-nowrap text-white/90 transition hover:text-white text-[clamp(1.0125rem,2.97vw,1.4625rem)] tracking-[0.1em] sm:tracking-[0.14em]";
-const FOOTER_NAV_PIPE_CLASS = "shrink-0 px-1.5 text-white/45 select-none sm:px-2.5";
+
+/** Ֆուտերի նավիգացիայի հղումներ և «|» — ֆիքս 14px։ */
+const FOOTER_NAV_LINK_TEXT_SIZE = "text-[14px]" as const;
+
+const FOOTER_NAV_LINK_CLASS = [
+  "whitespace-nowrap text-white/90 transition hover:text-white",
+  FOOTER_NAV_LINK_TEXT_SIZE,
+  "tracking-[0.1em] sm:tracking-[0.14em]",
+].join(" ");
+
+const FOOTER_NAV_PIPE_CLASS = [
+  "shrink-0 px-1.5 text-white/45 select-none sm:px-2.5",
+  FOOTER_NAV_LINK_TEXT_SIZE,
+].join(" ");
 
 const BLOCK_FIGMA = {
   footerBadge: publicAssetUrl("/figma/home/footerBadge.svg"),

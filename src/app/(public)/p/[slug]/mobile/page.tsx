@@ -6,7 +6,7 @@ import { prisma } from "@/shared/lib/db";
 import { LandingPage } from "@/features/landing/mobile/LandingPage";
 import { LandingDesktopRedirect } from "@/features/landing/mobile/LandingAutoRedirect";
 import { LandingBottomBarCallbacks } from "@/features/landing/LandingBottomBarCallbacks";
-import { SiteReachMapFooter } from "@/features/home/mobile/SiteReachMapFooter";
+import { SiteReachMapFooter } from "@/features/home/SiteReachMapFooter";
 import type { ExpoMap } from "@/features/landing/mobile/lib/blockVisibility";
 import { resolveProjectFolderMedia } from "@/features/landing/lib/resolveProjectFolderMedia";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
