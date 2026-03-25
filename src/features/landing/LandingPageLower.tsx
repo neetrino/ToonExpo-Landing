@@ -80,8 +80,8 @@ export function LandingPageLower({ fields, title: _title, folderMedia }: Props) 
       {vis.investment ? (
         <Section id="investment" className="bg-[#2ba8b0] py-16 text-white lg:py-24">
           <div className={`mx-auto max-w-[1536px] ${PARTICIPANT_SECTION_INSET}`}>
-            <div className="flex flex-col items-center">
-              <h2 className="text-center text-[clamp(2.25rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-[0.03em] text-white">
+            <div className="flex flex-col items-start">
+              <h2 className="text-[clamp(2.25rem,4.2vw,3.25rem)] font-bold leading-[1.05] tracking-[0.03em] text-white">
                 {HY_UI.SECTION_INVESTMENT_OFFER}
               </h2>
               <span

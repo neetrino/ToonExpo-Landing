@@ -144,8 +144,8 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
     <>
       {vis.investment ? (
         <section id="investment" className={`${MOBILE_SECTION_INSET} pt-6`}>
-          <div className="flex flex-col items-center">
-            <h2 className="text-center text-[clamp(1.35rem,4.5vw,1.75rem)] font-bold leading-tight tracking-wide text-[#101828]">
+          <div className="flex flex-col items-start">
+            <h2 className="text-[clamp(1.35rem,4.5vw,1.75rem)] font-bold leading-tight tracking-wide text-[#101828]">
               {HY_UI.MOBILE_INVESTMENT_HIGHLIGHTS}
             </h2>
             <span
