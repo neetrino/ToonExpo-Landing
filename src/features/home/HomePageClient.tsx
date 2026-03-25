@@ -237,7 +237,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
           className="relative z-10 scroll-mt-6 px-4 pb-12 pt-[72px] sm:px-5 sm:pb-16 sm:pt-[72px] lg:px-[92px] lg:pb-28 lg:pr-[107px] lg:pt-8"
         >
           <div className="mx-auto grid max-w-[1920px] grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,1063px)_24px_634px] lg:gap-0">
-            <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-hidden rounded-[26px] border border-[#00303D] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] lg:min-h-[531px]">
+            <div className="order-2 min-w-0 lg:order-1 toon-home-map relative z-0 overflow-visible rounded-[26px] border border-[#00303D] bg-black/20 shadow-[0_32px_80px_rgba(0,0,0,0.32)] [--toon-map-corner-radius:26px] lg:min-h-[531px]">
               <div className="absolute left-4 top-4 z-20 sm:right-auto">
                 <MapSearch
                   value={q}
@@ -338,7 +338,7 @@ export function HomePageClient({ projects }: { projects: HomeProject[] }) {
             }}
           >
             <div
-              className="toon-home-map relative h-[74vh] w-[88vw] overflow-hidden rounded-[26px] border border-[#00303D] bg-black shadow-2xl"
+              className="toon-home-map relative h-[74vh] w-[88vw] overflow-visible rounded-[26px] border border-[#00303D] bg-black shadow-2xl [--toon-map-corner-radius:26px]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* В попапе поиск всегда раскрыт (не зависим от isSearchExpanded) */}

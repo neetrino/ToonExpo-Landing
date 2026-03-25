@@ -46,8 +46,8 @@ export function SiteReachMapFooter({
     ? "text-2xl font-semibold uppercase tracking-[0.12em] text-[#246976] lg:text-[2.5rem]"
     : "text-2xl font-semibold uppercase tracking-[0.12em] text-white lg:text-[2.5rem]";
   const mapFrameClass = isParticipant
-    ? "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-[#246976]/25 shadow-[0_25px_60px_rgba(0,0,0,0.08)]"
-    : "toon-home-map relative z-0 overflow-hidden rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)]";
+    ? "toon-home-map relative z-0 overflow-visible rounded-[20px] border border-[#246976]/25 shadow-[0_25px_60px_rgba(0,0,0,0.08)] [--toon-map-corner-radius:20px]"
+    : "toon-home-map relative z-0 overflow-visible rounded-[20px] border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.2)] [--toon-map-corner-radius:20px]";
   const F = PROJECT_FIELD;
   const footerSite = isParticipant ? toExternalHref(anchor?.expoFields[F.website]) : "";
   const footerInstagram = anchor?.expoFields[F.instagram]?.trim() ?? "";

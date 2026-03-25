@@ -32,7 +32,7 @@ export function SiteReachMapFooter({
     <>
       <section id="contacts" className={`${MOBILE_SECTION_INSET} pt-9`}>
         <h2 className="text-[20px] font-bold leading-7 text-[#101828]">{HY_UI.HOME_LOCATION}</h2>
-        <div className="toon-home-map mt-7 overflow-hidden rounded-[10px] border border-[#246976]/12 shadow-[0_8px_24px_rgba(16,24,40,0.08)]">
+        <div className="toon-home-map mt-7 overflow-visible rounded-[10px] border border-[#246976]/12 shadow-[0_8px_24px_rgba(16,24,40,0.08)] [--toon-map-corner-radius:10px]">
           <LazyWhenVisible
             className="h-64 w-full"
             fallback={

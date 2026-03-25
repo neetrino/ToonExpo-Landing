@@ -1,5 +1,5 @@
 import { resolveLatLngForMap } from "@/shared/lib/latLng";
-import { formatMapPricePerSqm } from "@/shared/lib/formatMapPricePerSqm";
+import { formatMapMinPricePerSqm } from "@/shared/lib/formatMapPricePerSqm";
 import type { MapMarker } from "@/features/map/components/HomeMapPreview";
 import type { HomeProject } from "@/features/home/mobile/homeProject.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
@@ -17,7 +17,7 @@ export function buildMapMarkersFromProjects(list: HomeProject[]): MapMarker[] {
     const f = p.expoFields;
     const ll = resolveLatLngForMap(f);
     if (ll) {
-      const priceLine = formatMapPricePerSqm(f[F.priceMin], f[F.priceMax]);
+      const priceLine = formatMapMinPricePerSqm(f[F.priceMin]);
       markers.push({
         lat: ll.lat,
         lng: ll.lng,

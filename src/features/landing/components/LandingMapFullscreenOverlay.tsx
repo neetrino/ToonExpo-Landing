@@ -28,7 +28,7 @@ export function LandingMapFullscreenOverlay({ open, onClose, markers, title }: P
       onClick={onClose}
     >
       <div
-        className="toon-home-map relative flex h-[74vh] w-[88vw] flex-col overflow-hidden rounded-[26px] border border-[#246976] bg-black shadow-2xl"
+        className="toon-home-map relative flex h-[74vh] w-[88vw] flex-col overflow-visible rounded-[26px] border border-[#246976] bg-black shadow-2xl [--toon-map-corner-radius:26px]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-[#1d5662]/90 px-4 py-3 text-white">
