@@ -67,6 +67,8 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const leadText = getLeadText(fields);
   const desc = fields[F.description]?.trim() ?? "";
   const specialOffer = fields[F.specialOffer]?.trim() ?? "";
+  const headerPhone = (fields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim().replace(/\s/g, "");
+  const headerPhoneDisplay = (fields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim();
   const aboutPrimaryImage =
     folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
@@ -96,6 +98,17 @@ export function LandingPage({ fields, folderMedia }: Props) {
               </a>
             ))}
           </nav>
+          {headerPhone ? (
+            <a
+              href={`tel:${headerPhone}`}
+              className="group relative hidden shrink-0 items-center gap-2 rounded-full bg-[#e8192c] px-4 py-2 text-[0.7rem] font-extrabold uppercase tracking-[0.12em] text-white transition hover:brightness-110 lg:inline-flex"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5 shrink-0">
+                <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
+              </svg>
+              <span>{headerPhoneDisplay}</span>
+            </a>
+          ) : null}
         </div>
       </LandingStickyHeader>
 

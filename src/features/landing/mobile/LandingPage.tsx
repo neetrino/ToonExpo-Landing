@@ -182,7 +182,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
 
   return (
     <div className="overflow-x-hidden bg-white text-[#101828]">
-      <MobileLandingStickyHeader onMenuClick={() => setIsMenuOpen(true)} />
+      <MobileLandingStickyHeader onMenuClick={() => setIsMenuOpen(true)} phone={mobilePhone || undefined} />
       <MobileLandingNavMenu
         open={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}

@@ -80,9 +80,7 @@ export function SiteReachMapFooter({
     ? (anchor?.expoFields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim()
     : "";
   const footerPhone = footerPhoneRaw.replace(/\s/g, "");
-  const footerPhoneDisplay = footerPhoneRaw.startsWith("374") && !footerPhoneRaw.startsWith("+")
-    ? `+${footerPhoneRaw}`
-    : footerPhoneRaw;
+  const footerPhoneDisplay = footerPhoneRaw;
 
   return (
     <>
@@ -139,15 +137,20 @@ export function SiteReachMapFooter({
                 </div>
                 <div className="flex w-full shrink-0 justify-end lg:w-auto">
                   {footerPhone ? (
-                    <a
-                      href={`tel:${footerPhone}`}
-                      className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#e8192c] px-4 py-2 text-[0.65rem] font-extrabold uppercase tracking-[0.14em] text-white transition hover:brightness-110"
-                    >
-                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0">
-                        <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
-                      </svg>
-                      {footerPhoneDisplay}
-                    </a>
+                    <div className="flex flex-col items-end gap-1.5">
+                      <a
+                        href={`tel:${footerPhone}`}
+                        className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#e8192c] px-5 py-2.5 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-white shadow-[0_4px_18px_rgba(232,25,44,0.4)] transition hover:brightness-110"
+                      >
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0">
+                          <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
+                        </svg>
+                        {HY_UI.CTA_CALL_US}
+                      </a>
+                      <span className="text-[0.7rem] font-semibold tracking-[0.06em] text-white/80">
+                        {footerPhoneDisplay}
+                      </span>
+                    </div>
                   ) : (
                     <ReachOutCta className="shrink-0" />
                   )}
