@@ -178,16 +178,16 @@ export function LandingPage({ fields, folderMedia }: Props) {
                       </p>
                     </div>
                   ) : null}
-                  <p className="mt-8 max-w-[620px] text-[0.8rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[1.15rem] lg:leading-[1.28]">
+                  <p className="mt-8 max-w-[620px] text-[0.72rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[1.05rem] lg:leading-[1.28]">
                     {aboutMainText}
                   </p>
                   {specialOffer ? (
                     <div className="mt-8 w-full max-w-[620px] rounded-[10px] border border-[#22c55e]/40 bg-[#22c55e]/10 px-6 py-5 lg:mt-10">
                       <div className="flex items-center gap-3 mb-3">
-                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-5 w-5 shrink-0 text-[#22c55e]">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-7 w-7 shrink-0 text-[#22c55e]">
                           <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="currentColor"/>
                         </svg>
-                        <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#22c55e]">
+                        <p className="text-[0.85rem] font-bold uppercase tracking-[0.18em] text-[#22c55e]">
                           {HY_UI.SECTION_SPECIAL_OFFER}
                         </p>
                       </div>
