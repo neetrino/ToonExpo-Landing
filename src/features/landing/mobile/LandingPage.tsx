@@ -33,7 +33,6 @@ import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandi
 import { ContactFabMenu } from "@/features/landing/components/ContactFabMenu";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
-import { formatAreasWithSqmSuffix } from "@/shared/lib/formatAreasDisplay";
 import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
 
 type Props = {
@@ -70,16 +69,46 @@ function MobileStatCard({
   const valueClass = tone === "navy" ? "text-[#2ba8b0]" : "";
 
   return (
-    <div className={`flex-1 rounded-[14px] px-4 py-4 shadow-[0_4px_6px_rgba(0,0,0,0.07)] ${toneClass}`}>
+    <div className={`flex-1 rounded-[14px] px-3 py-3 shadow-[0_4px_6px_rgba(0,0,0,0.07)] ${toneClass}`}>
       <div className="flex justify-center">
-        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/10">
-          <Icon aria-hidden className="h-5 w-5" strokeWidth={LANDING_LUCIDE_STROKE} />
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/10">
+          <Icon aria-hidden className="h-4.5 w-4.5" strokeWidth={LANDING_LUCIDE_STROKE} />
         </span>
       </div>
-      <p className={`text-center text-2xl font-bold leading-8 ${valueClass}`}>{value}</p>
-      <p className="mt-1 text-center text-[12px] uppercase leading-4 opacity-90">{label}</p>
+      <p className={`mt-1 text-center text-[clamp(1.2rem,4.2vw,1.65rem)] font-bold leading-[1.08] tracking-[-0.005em] ${valueClass}`}>
+        {value}
+      </p>
+      <p className="mt-1 text-center text-[10px] uppercase leading-[1.15] opacity-90">{label}</p>
     </div>
   );
+}
+
+function getAreaStartValue(raw: string | undefined): string {
+  const match = raw?.match(/\d+(?:[.,]\d+)?/);
+  if (!match) {
+    return "";
+  }
+  return `${match[0].replace(",", ".")} m²`;
+}
+
+function getPriceStartValue(raw: string | undefined): string {
+  const formatted = formatPriceMinForDisplay(raw);
+  if (!formatted) {
+    return "";
+  }
+  return formatted.replace(/\s*֏/g, "").trim();
+}
+
+function getCompletionYearValue(raw: string | undefined): string {
+  const value = raw?.trim() ?? "";
+  if (!value) {
+    return "";
+  }
+  const yearMatch = value.match(/\d{4}/);
+  if (yearMatch?.[0]) {
+    return yearMatch[0];
+  }
+  return value;
 }
 
 export function LandingPage({ fields, folderMedia }: Props) {
@@ -113,20 +142,20 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
   const keyMetrics = [
     {
-      value: firstNonEmpty(fields[F.completion], HY_UI.ON_REQUEST),
+      value: firstNonEmpty(getCompletionYearValue(fields[F.completion]), HY_UI.ON_REQUEST),
       label: HY_UI.INVEST_CARD_COMPLETION,
       tone: "teal" as const,
       Icon: CalendarClock,
     },
     {
-      value: firstNonEmpty(formatAreasWithSqmSuffix(fields[F.areas]), HY_UI.ON_REQUEST),
+      value: firstNonEmpty(getAreaStartValue(fields[F.areas]), HY_UI.ON_REQUEST),
       label: HY_UI.INVEST_CARD_AREAS,
       tone: "gold" as const,
       Icon: Ruler,
     },
     {
-      value: firstNonEmpty(formatPriceMinForDisplay(fields[F.priceMin]), HY_UI.ON_REQUEST),
-      label: HY_UI.INVEST_CARD_PRICE_PER_SQM,
+      value: firstNonEmpty(getPriceStartValue(fields[F.priceMin]), HY_UI.ON_REQUEST),
+      label: HY_UI.HOME_CARD_MIN_PRICE_PER_SQM,
       tone: "navy" as const,
       Icon: CircleDollarSign,
     },
