@@ -20,6 +20,7 @@ import {
   SITE_HEADER_LOGO_SRC,
 } from "@/features/landing/landingPage.constants";
 import { LandingStickyHeader } from "@/features/landing/components/LandingStickyHeader";
+import { ContactFabMenu } from "@/features/landing/components/ContactFabMenu";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
@@ -66,6 +67,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const heroLogoUrl = firstNonEmpty(folderMedia?.logoUrl, getLogoUrl(fields));
   const leadText = getLeadText(fields);
   const desc = fields[F.description]?.trim() ?? "";
+  const specialOffer = fields[F.specialOffer]?.trim() ?? "";
   const aboutPrimaryImage =
     folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
@@ -177,24 +179,24 @@ export function LandingPage({ fields, folderMedia }: Props) {
                       </p>
                     </div>
                   ) : null}
-                  <p className="mt-8 max-w-[620px] text-[0.95rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[1.35rem] lg:leading-[1.28]">
+                  <p className="mt-8 max-w-[620px] text-[0.72rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[1.05rem] lg:leading-[1.28]">
                     {aboutMainText}
                   </p>
-                  <a
-                    href={vis.investment ? "#investment" : primaryCtaHref}
-                    className="mt-10 inline-flex w-fit items-center gap-3 rounded-[6px] border border-white px-5 py-3 text-sm font-semibold uppercase tracking-[0.03em] text-white transition hover:bg-white hover:text-black lg:mt-[84px] lg:min-h-[71px] lg:px-7 lg:text-[1.5rem]"
-                  >
-                    <span>{HY_UI.CTA_EXPLORE_MORE}</span>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 14 24"
-                      className="h-4 w-2.5 shrink-0 lg:h-[24px] lg:w-[14px]"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M1.5 1.5L12 12L1.5 22.5" stroke="currentColor" strokeWidth="2" />
-                    </svg>
-                  </a>
+                  {specialOffer ? (
+                    <div className="mt-8 w-full max-w-[620px] rounded-[10px] border border-[#22c55e]/40 bg-[#22c55e]/10 px-6 py-5 lg:mt-10">
+                      <div className="flex items-center gap-3 mb-3">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-7 w-7 shrink-0 text-[#22c55e]">
+                          <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="currentColor"/>
+                        </svg>
+                        <p className="text-[0.85rem] font-bold uppercase tracking-[0.18em] text-[#22c55e]">
+                          {HY_UI.SECTION_SPECIAL_OFFER}
+                        </p>
+                      </div>
+                      <p className="whitespace-pre-line text-[0.9rem] leading-[1.55] text-white/90 lg:text-[1rem]">
+                        {specialOffer}
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -223,6 +225,14 @@ export function LandingPage({ fields, folderMedia }: Props) {
       ) : null}
 
       <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
+      <ContactFabMenu
+        variant="desktop"
+        toggleLabel={HY_UI.CTA_CALL_US}
+        phone={fields[F.phone]}
+        instagram={fields[F.instagram]}
+        facebook={fields[F.facebook]}
+        website={fields[F.website]}
+      />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   CalendarClock,
@@ -18,16 +18,17 @@ import {
   MOBILE_SECTION_INSET,
   participantFigmaAssets,
 } from "@/features/landing/mobile/landingPage.constants";
+import { constructionCards } from "@/features/landing/landingPage.constants";
 import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
 import { RemoteAwareImage } from "@/shared/components/RemoteAwareImage";
 import { resolveGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
+import { ConstructionDetailIcon } from "@/features/landing/components/ConstructionDetailIcon";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import {
   firstNonEmpty,
   getProjectMedia,
   parseSizeOptions,
-  splitListItems,
 } from "@/features/landing/mobile/landingPage.helpers";
 import { PaymentCard } from "@/features/landing/mobile/PaymentCard";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
@@ -87,30 +88,21 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
       : "",
     "30.7 m² - 60.5 m².",
   );
-  const investmentSummary = firstNonEmpty(
-    splitListItems(fields[F.description])[0],
-    "Price varies by view and floor. Higher floors and better views command premium. Strong rental demand for ski-in/ski-out units.",
-  );
-  const paymentSummary = firstNonEmpty(
-    fields[F.paymentOptions],
-    investmentSummary,
-    "Price varies by view and floor. Higher floors and better views command premium. Strong rental demand for ski-in/ski-out units.",
-  );
   const paymentCards = [
     {
-      title: HY_UI.MOBILE_PAYMENT_CARD_1,
+      title: HY_UI.PAYMENT_INSTALLMENT,
       text: firstNonEmpty(fields[F.paymentOptions], "Strong rental demand year-round"),
       tone: "teal" as const,
       Icon: Wallet,
     },
     {
-      title: HY_UI.MOBILE_PAYMENT_CARD_2,
+      title: HY_UI.PAYMENT_MORTGAGE,
       text: firstNonEmpty(fields[F.bank], "Ski-in/ski-out access"),
       tone: "gold" as const,
       Icon: Landmark,
     },
     {
-      title: HY_UI.MOBILE_PAYMENT_CARD_3,
+      title: HY_UI.PAYMENT_TAX,
       text: firstNonEmpty(fields[F.taxRefund], "30% down, installments until 2027"),
       tone: "navy" as const,
       Icon: Percent,
@@ -141,8 +133,22 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
   ];
   const showGallery =
     (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryResolved.length > 0;
-  const showPayment = vis.payment || vis.construction;
+  const showPayment = vis.payment;
+  const showConstruction = vis.construction;
   const showOptions = sizeOptions.length > 0;
+
+  useEffect(() => {
+    const openFromHero = () => {
+      if (galleryImages.length > 0) {
+        setGalleryLightboxIndex(0);
+      }
+    };
+
+    window.addEventListener("toon:open-mobile-gallery", openFromHero);
+    return () => {
+      window.removeEventListener("toon:open-mobile-gallery", openFromHero);
+    };
+  }, [galleryImages.length]);
 
   return (
     <>
@@ -161,9 +167,6 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
             {investmentCards.map((item) => (
               <InvestmentCard key={item.title} title={item.title} text={item.text} Icon={item.Icon} />
             ))}
-            <div className="rounded-[14px] bg-white px-4 py-4 text-[14px] leading-[1.625] text-[#364153] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
-              {investmentSummary}
-            </div>
           </div>
         </section>
       ) : null}
@@ -312,8 +315,36 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
             {paymentCards.map((card) => (
               <PaymentCard key={card.title} title={card.title} text={card.text} tone={card.tone} Icon={card.Icon} />
             ))}
-            <div className="rounded-[14px] bg-white px-4 py-4 text-[14px] leading-[1.625] text-[#364153] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
-              {paymentSummary}
+          </div>
+        </section>
+      ) : null}
+
+      {showConstruction ? (
+        <section id="construction" className="mt-8 bg-[#192643] py-8 text-white">
+          <div className={MOBILE_SECTION_INSET}>
+            <h2 className="text-[20px] font-bold uppercase leading-7 text-[#2ba8b0]">
+              {HY_UI.SECTION_CONSTRUCTION}
+            </h2>
+            <div className="mt-4 space-y-3">
+              {constructionCards.map((card) => (
+                <div
+                  key={card.key}
+                  className="flex items-start gap-2.5 rounded-[12px] border border-white/10 bg-white/5 px-3 py-2.5"
+                >
+                  <div className="mt-0.5 shrink-0">
+                    <ConstructionDetailIcon
+                      variant={card.iconVariant}
+                      className="h-[42px] w-[42px] shrink-0 text-[#2ba8b0]"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[12px] font-semibold leading-4 text-[#2ba8b0]">{card.key}</p>
+                    <p className="mt-0.5 text-[11px] leading-[1.35] text-white/90">
+                      {firstNonEmpty(fields[card.key], HY_UI.ON_REQUEST)}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>

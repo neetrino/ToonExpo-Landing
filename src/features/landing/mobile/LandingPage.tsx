@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { CalendarClock, CircleDollarSign, Images, Ruler } from "lucide-react";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { LandingPageLower } from "@/features/landing/mobile/LandingPageLower";
@@ -12,11 +13,11 @@ import {
   getHeroMedia,
   getLandingTitle,
   getLeadText,
-  getMobileStats,
   getLogoUrl,
   getProjectMedia,
   splitParagraphs,
 } from "@/features/landing/mobile/landingPage.helpers";
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
 import {
   MOBILE_HERO_PROJECT_LOGO_BOX_CLASS,
   MOBILE_HERO_PROJECT_LOGO_IMG_CLASS,
@@ -29,8 +30,10 @@ import {
 } from "@/features/landing/mobile/landingPage.constants";
 import { MobileLandingNavMenu } from "@/features/landing/mobile/MobileLandingNavMenu";
 import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
+import { ContactFabMenu } from "@/features/landing/components/ContactFabMenu";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
 
 type Props = {
   fields: ExpoMap;
@@ -49,10 +52,12 @@ const MOBILE_NAV_ITEMS = [
 function MobileStatCard({
   value,
   label,
+  Icon,
   tone,
 }: {
   value: string;
   label: string;
+  Icon: typeof CalendarClock;
   tone: "teal" | "gold" | "navy";
 }) {
   const toneClass =
@@ -64,11 +69,46 @@ function MobileStatCard({
   const valueClass = tone === "navy" ? "text-[#2ba8b0]" : "";
 
   return (
-    <div className={`flex-1 rounded-[14px] px-4 py-4 shadow-[0_4px_6px_rgba(0,0,0,0.07)] ${toneClass}`}>
-      <p className={`text-center text-2xl font-bold leading-8 ${valueClass}`}>{value}</p>
-      <p className="mt-1 text-center text-[12px] uppercase leading-4 opacity-90">{label}</p>
+    <div className={`flex-1 rounded-[14px] px-3 py-3 shadow-[0_4px_6px_rgba(0,0,0,0.07)] ${toneClass}`}>
+      <div className="flex justify-center">
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/10">
+          <Icon aria-hidden className="h-4.5 w-4.5" strokeWidth={LANDING_LUCIDE_STROKE} />
+        </span>
+      </div>
+      <p className={`mt-1 text-center text-[clamp(1.2rem,4.2vw,1.65rem)] font-bold leading-[1.08] tracking-[-0.005em] ${valueClass}`}>
+        {value}
+      </p>
+      <p className="mt-1 text-center text-[10px] uppercase leading-[1.15] opacity-90">{label}</p>
     </div>
   );
+}
+
+function getAreaStartValue(raw: string | undefined): string {
+  const match = raw?.match(/\d+(?:[.,]\d+)?/);
+  if (!match) {
+    return "";
+  }
+  return `${match[0].replace(",", ".")} m²`;
+}
+
+function getPriceStartValue(raw: string | undefined): string {
+  const formatted = formatPriceMinForDisplay(raw);
+  if (!formatted) {
+    return "";
+  }
+  return formatted.replace(/\s*֏/g, "").trim();
+}
+
+function getCompletionYearValue(raw: string | undefined): string {
+  const value = raw?.trim() ?? "";
+  if (!value) {
+    return "";
+  }
+  const yearMatch = value.match(/\d{4}/);
+  if (yearMatch?.[0]) {
+    return yearMatch[0];
+  }
+  return value;
 }
 
 export function LandingPage({ fields, folderMedia }: Props) {
@@ -78,6 +118,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const heroTextBlockRef = useRef<HTMLParagraphElement>(null);
   const vis = visibleBlocks(fields);
   const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
+  const canOpenGallery = vis.gallery || galleryFromFolder;
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
   const heroBg = folderMedia?.heroUrl || getHeroMedia(fields) || null;
@@ -85,6 +126,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const F = PROJECT_FIELD;
   const aboutParagraphs = splitParagraphs(fields[F.description]);
   const leadText = getLeadText(fields);
+  const desc = fields[F.description]?.trim() ?? "";
   const rawAboutText = aboutParagraphs[0] ?? "";
   const hasDenseListCopy = (rawAboutText.match(/,/g) ?? []).length > 3 || rawAboutText.length > 120;
   const heroLead =
@@ -95,15 +137,31 @@ export function LandingPage({ fields, folderMedia }: Props) {
     ? "Premium residential project with strong investment potential and comfortable urban living."
     : firstNonEmpty(rawAboutText, "Premium residential project with strong investment potential and comfortable urban living.");
   const addressText = isFieldNonEmpty(fields[F.shortName]) ? fields[F.shortName] : "";
-  const aboutText = firstNonEmpty(
-    hasDenseListCopy ? "" : rawAboutText,
-    addressText ? `${title} is a residential project located at ${addressText}.` : "",
-    "Modern residential project designed for comfortable living and long-term value.",
-  );
+  const aboutText = firstNonEmpty(desc, leadText);
   const aboutPrimaryImage =
     folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
-  const stats = getMobileStats(fields);
+  const keyMetrics = [
+    {
+      value: firstNonEmpty(getCompletionYearValue(fields[F.completion]), HY_UI.ON_REQUEST),
+      label: HY_UI.INVEST_CARD_COMPLETION,
+      tone: "teal" as const,
+      Icon: CalendarClock,
+    },
+    {
+      value: firstNonEmpty(getAreaStartValue(fields[F.areas]), HY_UI.ON_REQUEST),
+      label: HY_UI.INVEST_CARD_AREAS,
+      tone: "gold" as const,
+      Icon: Ruler,
+    },
+    {
+      value: firstNonEmpty(getPriceStartValue(fields[F.priceMin]), HY_UI.ON_REQUEST),
+      label: HY_UI.HOME_CARD_MIN_PRICE_PER_SQM,
+      tone: "navy" as const,
+      Icon: CircleDollarSign,
+    },
+  ];
+  const mobileSpecialOffer = fields[F.specialOffer]?.trim() ?? "";
   const menuItems = useMemo(
     () =>
       MOBILE_NAV_ITEMS.filter((item) => {
@@ -236,12 +294,21 @@ export function LandingPage({ fields, folderMedia }: Props) {
             </div>
           </div>
 
-          <a
-            href="#options"
-            className="inline-flex h-14 w-full shrink-0 items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
+          <button
+            type="button"
+            onClick={() => {
+              if (canOpenGallery) {
+                window.dispatchEvent(new CustomEvent("toon:open-mobile-gallery"));
+                return;
+              }
+              const optionsSection = document.getElementById("options");
+              optionsSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            className="inline-flex h-14 w-full shrink-0 items-center justify-center gap-2 rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
           >
-            {HY_UI.CTA_VIEW_APARTMENTS}
-          </a>
+            <Images aria-hidden className="h-5 w-5" strokeWidth={LANDING_LUCIDE_STROKE} />
+            {HY_UI.NAV_GALLERY}
+          </button>
         </div>
 
         {isHeroReadFullOpen
@@ -291,8 +358,14 @@ export function LandingPage({ fields, folderMedia }: Props) {
 
       <section className={`${MOBILE_SECTION_INSET} relative z-10 -mt-[7px]`}>
         <div className="flex gap-3">
-          {stats.map((item) => (
-            <MobileStatCard key={item.label} value={item.value} label={item.label} tone={item.tone} />
+          {keyMetrics.map((item) => (
+            <MobileStatCard
+              key={item.label}
+              value={item.value}
+              label={item.label}
+              tone={item.tone}
+              Icon={item.Icon}
+            />
           ))}
         </div>
       </section>
@@ -303,14 +376,24 @@ export function LandingPage({ fields, folderMedia }: Props) {
             <h2 className="text-[clamp(1.55rem,2.1vw,2.25rem)] font-semibold uppercase leading-none tracking-[0.01em] text-[#2ba8b0]">
               {HY_UI.MOBILE_ABOUT_SECTION}
             </h2>
-            <p className="mt-3 max-w-[296px] text-[14px] leading-[1.625] text-[#1e2939]">{aboutText}</p>
-            <a
-              href="#investment"
-              className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-semibold uppercase leading-5 text-[#2ba8b0]"
-            >
-              {HY_UI.CTA_READ_MORE}
-              <img src={participantFigmaAssets.readMoreIcon} alt="" className="h-4 w-4" />
-            </a>
+            <p className="mt-3 max-w-[296px] whitespace-pre-line text-[14px] leading-[1.625] text-[#1e2939]">
+              {aboutText}
+            </p>
+            {mobileSpecialOffer ? (
+              <div className="mt-4 rounded-[10px] border border-[#16a34a]/55 bg-[#d9fbe5] px-4 py-4 shadow-[0_8px_22px_rgba(34,197,94,0.18)]">
+                <div className="mb-2 flex items-center gap-2">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-5 w-5 shrink-0 text-[#16a34a]">
+                    <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="currentColor"/>
+                  </svg>
+                  <p className="text-[0.75rem] font-bold uppercase tracking-[0.18em] text-[#16a34a]">
+                    {HY_UI.MOBILE_SPECIAL_OFFER}
+                  </p>
+                </div>
+                <p className="whitespace-pre-line text-[13px] leading-[1.6] text-[#1e2939]">
+                  {mobileSpecialOffer}
+                </p>
+              </div>
+            ) : null}
           </div>
         </section>
       ) : null}
@@ -331,6 +414,14 @@ export function LandingPage({ fields, folderMedia }: Props) {
       </section>
 
       <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
+      <ContactFabMenu
+        variant="mobile"
+        toggleLabel={HY_UI.CTA_CALL_US}
+        phone={fields[F.phone]}
+        instagram={fields[F.instagram]}
+        facebook={fields[F.facebook]}
+        website={fields[F.website]}
+      />
     </div>
   );
 }
