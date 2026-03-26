@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   CalendarClock,
@@ -133,6 +133,19 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
     (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryResolved.length > 0;
   const showPayment = vis.payment || vis.construction;
   const showOptions = sizeOptions.length > 0;
+
+  useEffect(() => {
+    const openFromHero = () => {
+      if (galleryImages.length > 0) {
+        setGalleryLightboxIndex(0);
+      }
+    };
+
+    window.addEventListener("toon:open-mobile-gallery", openFromHero);
+    return () => {
+      window.removeEventListener("toon:open-mobile-gallery", openFromHero);
+    };
+  }, [galleryImages.length]);
 
   return (
     <>

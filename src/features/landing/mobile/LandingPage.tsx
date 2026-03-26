@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { CalendarClock, CircleDollarSign, Ruler } from "lucide-react";
+import { CalendarClock, CircleDollarSign, Images, Ruler } from "lucide-react";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { LandingPageLower } from "@/features/landing/mobile/LandingPageLower";
@@ -118,6 +118,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const heroTextBlockRef = useRef<HTMLParagraphElement>(null);
   const vis = visibleBlocks(fields);
   const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
+  const canOpenGallery = vis.gallery || galleryFromFolder;
   const title = getLandingTitle(fields);
   const media = getProjectMedia(fields);
   const heroBg = folderMedia?.heroUrl || getHeroMedia(fields) || null;
@@ -293,12 +294,21 @@ export function LandingPage({ fields, folderMedia }: Props) {
             </div>
           </div>
 
-          <a
-            href="#options"
-            className="inline-flex h-14 w-full shrink-0 items-center justify-center rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
+          <button
+            type="button"
+            onClick={() => {
+              if (canOpenGallery) {
+                window.dispatchEvent(new CustomEvent("toon:open-mobile-gallery"));
+                return;
+              }
+              const optionsSection = document.getElementById("options");
+              optionsSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            className="inline-flex h-14 w-full shrink-0 items-center justify-center gap-2 rounded-[10px] bg-[#2ba8b0] text-[16px] font-bold uppercase tracking-[0.02em] text-white"
           >
-            {HY_UI.CTA_VIEW_APARTMENTS}
-          </a>
+            <Images aria-hidden className="h-5 w-5" strokeWidth={LANDING_LUCIDE_STROKE} />
+            {HY_UI.NAV_GALLERY}
+          </button>
         </div>
 
         {isHeroReadFullOpen
