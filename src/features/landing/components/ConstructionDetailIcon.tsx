@@ -23,32 +23,34 @@ export const CONSTRUCTION_DETAIL_ICON_VARIANTS = [
 export type ConstructionDetailIconVariant =
   (typeof CONSTRUCTION_DETAIL_ICON_VARIANTS)[number];
 
-const ICON_PROPS = {
-  className: "h-[62px] w-[62px] shrink-0 text-[#2ba8b0]",
-  strokeWidth: LANDING_LUCIDE_STROKE,
-  "aria-hidden": true as const,
-};
+const DEFAULT_ICON_CLASSNAME = "h-[62px] w-[62px] shrink-0 text-[#2ba8b0]";
 
 type Props = {
   variant: ConstructionDetailIconVariant;
+  className?: string;
 };
 
 /**
  * Դեկորատիվ Lucide-իկոն՝ «Կառուցման մանրամասներ» բլոկի համար։
  */
-export function ConstructionDetailIcon({ variant }: Props) {
+export function ConstructionDetailIcon({ variant, className }: Props) {
+  const iconProps = {
+    className: className?.trim() || DEFAULT_ICON_CLASSNAME,
+    strokeWidth: LANDING_LUCIDE_STROKE,
+    "aria-hidden": true as const,
+  };
   switch (variant) {
     case "structure":
-      return <Building2 {...ICON_PROPS} />;
+      return <Building2 {...iconProps} />;
     case "parkingClosed":
-      return <CircleParking {...ICON_PROPS} />;
+      return <CircleParking {...iconProps} />;
     case "elevators":
-      return <ArrowUpDown {...ICON_PROPS} />;
+      return <ArrowUpDown {...iconProps} />;
     case "handover":
-      return <KeyRound {...ICON_PROPS} />;
+      return <KeyRound {...iconProps} />;
     case "ceiling":
-      return <Ruler {...ICON_PROPS} />;
+      return <Ruler {...iconProps} />;
     case "floors":
-      return <Layers {...ICON_PROPS} />;
+      return <Layers {...iconProps} />;
   }
 }

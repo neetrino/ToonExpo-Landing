@@ -329,14 +329,17 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
               {constructionCards.map((card) => (
                 <div
                   key={card.key}
-                  className="flex items-start gap-3 rounded-[12px] border border-white/10 bg-white/5 px-3 py-3"
+                  className="flex items-start gap-2.5 rounded-[12px] border border-white/10 bg-white/5 px-3 py-2.5"
                 >
-                  <div className="mt-0.5 shrink-0 origin-top-left scale-[0.7]">
-                    <ConstructionDetailIcon variant={card.iconVariant} />
+                  <div className="mt-0.5 shrink-0">
+                    <ConstructionDetailIcon
+                      variant={card.iconVariant}
+                      className="h-[42px] w-[42px] shrink-0 text-[#2ba8b0]"
+                    />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[13px] font-semibold leading-5 text-[#2ba8b0]">{card.key}</p>
-                    <p className="mt-1 text-[12px] leading-[1.4] text-white/90">
+                    <p className="text-[12px] font-semibold leading-4 text-[#2ba8b0]">{card.key}</p>
+                    <p className="mt-0.5 text-[11px] leading-[1.35] text-white/90">
                       {firstNonEmpty(fields[card.key], HY_UI.ON_REQUEST)}
                     </p>
                   </div>
