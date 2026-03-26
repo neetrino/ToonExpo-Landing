@@ -20,6 +20,7 @@ import {
   SITE_HEADER_LOGO_SRC,
 } from "@/features/landing/landingPage.constants";
 import { LandingStickyHeader } from "@/features/landing/components/LandingStickyHeader";
+import { ContactFabMenu } from "@/features/landing/components/ContactFabMenu";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
@@ -74,7 +75,6 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const aboutSupportingText = firstNonEmpty(fields[F.shortName]);
   const aboutMainText = firstNonEmpty(desc, leadText);
   const primaryCtaHref = navItems[0] ? `#${navItems[0].id}` : "#about";
-  const desktopPhone = (fields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim().replace(/\s/g, "");
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-[#111827]">
@@ -225,21 +225,14 @@ export function LandingPage({ fields, folderMedia }: Props) {
       ) : null}
 
       <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
-
-      {desktopPhone ? (
-        <div className="fixed bottom-6 right-6 z-[9998] hidden lg:block">
-          <a
-            href={`tel:${desktopPhone}`}
-            aria-label={HY_UI.CTA_CALL_US}
-            className="relative inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#2CA8B0] text-white shadow-[0_6px_24px_rgba(44,168,176,0.55)] transition hover:brightness-110 active:scale-95"
-          >
-            <span className="absolute inset-0 rounded-full bg-[#2CA8B0] opacity-60 animate-ping" />
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="relative h-6 w-6 shrink-0">
-              <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
-            </svg>
-          </a>
-        </div>
-      ) : null}
+      <ContactFabMenu
+        variant="desktop"
+        toggleLabel={HY_UI.CTA_CALL_US}
+        phone={fields[F.phone]}
+        instagram={fields[F.instagram]}
+        facebook={fields[F.facebook]}
+        website={fields[F.website]}
+      />
     </div>
   );
 }

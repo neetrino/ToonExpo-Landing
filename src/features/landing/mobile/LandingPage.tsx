@@ -29,6 +29,7 @@ import {
 } from "@/features/landing/mobile/landingPage.constants";
 import { MobileLandingNavMenu } from "@/features/landing/mobile/MobileLandingNavMenu";
 import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandingStickyHeader";
+import { ContactFabMenu } from "@/features/landing/components/ContactFabMenu";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 
@@ -104,7 +105,6 @@ export function LandingPage({ fields, folderMedia }: Props) {
     folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
   const stats = getMobileStats(fields);
-  const mobilePhone = (fields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim().replace(/\s/g, "");
   const mobileSpecialOffer = fields[F.specialOffer]?.trim() ?? "";
   const menuItems = useMemo(
     () =>
@@ -348,21 +348,14 @@ export function LandingPage({ fields, folderMedia }: Props) {
       </section>
 
       <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
-
-      {mobilePhone ? (
-        <div className="fixed right-4 z-[9998]" style={{ bottom: "calc(5.75rem + env(safe-area-inset-bottom))" }}>
-          <a
-            href={`tel:${mobilePhone}`}
-            aria-label={HY_UI.CTA_CALL_US}
-            className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#2CA8B0] text-white shadow-[0_6px_20px_rgba(44,168,176,0.55)] active:scale-95"
-          >
-            <span className="absolute inset-0 rounded-full bg-[#2CA8B0] opacity-60 animate-ping" />
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="relative h-6 w-6 shrink-0">
-              <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
-            </svg>
-          </a>
-        </div>
-      ) : null}
+      <ContactFabMenu
+        variant="mobile"
+        toggleLabel={HY_UI.CTA_CALL_US}
+        phone={fields[F.phone]}
+        instagram={fields[F.instagram]}
+        facebook={fields[F.facebook]}
+        website={fields[F.website]}
+      />
     </div>
   );
 }
