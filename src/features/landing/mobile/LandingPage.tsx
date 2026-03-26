@@ -314,7 +314,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
               <img src={participantFigmaAssets.readMoreIcon} alt="" className="h-4 w-4" />
             </a>
             {mobileSpecialOffer ? (
-              <div className="mt-4 rounded-[10px] border border-[#22c55e]/30 bg-[#f0fdf4] px-4 py-4">
+              <div className="mt-4 rounded-[10px] border border-[#16a34a]/55 bg-[#d9fbe5] px-4 py-4 shadow-[0_8px_22px_rgba(34,197,94,0.18)]">
                 <div className="mb-2 flex items-center gap-2">
                   <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-5 w-5 shrink-0 text-[#16a34a]">
                     <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="currentColor"/>
