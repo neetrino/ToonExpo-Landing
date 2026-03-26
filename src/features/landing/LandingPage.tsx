@@ -67,8 +67,6 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const leadText = getLeadText(fields);
   const desc = fields[F.description]?.trim() ?? "";
   const specialOffer = fields[F.specialOffer]?.trim() ?? "";
-  const headerPhone = (fields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim().replace(/\s/g, "");
-  const headerPhoneDisplay = (fields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim();
   const aboutPrimaryImage =
     folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
@@ -76,6 +74,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const aboutSupportingText = firstNonEmpty(fields[F.shortName]);
   const aboutMainText = firstNonEmpty(desc, leadText);
   const primaryCtaHref = navItems[0] ? `#${navItems[0].id}` : "#about";
+  const desktopPhone = (fields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim().replace(/\s/g, "");
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-white text-[#111827]">
@@ -98,17 +97,6 @@ export function LandingPage({ fields, folderMedia }: Props) {
               </a>
             ))}
           </nav>
-          {headerPhone ? (
-            <a
-              href={`tel:${headerPhone}`}
-              className="group relative hidden shrink-0 items-center gap-2 rounded-full bg-[#e8192c] px-4 py-2 text-[0.7rem] font-extrabold uppercase tracking-[0.12em] text-white transition hover:brightness-110 lg:inline-flex"
-            >
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5 shrink-0">
-                <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
-              </svg>
-              <span>{headerPhoneDisplay}</span>
-            </a>
-          ) : null}
         </div>
       </LandingStickyHeader>
 
@@ -237,6 +225,20 @@ export function LandingPage({ fields, folderMedia }: Props) {
       ) : null}
 
       <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
+
+      {desktopPhone ? (
+        <div className="fixed bottom-6 left-6 z-[9998] hidden lg:block">
+          <a
+            href={`tel:${desktopPhone}`}
+            className="inline-flex items-center gap-2.5 rounded-full bg-[#e8192c] py-3 pl-4 pr-5 text-[0.75rem] font-extrabold uppercase tracking-[0.1em] text-white shadow-[0_8px_32px_rgba(232,25,44,0.5)] transition hover:brightness-110 active:scale-95"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 shrink-0">
+              <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
+            </svg>
+            {HY_UI.CTA_CALL_US}
+          </a>
+        </div>
+      ) : null}
     </div>
   );
 }

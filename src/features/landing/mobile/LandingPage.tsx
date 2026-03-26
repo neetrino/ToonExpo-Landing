@@ -182,7 +182,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
 
   return (
     <div className="overflow-x-hidden bg-white text-[#101828]">
-      <MobileLandingStickyHeader onMenuClick={() => setIsMenuOpen(true)} phone={mobilePhone || undefined} />
+      <MobileLandingStickyHeader onMenuClick={() => setIsMenuOpen(true)} />
       <MobileLandingNavMenu
         open={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
@@ -350,7 +350,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
       <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
 
       {mobilePhone ? (
-        <div className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 z-[9999]">
+        <div className="fixed left-4 z-[9998]" style={{ bottom: "calc(5.75rem + env(safe-area-inset-bottom))" }}>
           <a
             href={`tel:${mobilePhone}`}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#e8192c] px-5 py-3.5 text-[0.75rem] font-extrabold uppercase tracking-[0.1em] text-white shadow-[0_8px_28px_rgba(232,25,44,0.55)] transition active:scale-95"
