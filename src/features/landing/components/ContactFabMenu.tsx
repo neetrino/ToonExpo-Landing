@@ -78,6 +78,7 @@ export function ContactFabMenu({
   toggleLabel,
 }: ContactFabMenuProps) {
   const [open, setOpen] = useState(false);
+  const [typedContactLabel, setTypedContactLabel] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
   const cleanedPhone = sanitizePhone(phone);
 
@@ -139,6 +140,42 @@ export function ContactFabMenu({
     };
   }, []);
 
+  // Main hint typing effect to draw attention.
+  useEffect(() => {
+    const fullText = "Կապ կառուցապատողի հետ";
+    let index = 0;
+    let stopped = false;
+    let resetTimeout: ReturnType<typeof setTimeout> | null = null;
+    let tickTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const run = () => {
+      if (stopped) {
+        return;
+      }
+      if (index <= fullText.length) {
+        setTypedContactLabel(fullText.slice(0, index));
+        index += 1;
+        tickTimeout = setTimeout(run, 190);
+        return;
+      }
+      resetTimeout = setTimeout(() => {
+        index = 0;
+        run();
+      }, 7200);
+    };
+
+    run();
+    return () => {
+      stopped = true;
+      if (tickTimeout) {
+        clearTimeout(tickTimeout);
+      }
+      if (resetTimeout) {
+        clearTimeout(resetTimeout);
+      }
+    };
+  }, []);
+
   const positionClass =
     variant === "desktop"
       ? "fixed bottom-20 right-20 z-[9998] hidden lg:block"
@@ -147,17 +184,18 @@ export function ContactFabMenu({
     variant === "mobile"
       ? ({ bottom: "calc(5.75rem + env(safe-area-inset-bottom))" } as const)
       : undefined;
+  const contactBuilderLabel = "Կապ հաստատել կառուցապատողի հետ";
 
   return (
     <div ref={rootRef} className={positionClass} style={positionStyle}>
       <div
-        className={`absolute right-0 bottom-[calc(100%+0.75rem)] flex flex-col gap-2 rounded-2xl border border-white/20 bg-black/70 p-2 backdrop-blur-md shadow-[0_12px_36px_rgba(0,0,0,0.35)] transition-all duration-200 ${
+        className={`absolute right-0 bottom-[calc(100%+0.75rem)] flex flex-col gap-2 rounded-2xl border border-[#FFD34D]/35 bg-[#111827]/88 p-2 backdrop-blur-md shadow-[0_14px_38px_rgba(0,0,0,0.45)] transition-all duration-200 ${
           open ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"
         }`}
       >
         {links.map((item) => {
           const iconClass =
-            "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white transition";
+            "inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/5 text-white transition";
           if (!item.href) {
             return (
               <span
@@ -171,29 +209,64 @@ export function ContactFabMenu({
             );
           }
           return (
-            <a
-              key={item.id}
-              href={item.href}
-              target={item.external ? "_blank" : undefined}
-              rel={item.external ? "noreferrer" : undefined}
-              aria-label={item.label}
-              className={`${iconClass} hover:bg-white/20 hover:text-[#FFD34D]`}
-            >
-              <item.Icon className="h-5 w-5" />
-            </a>
+            <div key={item.id} className="relative">
+              {item.id === "phone" && cleanedPhone ? (
+                <div className="pointer-events-none absolute right-[calc(100%+0.6rem)] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-lg border border-[#FFD34D]/45 bg-[#111827]/76 px-3 py-1.5 text-[0.72rem] font-semibold tracking-[0.04em] text-white backdrop-blur-md shadow-[0_8px_20px_rgba(0,0,0,0.32)]">
+                  {cleanedPhone}
+                </div>
+              ) : null}
+              <a
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noreferrer" : undefined}
+                aria-label={item.label}
+                className={`${iconClass} hover:border-[#FFD34D]/70 hover:bg-[#FFD34D]/10 hover:text-[#FFD34D]`}
+              >
+                <item.Icon className="h-5 w-5" />
+              </a>
+            </div>
           );
         })}
       </div>
 
-      <button
-        type="button"
-        aria-label={toggleLabel}
-        onClick={() => setOpen((prev) => !prev)}
-        className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#FFD34D] text-black shadow-[0_6px_20px_rgba(255,211,77,0.55)] transition hover:brightness-110 active:scale-95 lg:h-14 lg:w-14"
-      >
-        <span className="absolute inset-0 rounded-full bg-[#FFD34D] opacity-60 animate-ping" />
-        <PhoneIcon className="relative h-6 w-6 shrink-0" />
-      </button>
+      <div className="relative">
+        <div className="pointer-events-none absolute right-[calc(100%+0.6rem)] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-lg border border-[#FFD34D]/45 bg-[#111827]/76 px-3 py-1.5 text-[0.72rem] font-semibold tracking-[0.04em] text-white backdrop-blur-md shadow-[0_8px_20px_rgba(0,0,0,0.32)]">
+          {typedContactLabel}
+          <span
+            aria-hidden
+            className="ml-1 inline-block h-[0.95em] w-[2px] rounded-full bg-[#FFD34D] align-[-0.08em] shadow-[0_0_10px_rgba(255,211,77,0.6)]"
+            style={{ animation: "caretBlink 1.05s steps(1, end) infinite" }}
+          />
+        </div>
+        <button
+          type="button"
+          aria-label={toggleLabel}
+          onClick={() => setOpen((prev) => !prev)}
+          className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#FFD34D] text-black shadow-[0_6px_20px_rgba(255,211,77,0.55)] transition hover:brightness-110 active:scale-95 lg:h-14 lg:w-14"
+        >
+          <span className="absolute inset-0 rounded-full bg-[#FFD34D] opacity-60 animate-ping" />
+          <PhoneIcon className="relative h-6 w-6 shrink-0" />
+        </button>
+      </div>
+      <style jsx>{`
+        @keyframes caretBlink {
+          0%,
+          45% {
+            opacity: 1;
+            transform: translateY(0) scaleY(1);
+          }
+          46%,
+          54% {
+            opacity: 0.05;
+            transform: translateY(0) scaleY(0.9);
+          }
+          55%,
+          100% {
+            opacity: 1;
+            transform: translateY(0) scaleY(1);
+          }
+        }
+      `}</style>
     </div>
   );
 }
