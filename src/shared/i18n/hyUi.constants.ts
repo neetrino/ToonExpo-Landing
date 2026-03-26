@@ -23,6 +23,7 @@ export const HY_UI = {
   CTA_VIEW_ALL: "Բոլորը",
   CTA_READ_MORE: "Կարդալ ավելին",
   CTA_VISIT_SITE: "Կայք",
+  CTA_CALL_US: "Զանգահարել",
   CTA_REACH_OUT: "Կապվել",
 
   SECTION_ABOUT_PROJECT: "Նախագծի մասին",

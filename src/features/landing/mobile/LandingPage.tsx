@@ -104,6 +104,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
     folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
   const stats = getMobileStats(fields);
+  const mobilePhone = (fields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim().replace(/\s/g, "");
   const menuItems = useMemo(
     () =>
       MOBILE_NAV_ITEMS.filter((item) => {
@@ -331,6 +332,20 @@ export function LandingPage({ fields, folderMedia }: Props) {
       </section>
 
       <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
+
+      {mobilePhone ? (
+        <div className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 z-[9999]">
+          <a
+            href={`tel:${mobilePhone}`}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#e8192c] px-5 py-3.5 text-[0.75rem] font-extrabold uppercase tracking-[0.1em] text-white shadow-[0_8px_28px_rgba(232,25,44,0.55)] transition active:scale-95"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 shrink-0">
+              <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
+            </svg>
+            {HY_UI.CTA_CALL_US}
+          </a>
+        </div>
+      ) : null}
     </div>
   );
 }
