@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { CalendarClock, CircleDollarSign, Ruler } from "lucide-react";
 import { isFieldNonEmpty } from "@/shared/lib/expoFields";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { LandingPageLower } from "@/features/landing/mobile/LandingPageLower";
@@ -12,11 +13,11 @@ import {
   getHeroMedia,
   getLandingTitle,
   getLeadText,
-  getMobileStats,
   getLogoUrl,
   getProjectMedia,
   splitParagraphs,
 } from "@/features/landing/mobile/landingPage.helpers";
+import { LANDING_LUCIDE_STROKE } from "@/features/landing/lib/lucideLandingStyle";
 import {
   MOBILE_HERO_PROJECT_LOGO_BOX_CLASS,
   MOBILE_HERO_PROJECT_LOGO_IMG_CLASS,
@@ -32,6 +33,8 @@ import { MobileLandingStickyHeader } from "@/features/landing/mobile/MobileLandi
 import { ContactFabMenu } from "@/features/landing/components/ContactFabMenu";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
+import { formatAreasWithSqmSuffix } from "@/shared/lib/formatAreasDisplay";
+import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
 
 type Props = {
   fields: ExpoMap;
@@ -50,10 +53,12 @@ const MOBILE_NAV_ITEMS = [
 function MobileStatCard({
   value,
   label,
+  Icon,
   tone,
 }: {
   value: string;
   label: string;
+  Icon: typeof CalendarClock;
   tone: "teal" | "gold" | "navy";
 }) {
   const toneClass =
@@ -66,6 +71,11 @@ function MobileStatCard({
 
   return (
     <div className={`flex-1 rounded-[14px] px-4 py-4 shadow-[0_4px_6px_rgba(0,0,0,0.07)] ${toneClass}`}>
+      <div className="flex justify-center">
+        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/10">
+          <Icon aria-hidden className="h-5 w-5" strokeWidth={LANDING_LUCIDE_STROKE} />
+        </span>
+      </div>
       <p className={`text-center text-2xl font-bold leading-8 ${valueClass}`}>{value}</p>
       <p className="mt-1 text-center text-[12px] uppercase leading-4 opacity-90">{label}</p>
     </div>
@@ -86,6 +96,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const F = PROJECT_FIELD;
   const aboutParagraphs = splitParagraphs(fields[F.description]);
   const leadText = getLeadText(fields);
+  const desc = fields[F.description]?.trim() ?? "";
   const rawAboutText = aboutParagraphs[0] ?? "";
   const hasDenseListCopy = (rawAboutText.match(/,/g) ?? []).length > 3 || rawAboutText.length > 120;
   const heroLead =
@@ -96,15 +107,30 @@ export function LandingPage({ fields, folderMedia }: Props) {
     ? "Premium residential project with strong investment potential and comfortable urban living."
     : firstNonEmpty(rawAboutText, "Premium residential project with strong investment potential and comfortable urban living.");
   const addressText = isFieldNonEmpty(fields[F.shortName]) ? fields[F.shortName] : "";
-  const aboutText = firstNonEmpty(
-    hasDenseListCopy ? "" : rawAboutText,
-    addressText ? `${title} is a residential project located at ${addressText}.` : "",
-    "Modern residential project designed for comfortable living and long-term value.",
-  );
+  const aboutText = firstNonEmpty(desc, leadText);
   const aboutPrimaryImage =
     folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
-  const stats = getMobileStats(fields);
+  const keyMetrics = [
+    {
+      value: firstNonEmpty(fields[F.completion], HY_UI.ON_REQUEST),
+      label: HY_UI.INVEST_CARD_COMPLETION,
+      tone: "teal" as const,
+      Icon: CalendarClock,
+    },
+    {
+      value: firstNonEmpty(formatAreasWithSqmSuffix(fields[F.areas]), HY_UI.ON_REQUEST),
+      label: HY_UI.INVEST_CARD_AREAS,
+      tone: "gold" as const,
+      Icon: Ruler,
+    },
+    {
+      value: firstNonEmpty(formatPriceMinForDisplay(fields[F.priceMin]), HY_UI.ON_REQUEST),
+      label: HY_UI.INVEST_CARD_PRICE_PER_SQM,
+      tone: "navy" as const,
+      Icon: CircleDollarSign,
+    },
+  ];
   const mobileSpecialOffer = fields[F.specialOffer]?.trim() ?? "";
   const menuItems = useMemo(
     () =>
@@ -293,8 +319,14 @@ export function LandingPage({ fields, folderMedia }: Props) {
 
       <section className={`${MOBILE_SECTION_INSET} relative z-10 -mt-[7px]`}>
         <div className="flex gap-3">
-          {stats.map((item) => (
-            <MobileStatCard key={item.label} value={item.value} label={item.label} tone={item.tone} />
+          {keyMetrics.map((item) => (
+            <MobileStatCard
+              key={item.label}
+              value={item.value}
+              label={item.label}
+              tone={item.tone}
+              Icon={item.Icon}
+            />
           ))}
         </div>
       </section>
@@ -305,14 +337,9 @@ export function LandingPage({ fields, folderMedia }: Props) {
             <h2 className="text-[clamp(1.55rem,2.1vw,2.25rem)] font-semibold uppercase leading-none tracking-[0.01em] text-[#2ba8b0]">
               {HY_UI.MOBILE_ABOUT_SECTION}
             </h2>
-            <p className="mt-3 max-w-[296px] text-[14px] leading-[1.625] text-[#1e2939]">{aboutText}</p>
-            <a
-              href="#investment"
-              className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-semibold uppercase leading-5 text-[#2ba8b0]"
-            >
-              {HY_UI.CTA_READ_MORE}
-              <img src={participantFigmaAssets.readMoreIcon} alt="" className="h-4 w-4" />
-            </a>
+            <p className="mt-3 max-w-[296px] whitespace-pre-line text-[14px] leading-[1.625] text-[#1e2939]">
+              {aboutText}
+            </p>
             {mobileSpecialOffer ? (
               <div className="mt-4 rounded-[10px] border border-[#16a34a]/55 bg-[#d9fbe5] px-4 py-4 shadow-[0_8px_22px_rgba(34,197,94,0.18)]">
                 <div className="mb-2 flex items-center gap-2">

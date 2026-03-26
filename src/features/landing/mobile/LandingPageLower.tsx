@@ -27,7 +27,6 @@ import {
   firstNonEmpty,
   getProjectMedia,
   parseSizeOptions,
-  splitListItems,
 } from "@/features/landing/mobile/landingPage.helpers";
 import { PaymentCard } from "@/features/landing/mobile/PaymentCard";
 import type { ResolvedProjectFolderMedia } from "@/features/landing/lib/projectFolderMedia.types";
@@ -86,15 +85,6 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
       ? `${sizeOptions[0]} m² - ${sizeOptions[sizeOptions.length - 1]} m².`
       : "",
     "30.7 m² - 60.5 m².",
-  );
-  const investmentSummary = firstNonEmpty(
-    splitListItems(fields[F.description])[0],
-    "Price varies by view and floor. Higher floors and better views command premium. Strong rental demand for ski-in/ski-out units.",
-  );
-  const paymentSummary = firstNonEmpty(
-    fields[F.paymentOptions],
-    investmentSummary,
-    "Price varies by view and floor. Higher floors and better views command premium. Strong rental demand for ski-in/ski-out units.",
   );
   const paymentCards = [
     {
@@ -161,9 +151,6 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
             {investmentCards.map((item) => (
               <InvestmentCard key={item.title} title={item.title} text={item.text} Icon={item.Icon} />
             ))}
-            <div className="rounded-[14px] bg-white px-4 py-4 text-[14px] leading-[1.625] text-[#364153] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
-              {investmentSummary}
-            </div>
           </div>
         </section>
       ) : null}
@@ -312,9 +299,6 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
             {paymentCards.map((card) => (
               <PaymentCard key={card.title} title={card.title} text={card.text} tone={card.tone} Icon={card.Icon} />
             ))}
-            <div className="rounded-[14px] bg-white px-4 py-4 text-[14px] leading-[1.625] text-[#364153] shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
-              {paymentSummary}
-            </div>
           </div>
         </section>
       ) : null}
