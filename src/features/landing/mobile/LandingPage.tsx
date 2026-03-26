@@ -314,12 +314,12 @@ export function LandingPage({ fields, folderMedia }: Props) {
               <img src={participantFigmaAssets.readMoreIcon} alt="" className="h-4 w-4" />
             </a>
             {mobileSpecialOffer ? (
-              <div className="mt-4 rounded-[10px] border border-[#e8192c]/30 bg-[#fff1f2] px-4 py-4">
+              <div className="mt-4 rounded-[10px] border border-[#22c55e]/30 bg-[#f0fdf4] px-4 py-4">
                 <div className="mb-2 flex items-center gap-2">
-                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-4 w-4 shrink-0 text-[#e8192c]">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-4 w-4 shrink-0 text-[#16a34a]">
                     <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="currentColor"/>
                   </svg>
-                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#e8192c]">
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#16a34a]">
                     {HY_UI.MOBILE_SPECIAL_OFFER}
                   </p>
                 </div>
