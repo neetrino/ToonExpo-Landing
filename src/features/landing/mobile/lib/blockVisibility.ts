@@ -11,7 +11,7 @@ const F = PROJECT_FIELD;
 
 const KEYS = {
   hero: [F.titleExhibition, F.participantName, F.shortName, F.description],
-  about: [F.description, F.developer, F.shortName],
+  about: [F.description, F.developer, F.shortName, F.specialOffer],
   investment: [F.completion, F.areas, F.priceMin, F.priceMax, F.bank, F.taxRefund],
   gallery: [] as string[],
   payment: [F.paymentOptions, F.bank, F.taxRefund],

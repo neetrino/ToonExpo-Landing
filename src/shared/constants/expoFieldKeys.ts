@@ -37,6 +37,7 @@ export const PROJECT_FIELD = {
   facebook: "51․ Տեղադրել ֆեյսբուքյան էջի հղումը։",
   description: "Նկարագրություն",
   virtualTour: "Վիրտուալ Տուր",
+  specialOffer: "Հատուկ առաջարկ",
 } as const;
 
 export type ProjectFieldKey = (typeof PROJECT_FIELD)[keyof typeof PROJECT_FIELD];
@@ -71,6 +72,7 @@ export const EXPO_FIELD_KEYS: readonly ProjectFieldKey[] = [
   PROJECT_FIELD.facebook,
   PROJECT_FIELD.description,
   PROJECT_FIELD.virtualTour,
+  PROJECT_FIELD.specialOffer,
 ];
 
 export const EXPO_FIELD_COUNT = EXPO_FIELD_KEYS.length;
@@ -152,6 +154,7 @@ export const EXPO_FIELD_GROUPS: {
       PROJECT_FIELD.facebook,
       PROJECT_FIELD.description,
       PROJECT_FIELD.virtualTour,
+      PROJECT_FIELD.specialOffer,
     ],
   },
 ];

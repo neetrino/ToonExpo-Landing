@@ -27,6 +27,7 @@ export const HY_UI = {
   CTA_REACH_OUT: "Կապվել",
 
   SECTION_ABOUT_PROJECT: "Նախագծի մասին",
+  SECTION_SPECIAL_OFFER: "Հատուկ առաջարկ",
   SECTION_GALLERY: "Պատկերներ",
   SECTION_PAYMENT: "Վճարման պայմաններ",
   SECTION_INFRA: "Ինֆրակառուցվածք",
@@ -121,6 +122,7 @@ export const HY_UI = {
   MOBILE_LABEL_FLOOR: "Հարկեր․",
   MOBILE_SELECT_SIZE_HINT: "Ընտրեք չափը",
   MOBILE_ABOUT_SECTION: "Նախագծի մասին",
+  MOBILE_SPECIAL_OFFER: "Հատուկ առաջարկ",
 
   /** Հերոյի վիճակագրական քարտեր (բնակարան / հարկ / կայանատեղի) */
   MOBILE_STAT_FLOORS: "Հարկեր",

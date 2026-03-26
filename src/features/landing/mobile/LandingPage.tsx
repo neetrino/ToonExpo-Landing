@@ -105,6 +105,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
   const stats = getMobileStats(fields);
   const mobilePhone = (fields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim().replace(/\s/g, "");
+  const mobileSpecialOffer = fields[F.specialOffer]?.trim() ?? "";
   const menuItems = useMemo(
     () =>
       MOBILE_NAV_ITEMS.filter((item) => {
@@ -312,6 +313,21 @@ export function LandingPage({ fields, folderMedia }: Props) {
               {HY_UI.CTA_READ_MORE}
               <img src={participantFigmaAssets.readMoreIcon} alt="" className="h-4 w-4" />
             </a>
+            {mobileSpecialOffer ? (
+              <div className="mt-4 rounded-[10px] border border-[#e8192c]/30 bg-[#fff1f2] px-4 py-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-4 w-4 shrink-0 text-[#e8192c]">
+                    <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="currentColor"/>
+                  </svg>
+                  <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#e8192c]">
+                    {HY_UI.MOBILE_SPECIAL_OFFER}
+                  </p>
+                </div>
+                <p className="whitespace-pre-line text-[13px] leading-[1.6] text-[#1e2939]">
+                  {mobileSpecialOffer}
+                </p>
+              </div>
+            ) : null}
           </div>
         </section>
       ) : null}

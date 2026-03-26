@@ -66,6 +66,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
   const heroLogoUrl = firstNonEmpty(folderMedia?.logoUrl, getLogoUrl(fields));
   const leadText = getLeadText(fields);
   const desc = fields[F.description]?.trim() ?? "";
+  const specialOffer = fields[F.specialOffer]?.trim() ?? "";
   const aboutPrimaryImage =
     folderMedia?.aboutLargeUrl || media[1] || media[0] || null;
   const aboutInteriorOneOverlayUrl = folderMedia?.aboutSmallUrl ?? null;
@@ -195,6 +196,22 @@ export function LandingPage({ fields, folderMedia }: Props) {
                       <path d="M1.5 1.5L12 12L1.5 22.5" stroke="currentColor" strokeWidth="2" />
                     </svg>
                   </a>
+
+                  {specialOffer ? (
+                    <div className="mt-8 w-full max-w-[620px] rounded-[10px] border border-[#e8192c]/40 bg-[#e8192c]/10 px-6 py-5 lg:mt-10">
+                      <div className="flex items-center gap-3 mb-3">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-5 w-5 shrink-0 text-[#e8192c]">
+                          <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="currentColor"/>
+                        </svg>
+                        <p className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#e8192c]">
+                          {HY_UI.SECTION_SPECIAL_OFFER}
+                        </p>
+                      </div>
+                      <p className="whitespace-pre-line text-[0.9rem] leading-[1.55] text-white/90 lg:text-[1rem]">
+                        {specialOffer}
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
