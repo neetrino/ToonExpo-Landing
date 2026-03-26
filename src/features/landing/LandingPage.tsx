@@ -230,12 +230,13 @@ export function LandingPage({ fields, folderMedia }: Props) {
         <div className="fixed bottom-6 left-6 z-[9998] hidden lg:block">
           <a
             href={`tel:${desktopPhone}`}
-            className="inline-flex items-center gap-2.5 rounded-full bg-[#e8192c] py-3 pl-4 pr-5 text-[0.75rem] font-extrabold uppercase tracking-[0.1em] text-white shadow-[0_8px_32px_rgba(232,25,44,0.5)] transition hover:brightness-110 active:scale-95"
+            aria-label={HY_UI.CTA_CALL_US}
+            className="relative inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#2CA8B0] text-white shadow-[0_6px_24px_rgba(44,168,176,0.55)] transition hover:brightness-110 active:scale-95"
           >
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 shrink-0">
+            <span className="absolute inset-0 rounded-full bg-[#2CA8B0] opacity-60 animate-ping" />
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="relative h-6 w-6 shrink-0">
               <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
             </svg>
-            {HY_UI.CTA_CALL_US}
           </a>
         </div>
       ) : null}
