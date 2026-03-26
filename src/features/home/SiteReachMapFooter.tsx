@@ -76,9 +76,13 @@ export function SiteReachMapFooter({
   const footerSite = isParticipant ? toExternalHref(anchor?.expoFields[F.website]) : "";
   const footerInstagram = anchor?.expoFields[F.instagram]?.trim() ?? "";
   const footerFacebook = anchor?.expoFields[F.facebook]?.trim() ?? "";
-  const footerPhone = isParticipant
-    ? (anchor?.expoFields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim().replace(/\s/g, "")
+  const footerPhoneRaw = isParticipant
+    ? (anchor?.expoFields[F.phone]?.trim() ?? "").split(/[\n,]/)[0].trim()
     : "";
+  const footerPhone = footerPhoneRaw.replace(/\s/g, "");
+  const footerPhoneDisplay = footerPhoneRaw.startsWith("374") && !footerPhoneRaw.startsWith("+")
+    ? `+${footerPhoneRaw}`
+    : footerPhoneRaw;
 
   return (
     <>
@@ -142,7 +146,7 @@ export function SiteReachMapFooter({
                       <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0">
                         <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V21a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.25 1.01l-2.2 2.22z"/>
                       </svg>
-                      {HY_UI.CTA_CALL_US}
+                      {footerPhoneDisplay}
                     </a>
                   ) : (
                     <ReachOutCta className="shrink-0" />
