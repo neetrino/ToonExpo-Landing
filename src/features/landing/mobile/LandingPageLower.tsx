@@ -18,9 +18,11 @@ import {
   MOBILE_SECTION_INSET,
   participantFigmaAssets,
 } from "@/features/landing/mobile/landingPage.constants";
+import { constructionCards } from "@/features/landing/landingPage.constants";
 import { GalleryLightbox } from "@/features/landing/GalleryLightbox";
 import { RemoteAwareImage } from "@/shared/components/RemoteAwareImage";
 import { resolveGalleryItems } from "@/features/landing/lib/resolveGalleryImageUrls";
+import { ConstructionDetailIcon } from "@/features/landing/components/ConstructionDetailIcon";
 import { HY_UI } from "@/shared/i18n/hyUi.constants";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import {
@@ -88,19 +90,19 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
   );
   const paymentCards = [
     {
-      title: HY_UI.MOBILE_PAYMENT_CARD_1,
+      title: HY_UI.PAYMENT_INSTALLMENT,
       text: firstNonEmpty(fields[F.paymentOptions], "Strong rental demand year-round"),
       tone: "teal" as const,
       Icon: Wallet,
     },
     {
-      title: HY_UI.MOBILE_PAYMENT_CARD_2,
+      title: HY_UI.PAYMENT_MORTGAGE,
       text: firstNonEmpty(fields[F.bank], "Ski-in/ski-out access"),
       tone: "gold" as const,
       Icon: Landmark,
     },
     {
-      title: HY_UI.MOBILE_PAYMENT_CARD_3,
+      title: HY_UI.PAYMENT_TAX,
       text: firstNonEmpty(fields[F.taxRefund], "30% down, installments until 2027"),
       tone: "navy" as const,
       Icon: Percent,
@@ -131,7 +133,8 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
   ];
   const showGallery =
     (folderMedia?.galleryUrls.length ?? 0) > 0 || galleryResolved.length > 0;
-  const showPayment = vis.payment || vis.construction;
+  const showPayment = vis.payment;
+  const showConstruction = vis.construction;
   const showOptions = sizeOptions.length > 0;
 
   useEffect(() => {
@@ -312,6 +315,34 @@ export function LandingPageLower({ fields, title, folderMedia }: Props) {
             {paymentCards.map((card) => (
               <PaymentCard key={card.title} title={card.title} text={card.text} tone={card.tone} Icon={card.Icon} />
             ))}
+          </div>
+        </section>
+      ) : null}
+
+      {showConstruction ? (
+        <section id="construction" className="mt-8 bg-[#192643] py-8 text-white">
+          <div className={MOBILE_SECTION_INSET}>
+            <h2 className="text-[20px] font-bold uppercase leading-7 text-[#2ba8b0]">
+              {HY_UI.SECTION_CONSTRUCTION}
+            </h2>
+            <div className="mt-4 space-y-3">
+              {constructionCards.map((card) => (
+                <div
+                  key={card.key}
+                  className="flex items-start gap-3 rounded-[12px] border border-white/10 bg-white/5 px-3 py-3"
+                >
+                  <div className="mt-0.5 shrink-0 origin-top-left scale-[0.7]">
+                    <ConstructionDetailIcon variant={card.iconVariant} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-semibold leading-5 text-[#2ba8b0]">{card.key}</p>
+                    <p className="mt-1 text-[12px] leading-[1.4] text-white/90">
+                      {firstNonEmpty(fields[card.key], HY_UI.ON_REQUEST)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       ) : null}
