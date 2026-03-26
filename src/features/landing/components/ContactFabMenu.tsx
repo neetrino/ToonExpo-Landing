@@ -141,7 +141,7 @@ export function ContactFabMenu({
 
   const positionClass =
     variant === "desktop"
-      ? "fixed bottom-6 right-6 z-[9998] hidden lg:block"
+      ? "fixed bottom-20 right-20 z-[9998] hidden lg:block"
       : "fixed right-4 z-[9998]";
   const positionStyle =
     variant === "mobile"
@@ -177,7 +177,7 @@ export function ContactFabMenu({
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noreferrer" : undefined}
               aria-label={item.label}
-              className={`${iconClass} hover:bg-white/20 hover:text-[#2CA8B0]`}
+              className={`${iconClass} hover:bg-white/20 hover:text-[#FFD34D]`}
             >
               <item.Icon className="h-5 w-5" />
             </a>
@@ -189,9 +189,9 @@ export function ContactFabMenu({
         type="button"
         aria-label={toggleLabel}
         onClick={() => setOpen((prev) => !prev)}
-        className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#2CA8B0] text-white shadow-[0_6px_20px_rgba(44,168,176,0.55)] transition hover:brightness-110 active:scale-95 lg:h-14 lg:w-14"
+        className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#FFD34D] text-black shadow-[0_6px_20px_rgba(255,211,77,0.55)] transition hover:brightness-110 active:scale-95 lg:h-14 lg:w-14"
       >
-        <span className="absolute inset-0 rounded-full bg-[#2CA8B0] opacity-60 animate-ping" />
+        <span className="absolute inset-0 rounded-full bg-[#FFD34D] opacity-60 animate-ping" />
         <PhoneIcon className="relative h-6 w-6 shrink-0" />
       </button>
     </div>

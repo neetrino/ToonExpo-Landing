@@ -8,7 +8,7 @@ import { buildMapMarkersFromProjects } from "@/features/home/buildMapMarkers";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { FooterEvolverCreditCard } from "@/features/home/components/FooterEvolverCreditCard";
 import { FooterNeetrinoCreditCard } from "@/features/home/components/FooterNeetrinoCreditCard";
-import { FooterBottomNav, ReachOutCta, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
+import { FooterBottomNav, SocialTilesRow } from "@/features/home/siteReachFooterBlocks";
 import { toExternalHref } from "@/features/landing/mobile/landingPage.helpers";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import {
@@ -129,9 +129,6 @@ export function SiteReachMapFooter({
                     iconClassName={TEAL_BAR_SOCIAL_ICON_CLASS}
                     className="flex items-center gap-1.5"
                   />
-                </div>
-                <div className="flex w-full shrink-0 justify-end lg:w-auto">
-                  <ReachOutCta className="shrink-0" />
                 </div>
               </div>
             </div>
