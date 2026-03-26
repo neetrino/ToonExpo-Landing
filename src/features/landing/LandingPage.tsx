@@ -181,22 +181,6 @@ export function LandingPage({ fields, folderMedia }: Props) {
                   <p className="mt-8 max-w-[620px] text-[0.95rem] font-normal leading-[1.28] text-white lg:mt-[66px] lg:text-[1.35rem] lg:leading-[1.28]">
                     {aboutMainText}
                   </p>
-                  <a
-                    href={vis.investment ? "#investment" : primaryCtaHref}
-                    className="mt-10 inline-flex w-fit items-center gap-3 rounded-[6px] border border-white px-5 py-3 text-sm font-semibold uppercase tracking-[0.03em] text-white transition hover:bg-white hover:text-black lg:mt-[84px] lg:min-h-[71px] lg:px-7 lg:text-[1.5rem]"
-                  >
-                    <span>{HY_UI.CTA_EXPLORE_MORE}</span>
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 14 24"
-                      className="h-4 w-2.5 shrink-0 lg:h-[24px] lg:w-[14px]"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M1.5 1.5L12 12L1.5 22.5" stroke="currentColor" strokeWidth="2" />
-                    </svg>
-                  </a>
-
                   {specialOffer ? (
                     <div className="mt-8 w-full max-w-[620px] rounded-[10px] border border-[#e8192c]/40 bg-[#e8192c]/10 px-6 py-5 lg:mt-10">
                       <div className="flex items-center gap-3 mb-3">
