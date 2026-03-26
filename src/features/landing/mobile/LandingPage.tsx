@@ -350,7 +350,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
       <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
 
       {mobilePhone ? (
-        <div className="fixed left-4 z-[9998]" style={{ bottom: "calc(5.75rem + env(safe-area-inset-bottom))" }}>
+        <div className="fixed right-4 z-[9998]" style={{ bottom: "calc(5.75rem + env(safe-area-inset-bottom))" }}>
           <a
             href={`tel:${mobilePhone}`}
             aria-label={HY_UI.CTA_CALL_US}

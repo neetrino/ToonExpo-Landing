@@ -227,7 +227,7 @@ export function LandingPage({ fields, folderMedia }: Props) {
       <LandingPageLower fields={fields} title={title} folderMedia={folderMedia} />
 
       {desktopPhone ? (
-        <div className="fixed bottom-6 left-6 z-[9998] hidden lg:block">
+        <div className="fixed bottom-6 right-6 z-[9998] hidden lg:block">
           <a
             href={`tel:${desktopPhone}`}
             aria-label={HY_UI.CTA_CALL_US}
