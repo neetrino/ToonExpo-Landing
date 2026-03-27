@@ -27,6 +27,8 @@ import { HY_UI } from "@/shared/i18n/hyUi.constants";
 type Props = {
   fields: ExpoMap;
   folderMedia: ResolvedProjectFolderMedia | null;
+  projectSlug: string;
+  projectName: string;
 };
 
 function Section({
@@ -45,7 +47,7 @@ function Section({
   );
 }
 
-export function LandingPage({ fields, folderMedia }: Props) {
+export function LandingPage({ fields, folderMedia, projectSlug, projectName }: Props) {
   const vis = visibleBlocks(fields);
   const galleryFromFolder = (folderMedia?.galleryUrls.length ?? 0) > 0;
   const secondaryGalleryFromFolder =
@@ -232,6 +234,8 @@ export function LandingPage({ fields, folderMedia }: Props) {
         instagram={fields[F.instagram]}
         facebook={fields[F.facebook]}
         website={fields[F.website]}
+        projectSlug={projectSlug}
+        projectName={projectName}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { trackContactClick } from "@/shared/lib/analytics";
 
 type Variant = "desktop" | "mobile";
 
@@ -9,6 +10,8 @@ type ContactFabMenuProps = {
   instagram?: string;
   facebook?: string;
   website?: string;
+  projectSlug: string;
+  projectName: string;
   variant: Variant;
   toggleLabel: string;
 };
@@ -74,6 +77,8 @@ export function ContactFabMenu({
   instagram,
   facebook,
   website,
+  projectSlug,
+  projectName,
   variant,
   toggleLabel,
 }: ContactFabMenuProps) {
@@ -220,6 +225,14 @@ export function ContactFabMenu({
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noreferrer" : undefined}
                 aria-label={item.label}
+                onClick={() =>
+                  trackContactClick({
+                    projectSlug,
+                    projectName,
+                    ctaType: item.id,
+                    placement: variant === "desktop" ? "fab_desktop" : "fab_mobile",
+                  })
+                }
                 className={`${iconClass} hover:border-[#FFD34D]/70 hover:bg-[#FFD34D]/10 hover:text-[#FFD34D]`}
               >
                 <item.Icon className="h-5 w-5" />

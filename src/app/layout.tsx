@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { publicAssetUrl } from "@/shared/lib/publicAssetUrl";
+import { GoogleAnalytics } from "@/app/GoogleAnalytics";
 
 const SITE_ICON = publicAssetUrl("/figma/home/footerLogo.svg");
 
@@ -32,6 +33,7 @@ export default function RootLayout({
   return (
     <html lang="hy" suppressHydrationWarning>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
+        <GoogleAnalytics />
         {children}
       </body>
     </html>

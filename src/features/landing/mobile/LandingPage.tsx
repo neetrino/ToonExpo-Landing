@@ -38,6 +38,8 @@ import { formatPriceMinForDisplay } from "@/shared/lib/formatPriceMinDisplay";
 type Props = {
   fields: ExpoMap;
   folderMedia: ResolvedProjectFolderMedia | null;
+  projectSlug: string;
+  projectName: string;
 };
 
 const MOBILE_NAV_ITEMS = [
@@ -111,7 +113,7 @@ function getCompletionYearValue(raw: string | undefined): string {
   return value;
 }
 
-export function LandingPage({ fields, folderMedia }: Props) {
+export function LandingPage({ fields, folderMedia, projectSlug, projectName }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isHeroReadFullOpen, setIsHeroReadFullOpen] = useState(false);
   const [heroShowReadFull, setHeroShowReadFull] = useState(false);
@@ -421,6 +423,8 @@ export function LandingPage({ fields, folderMedia }: Props) {
         instagram={fields[F.instagram]}
         facebook={fields[F.facebook]}
         website={fields[F.website]}
+        projectSlug={projectSlug}
+        projectName={projectName}
       />
     </div>
   );
