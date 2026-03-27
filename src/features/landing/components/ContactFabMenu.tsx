@@ -120,11 +120,7 @@ export function ContactFabMenu({
     ],
     [cleanedPhone, instagram, facebook, website],
   );
-
-  // If nothing to show at all, do not render widget.
-  if (!links.some((item) => item.href)) {
-    return null;
-  }
+  const hasAnyLinks = links.some((item) => item.href);
 
   useEffect(() => {
     const onPointerDown = (event: MouseEvent) => {
@@ -189,7 +185,11 @@ export function ContactFabMenu({
     variant === "mobile"
       ? ({ bottom: "calc(5.75rem + env(safe-area-inset-bottom))" } as const)
       : undefined;
-  const contactBuilderLabel = "Կապ հաստատել կառուցապատողի հետ";
+
+  // If nothing to show at all, do not render widget.
+  if (!hasAnyLinks) {
+    return null;
+  }
 
   return (
     <div ref={rootRef} className={positionClass} style={positionStyle}>
