@@ -2,6 +2,7 @@ import { cache } from "react";
 import { prisma } from "@/shared/lib/db";
 import type { HomeProject } from "@/features/home/homeProject.types";
 import { resolveHomeCardMedia } from "@/features/home/resolveHomeCardMedia";
+import { withPrismaRetry } from "@/shared/lib/prismaRetry";
 
 type Row = {
   id: string;
@@ -53,10 +54,14 @@ function compareForHome(a: Row, b: Row): number {
  * Հրապարակված նախագծերի ցանկ — կիսվում է հանրային layout-ի և գլխավոր էջի միջև (մեկ հարցում)։
  */
 export const getPublishedProjectsForSite = cache(async (): Promise<HomeProject[]> => {
-  const projects = await prisma.project.findMany({
-    where: { published: true },
-    select: { id: true, slug: true, expoFields: true, mediaFolderId: true, sortOrder: true },
-  });
+  const projects = await withPrismaRetry(
+    () =>
+      prisma.project.findMany({
+        where: { published: true },
+        select: { id: true, slug: true, expoFields: true, mediaFolderId: true, sortOrder: true },
+      }),
+    { operation: "getPublishedProjectsForSite.findMany" },
+  );
   const sorted = [...projects].sort(compareForHome);
   return Promise.all(
     sorted.map(async (p) => {

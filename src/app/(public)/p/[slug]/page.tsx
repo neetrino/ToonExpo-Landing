@@ -11,6 +11,7 @@ import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { resolveProjectFolderMedia } from "@/features/landing/lib/resolveProjectFolderMedia";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
 import { LandingAnalyticsTracker } from "@/features/landing/components/LandingAnalyticsTracker";
+import { withPrismaRetry } from "@/shared/lib/prismaRetry";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -24,9 +25,13 @@ function resolveProjectName(fields: Record<string, string>, slug: string): strin
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const p = await prisma.project.findFirst({
-    where: { slug, published: true },
-  });
+  const p = await withPrismaRetry(
+    () =>
+      prisma.project.findFirst({
+        where: { slug, published: true },
+      }),
+    { operation: "publicLanding.generateMetadata.findFirst" },
+  );
   const f = (p?.expoFields as ExpoMap) ?? {};
   const title = f[PROJECT_FIELD.titleExhibition] || f[PROJECT_FIELD.participantName] || slug;
   return { title: `${title} | Toon Expo` };
@@ -34,15 +39,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PublicLandingPage({ params }: Props) {
   const { slug } = await params;
-  const project = await prisma.project.findFirst({
-    where: { slug, published: true },
-    select: {
-      id: true,
-      slug: true,
-      expoFields: true,
-      mediaFolderId: true,
-    },
-  });
+  const project = await withPrismaRetry(
+    () =>
+      prisma.project.findFirst({
+        where: { slug, published: true },
+        select: {
+          id: true,
+          slug: true,
+          expoFields: true,
+          mediaFolderId: true,
+        },
+      }),
+    { operation: "publicLanding.page.findFirst" },
+  );
   if (!project) {
     notFound();
   }
