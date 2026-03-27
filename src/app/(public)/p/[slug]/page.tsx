@@ -10,8 +10,17 @@ import { SiteReachMapFooter } from "@/features/home/SiteReachMapFooter";
 import type { ExpoMap } from "@/features/landing/lib/blockVisibility";
 import { resolveProjectFolderMedia } from "@/features/landing/lib/resolveProjectFolderMedia";
 import { PROJECT_FIELD } from "@/shared/constants/expoFieldKeys";
+import { LandingAnalyticsTracker } from "@/features/landing/components/LandingAnalyticsTracker";
 
 type Props = { params: Promise<{ slug: string }> };
+
+function resolveProjectName(fields: Record<string, string>, slug: string): string {
+  return (
+    fields[PROJECT_FIELD.titleExhibition]?.trim() ||
+    fields[PROJECT_FIELD.participantName]?.trim() ||
+    slug
+  );
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -38,6 +47,7 @@ export default async function PublicLandingPage({ params }: Props) {
     notFound();
   }
   const fields = (project.expoFields as Record<string, string>) ?? {};
+  const projectName = resolveProjectName(fields, project.slug);
   const folderMedia = await resolveProjectFolderMedia(project.mediaFolderId);
   const projectData = {
     id: project.id,
@@ -47,7 +57,13 @@ export default async function PublicLandingPage({ params }: Props) {
   return (
     <>
       <LandingAutoRedirect slug={project.slug} />
-      <LandingPage fields={fields} folderMedia={folderMedia} />
+      <LandingAnalyticsTracker projectSlug={project.slug} projectName={projectName} />
+      <LandingPage
+        fields={fields}
+        folderMedia={folderMedia}
+        projectSlug={project.slug}
+        projectName={projectName}
+      />
       <LandingBottomBarCallbacks project={projectData}>
         <SiteReachMapFooter variant="participant" projects={[projectData]} />
       </LandingBottomBarCallbacks>
